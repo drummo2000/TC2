@@ -2,7 +2,8 @@ from CatanPlayer import *
 import random
 import logging
 import math
-from CatanUtils import GetRandomBankTrade
+# from CatanUtils import GetRandomBankTrade
+from CatanUtilsPy import GetRandomBankTrade
 
 class AgentRandom(Player):
 

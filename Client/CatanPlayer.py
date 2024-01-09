@@ -1,8 +1,8 @@
 from CatanAction import *
 import math
 import sys
-from CatanUtils import CanAfford as cf
-from CatanUtils import listm
+from CatanUtilsPy import CanAfford as cf
+from CatanUtilsPy import listm
 import cPickle
 from GameDataExplorer import GetGameStateDataFrame
 
@@ -84,7 +84,7 @@ class Player(object):
     @staticmethod
     def LoadModel():
 
-        with open('Models/Test07.mod', 'rb') as handle:
+        with open('Models/mainModel.mod', 'rb') as handle:
             Player.Model = cPickle.load(handle)
 
     def UpdateTradeRates(self, gameState):
@@ -153,8 +153,12 @@ class Player(object):
             diceProduction = self.diceProduction[diceNumber]
 
             if sum(diceProduction) > 0:
-
+                num_start = len(self.resources)
                 self.resources += diceProduction
+                num_end = len(self.resources)
+                if num_start != num_end:
+                    print("\n\n\n UpdatePlayerResources changes length \n\n\n", self.seatNumber, self.resources, diceProduction)
+                    raise("TEST ERROR")
 
     def UpdateLargestArmy(self, option):
 
@@ -606,6 +610,7 @@ class Player(object):
                 player.developmentCards[KNIGHT_CARD_INDEX] > 0:
             return [UseKnightsCardAction(player.seatNumber, None, None)]
 
+        # NOTE: removing if part and just returning fixed an error before
         if not player.rolledTheDices:
             return [RollDicesAction(player.seatNumber)]
 

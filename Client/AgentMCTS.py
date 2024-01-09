@@ -125,7 +125,7 @@ class AgentMCTS(AgentRandom):
 
     def LoadModel(self):
 
-        with open('Models/Test07.mod', 'rb') as handle:
+        with open('Models/mainModel.mod', 'rb') as handle:
             return cPickle.load(handle)
 
     def DoMove(self, game):
@@ -155,14 +155,14 @@ class AgentMCTS(AgentRandom):
 
         # SPECIAL CASE -> WE JUST GOT OUR TURN AND CAN CLEAR THE "BUFFER"...
         if game.gameState.currState == "PLAY":
-            #print("empty buffer! -> PLAY")
+            ##print("empty buffer! -> PLAY")
             self.movesToDo = []
             self.tradeLock = False
 
         # IF I HAVE MOVES IN MY "BUFFER", RETURN THOSE...
         if len(self.movesToDo) > 0:
 
-            print("Accessed Move Buffer = {0}".format(self.movesToDo))
+            #print("Accessed Move Buffer = {0}".format(self.movesToDo))
 
             action = self.movesToDo[0]  # get first element
             # SPECIAL CASE -> MONOPOLY ACTION - we don't know what resources will come from the server
@@ -174,12 +174,12 @@ class AgentMCTS(AgentRandom):
                 isinstance(action, ChoosePlayerToStealFromAction) or \
                 isinstance(action, PlaceRobberAction) or \
                 isinstance(action, DiscardResourcesAction):
-                print("Clear buffer -> MONOPOLY OR CHOOSEPLAYER")
+                #print("Clear buffer -> MONOPOLY OR CHOOSEPLAYER")
                 self.movesToDo = []
             else:
                 self.movesToDo = self.movesToDo[1:]  # remove first element
 
-            print("BUFFER ACTION = \n{0}".format(action))
+            #print("BUFFER ACTION = \n{0}".format(action))
 
             return action
 
@@ -218,14 +218,14 @@ class AgentMCTS(AgentRandom):
                                 virtualWins=self.virtualWins)
 
             if rootNode.possibleActions is None:
-                print("MCTS ERROR! POSSIBLE ACTIONS FROM ROOT NODE ARE NONE!!!!")
+                #print("MCTS ERROR! POSSIBLE ACTIONS FROM ROOT NODE ARE NONE!!!!")
                 return None
 
             elif len(rootNode.possibleActions) == 1:
                 return rootNode.possibleActions[0]
 
             elif len(rootNode.possibleActions) <= 0:
-                print("MCTS ERROR! NO POSSIBLE ACTIONS FROM ROOT NODE!")
+                #print("MCTS ERROR! NO POSSIBLE ACTIONS FROM ROOT NODE!")
                 return None
 
             processes = [mp.Process(target=self.MonteCarloTreeSearch, args=(state, ct, coreSimCount, True, i, resultNodes,
@@ -271,7 +271,7 @@ class AgentMCTS(AgentRandom):
                 isinstance(action, ChoosePlayerToStealFromAction) or \
                 isinstance(action, PlaceRobberAction) or \
                 isinstance(action, DiscardResourcesAction):
-                print("empty buffer! -> MONOPOLY OR CHOOSEPLAYER")
+                #print("empty buffer! -> MONOPOLY OR CHOOSEPLAYER")
                 self.movesToDo = []
 
         return action
@@ -290,10 +290,10 @@ class AgentMCTS(AgentRandom):
                                 actionsFunction=self.GetPossibleActions,
                                 virtualWins=self.virtualWins)
 
-        # print("GAME STATE      : {0}".format(gameState.currState))
-        # print("POSSIBLE ACTIONS: {0}".format(rootNode.possibleActions))
+        # #print("GAME STATE      : {0}".format(gameState.currState))
+        # #print("POSSIBLE ACTIONS: {0}".format(rootNode.possibleActions))
         #
-        # print("RESOURCES = BRICK: {0}\n"
+        # #print("RESOURCES = BRICK: {0}\n"
         #       "              ORE: {1}\n"
         #       "             WOOL: {2}\n"
         #       "            GRAIN: {3}\n"
@@ -306,7 +306,7 @@ class AgentMCTS(AgentRandom):
         # ))
         #
         # if sum(self.developmentCards) > 0:
-        #     print("DEVELOPMENT CARDS = KNIGHT:        {0}\n"
+        #     #print("DEVELOPMENT CARDS = KNIGHT:        {0}\n"
         #           "                    ROAD_BUILDING: {1}\n"
         #           "                    YEAR_OF_PLENTY:{2}\n"
         #           "                    MONOPOLY:      {3}\n"
@@ -319,14 +319,14 @@ class AgentMCTS(AgentRandom):
         #     ))
 
         if rootNode.possibleActions is None:
-            print("MCTS ERROR! POSSIBLE ACTIONS FROM ROOT NODE ARE NONE!!!!")
+            #print("MCTS ERROR! POSSIBLE ACTIONS FROM ROOT NODE ARE NONE!!!!")
             return None
 
         elif len(rootNode.possibleActions) == 1:
             return rootNode.possibleActions[0]
 
         elif len(rootNode.possibleActions) <= 0:
-            print("MCTS ERROR! NO POSSIBLE ACTIONS FROM ROOT NODE!")
+            #print("MCTS ERROR! NO POSSIBLE ACTIONS FROM ROOT NODE!")
             return None
 
         msg = "Player {0} is a {1} agent".format(self.name,
@@ -336,7 +336,7 @@ class AgentMCTS(AgentRandom):
                + "\n his devcards are: ({0})".format(g_developmentCards) \
                + "\n DEV CARDS       = {0} ".format(self.developmentCards)
 
-        print(msg)
+        #print(msg)
 
         startTime = datetime.utcnow()
 
@@ -354,15 +354,15 @@ class AgentMCTS(AgentRandom):
             self.BackUp(nextNode, reward)
             self.simulationCounter += 1
 
-        print("TOTAL SIMULATIONS = {0}".format(self.simulationCounter))
-        print("TOTAL TIME        = {0}".format((datetime.utcnow() - startTime)))
+        #print("TOTAL SIMULATIONS = {0}".format(self.simulationCounter))
+        #print("TOTAL TIME        = {0}".format((datetime.utcnow() - startTime)))
 
-        print("POSSIBLE MOVE COUNT = {0}".format(len(rootNode.children)))
-        print("POSSIBLE MOVES = {0}".format([child.action for child in rootNode.children]))
+        #print("POSSIBLE MOVE COUNT = {0}".format(len(rootNode.children)))
+        #print("POSSIBLE MOVES = {0}".format([child.action for child in rootNode.children]))
 
         best = self.BestChild(rootNode, 0, rootNode.NValue)
 
-        print("CHOSEN ACTION = \n{0}".format(best.action))
+        #print("CHOSEN ACTION = \n{0}".format(best.action))
 
         # KEEP FUTURE ACTIONS IN A "BUFFER"...
         # IF WE ARE CHOOSING A PLAYER TO STEAL FROM, DON'T KEEP BUFFER -> WE DON'T KNOW WHAT RESOURCE WE WILL STEAL!
@@ -376,7 +376,7 @@ class AgentMCTS(AgentRandom):
                     self.movesToDo.append(bestChild.action)
                     bestChild = self.BestChild(bestChild, 0, rootNode.NValue)
 
-                    print("Created Move Buffer = {0}".format(self.movesToDo))
+                    #print("Created Move Buffer = {0}".format(self.movesToDo))
 
             return best.action
 
@@ -390,7 +390,7 @@ class AgentMCTS(AgentRandom):
             #        movesToDo.append(bestChild.action)
             #        bestChild = self.BestChild(bestChild, 0, rootNode.NValue)
             #
-            #        print("Created Move Buffer = {0}".format(self.movesToDo))
+            #        #print("Created Move Buffer = {0}".format(self.movesToDo))
 
             processList[processIndex] = rootNode
 
@@ -451,7 +451,7 @@ class AgentMCTS(AgentRandom):
                                                       gameState.players[gameState.currPlayer],
                                                       atRandom=True)
             #if possibleActions is None:
-            #    print("ERROR!")
+            #    #print("ERROR!")
             #    possibleActions = self.GetPossibleActions(gameState,
             #                                              gameState.players[gameState.currPlayer],
             #                                              atRandom=True)

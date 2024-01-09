@@ -8,9 +8,15 @@ import os.path
 import socket
 from CatanGame import *
 from AgentRandom import *
+from AgentMCTS import AgentMCTS
+from AgentUCT import AgentUCT
+from AgentRAVE import AgentRAVE
+from AgentAlphabeta import AgentAlphabeta
 from joblib import Parallel, delayed
 import multiprocessing
 import CSVGenerator
+from CatanUtilsPy import listm
+import random
 
 # -- ML STUFF --
 import sklearn
@@ -522,26 +528,39 @@ def RunModelTesting(numberOfTests, loadModel, customBoard = None):
 
 if __name__ == '__main__':
 
-    RunModelTraining(numberOfTrainings=20000, modelName="Test07")
-    #RunModelTesting(numberOfTests=20, loadModel="Test06")
+    # RunModelTraining(numberOfTrainings=2000, modelName="Test06")
+    # RunModelTesting(numberOfTests=20, loadModel="Test06")
 
-    #for i in range(0, 500):
-    #    RunGame(saveImgLog=False)
+    # for i in range(0, 500):
+    #    print(RunGame(saveImgLog=False))
 
-    #RunGame(saveImgLog=False, showLog=True)
+    players = [
+        AgentRandom("P4", 3),
+        AgentRandom("P4", 3),
+        AgentRandom("P2", 1),
+        AgentRandom("P3", 2)]
+    players_ = [
+        AgentUCT("P0", 0, choiceTime=0.1, useModel=True),
+        AgentUCT("P1", 1, choiceTime=0.1, useModel=True),
+        AgentMCTS("P2", 2, choiceTime=0.1, useModel=True),
+        AgentMCTS("P3", 3, choiceTime=0.1, useModel=True)]
+    
+    for i in range(0, 500):
+        print(RunGame(players=random.shuffle(players), showLog=False))
 
-    # for i in range(0, 10):
-    #     RunGame(defaultPlayers)
-    #
-    #     print(" --- GAME : {0} --- ".format(datetime.datetime.utcnow()))
+    # for i in range(0, 1000):
+    #     RunGame(saveImgLog=False)
 
-    # RUN WITH LOGGING
-    #RunWithLogging(300, saveGameStateLogs=False, multiprocess=True, players=defaultPlayers)
+    #     if i == 0 or i == 999:
+    #         print(" --- GAME {0} : {1} --- ".format(i, datetime.datetime.utcnow()))
 
-    #RunWithCSVSaving(1000, multiprocess=False)
+    # # RUN WITH LOGGING
+    # RunWithLogging(300, saveGameStateLogs=False, multiprocess=True, players=defaultPlayers)
 
-    # SPEED TEST
-    #RunSpeedTest(50)
+    # RunWithCSVSaving(1000, multiprocess=False)
 
-    # SIMULATOR PROFILER
-    #RunProfiler()
+    # # SPEED TEST
+    # RunSpeedTest(50)
+
+    # # SIMULATOR PROFILER
+    # RunProfiler()
