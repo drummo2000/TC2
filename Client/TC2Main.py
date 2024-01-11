@@ -12,6 +12,7 @@ from AgentRAVE import AgentRAVE
 from AgentUCTParanoid import AgentUCTParanoid
 from AgentUCTTuned import AgentUCTTuned
 import CSVGenerator
+from Client import Client
 
 def check_positive(value):
     ivalue = int(value)
@@ -187,7 +188,7 @@ class TC2Main(object):
         if args.startServer and canInitServer:
 
             self.serverProcess = subprocess.Popen("java -jar JSettlersServer{0}.jar 8880 10 dbUser dbPass".format(self.serverType),
-                                             shell=False, stdout=subprocess.PIPE)
+                                             shell=True, stdout=subprocess.PIPE)
 
         if args.robots and callProcess:
             self.robot1Process = subprocess.Popen(

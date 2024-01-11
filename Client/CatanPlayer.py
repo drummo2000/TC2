@@ -24,6 +24,7 @@ class PlayerStats(object):
         self.numberOfTurnsWithArmy = 0
         self.numberOfTurnsWithRoad = 0
 
+# Base player class to extend when building a new agent
 class Player(object):
 
     Model = None

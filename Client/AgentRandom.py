@@ -20,11 +20,13 @@ class AgentRandom(Player):
         if self.useModel:
             Player.LoadModel()
 
+    # Returns list of possible actions in given state
     def GetPossibleActions(self, gameState, player = None):
 
         if player is None:
             player = self
 
+        # Call function based on game phase
         if not gameState.setupDone:
             return self.GetPossibleActions_SetupTurns(gameState, player, self.filterSetupSettlements)
         elif gameState.currState == "PLAY":
@@ -105,9 +107,10 @@ class AgentRandom(Player):
 
             return [UseKnightsCardAction( player.seatNumber, None, None )]
 
-        if not player.rolledTheDices:
+        # Was returning None for actions and breaking before
+        #if not player.rolledTheDices:
 
-            return [RollDicesAction( player.seatNumber )]
+        return [RollDicesAction( player.seatNumber )]
 
     actions = ('buildRoad', 'buildSettlement', 'buildCity',
                'buyDevCard', 'useDevCard', 'bankTrade', 'endTurn')
@@ -264,13 +267,15 @@ class AgentRandom(Player):
 
             return self.GetPossiblePlayerTradeReactions(gameState, player)
 
-
+    # Return list of actions
     def DoMove(self, game):
 
+        # If not my turn and were not in WAITING_FOR_DISCARDS phase then return None
         if game.gameState.currPlayer != self.seatNumber and \
             game.gameState.currState != "WAITING_FOR_DISCARDS":
             return None
 
+        # Get all possible actions in given gameState
         if self.useModel:
             possibleActions = Player.GetModelSelectedActions(game.gameState, self)
         else:
@@ -278,10 +283,12 @@ class AgentRandom(Player):
 
         #logging.debug("possible actions = {0}".format(possibleActions))
 
+        # If in PLAY1 state (Regular) then return either list/single action
         if game.gameState.currState == "PLAY1":
             if possibleActions is not None:
                 return possibleActions
 
+        # If in any other phase choose a random action from list
         if possibleActions is not None and possibleActions:
             #return random.choice(possibleActions)
             return possibleActions[int(random.random() * len(possibleActions))]
@@ -289,6 +296,7 @@ class AgentRandom(Player):
         elif possibleActions is None:
             print("NONE!!!")
 
+        # NOTE: If no actions returned should we return EndTurn/RollDice?
         return None
 
     def ChooseCardsToDiscard(self, player = None):

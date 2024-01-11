@@ -2338,11 +2338,13 @@ static const char __pyx_k_possibleTradePopulation[] = "possibleTradePopulation";
 static const char __pyx_k_Incompatible_checksums_0x_x_vs_0[] = "Incompatible checksums (0x%x vs (0xe3b0c44, 0xda39a3e, 0xd41d8cd) = ())";
 /* #### Code section: decls ### */
 static PyObject *__pyx_pf_10CatanUtils_5listm___add__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_10CatanUtils_5listm_8__reduce_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10CatanUtils_5listm_10__setstate_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_10CatanUtils_5listm_2__iadd__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_10CatanUtils_5listm_4__mul__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_10CatanUtils_5listm_6__truediv__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_10CatanUtils_5listm_8__sub__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_10CatanUtils_5listm_10__isub__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_10CatanUtils_5listm_12__reduce_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10CatanUtils_5listm_14__setstate_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_10CatanUtils_CanAfford(CYTHON_UNUSED PyObject *__pyx_self, struct __pyx_obj_10CatanUtils_listm *__pyx_v_resources, struct __pyx_obj_10CatanUtils_listm *__pyx_v_price); /* proto */
 static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObject *__pyx_self, struct __pyx_obj_10CatanUtils_listm *__pyx_v_playerResources, PyObject *__pyx_v_tradeRates); /* proto */
 static PyObject *__pyx_pf_10CatanUtils_4__pyx_unpickle_listm(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
@@ -3093,7 +3095,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm___add__(struct __pyx_obj_10CatanUt
  *             else:
  *                 return listm([self[i]+y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  * 
- *     def __mul__(self,y):
+ *     def __iadd__(self,y):
  */
     /*else*/ {
       __Pyx_XDECREF(__pyx_r);
@@ -3150,27 +3152,27 @@ static PyObject *__pyx_pf_10CatanUtils_5listm___add__(struct __pyx_obj_10CatanUt
 /* "CatanUtils.pyx":26
  *                 return listm([self[i]+y[i] for i in range(N)])
  * 
- *     def __mul__(self,y):             # <<<<<<<<<<<<<<
+ *     def __iadd__(self,y):             # <<<<<<<<<<<<<<
  *         cdef int i,N
  * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10CatanUtils_5listm_3__mul__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
-static PyObject *__pyx_pw_10CatanUtils_5listm_3__mul__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
+static PyObject *__pyx_pw_10CatanUtils_5listm_3__iadd__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
+static PyObject *__pyx_pw_10CatanUtils_5listm_3__iadd__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__mul__ (wrapper)", 0);
+  __Pyx_RefNannySetupContext("__iadd__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_10CatanUtils_5listm_2__mul__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
+  __pyx_r = __pyx_pf_10CatanUtils_5listm_2__iadd__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
+static PyObject *__pyx_pf_10CatanUtils_5listm_2__iadd__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
   int __pyx_v_N;
   int __pyx_8genexpr4__pyx_v_i;
   int __pyx_8genexpr5__pyx_v_i;
@@ -3191,7 +3193,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__mul__", 1);
+  __Pyx_RefNannySetupContext("__iadd__", 1);
 
   /* "CatanUtils.pyx":29
  *         cdef int i,N
@@ -3208,7 +3210,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
  *         if isinstance(self,listm):
  *             N=len(self)             # <<<<<<<<<<<<<<
  *             if isinstance(y,int) or isinstance(y,float):
- *                 return listm([self[i]*y for i in range(N)])
+ *                 return listm([self[i]+y for i in range(N)])
  */
     __pyx_t_2 = PyObject_Length(((PyObject *)__pyx_v_self)); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 30, __pyx_L1_error)
     __pyx_v_N = __pyx_t_2;
@@ -3217,7 +3219,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
  *         if isinstance(self,listm):
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
- *                 return listm([self[i]*y for i in range(N)])
+ *                 return listm([self[i]+y for i in range(N)])
  *             else:
  */
     __pyx_t_3 = PyInt_Check(__pyx_v_y); 
@@ -3234,9 +3236,9 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
       /* "CatanUtils.pyx":32
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):
- *                 return listm([self[i]*y for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]+y for i in range(N)])             # <<<<<<<<<<<<<<
  *             else:
- *                 return listm([self[i]*y[i] for i in range(N)])
+ *                 return listm([self[i]+y[i] for i in range(N)])
  */
       __Pyx_XDECREF(__pyx_r);
       { /* enter inner scope */
@@ -3248,7 +3250,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
           __pyx_8genexpr4__pyx_v_i = __pyx_t_7;
           __pyx_t_8 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_8genexpr4__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 32, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_9 = PyNumber_Multiply(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 32, __pyx_L1_error)
+          __pyx_t_9 = PyNumber_Add(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 32, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 32, __pyx_L1_error)
@@ -3266,15 +3268,15 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
  *         if isinstance(self,listm):
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
- *                 return listm([self[i]*y for i in range(N)])
+ *                 return listm([self[i]+y for i in range(N)])
  *             else:
  */
     }
 
     /* "CatanUtils.pyx":34
- *                 return listm([self[i]*y for i in range(N)])
+ *                 return listm([self[i]+y for i in range(N)])
  *             else:
- *                 return listm([self[i]*y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]+y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  *         else:
  *             ### it is backwards, self is something else, y is a listm
  */
@@ -3291,7 +3293,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
           __Pyx_GOTREF(__pyx_t_4);
           __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_y, __pyx_8genexpr5__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 34, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_10 = PyNumber_Multiply(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 34, __pyx_L1_error)
+          __pyx_t_10 = PyNumber_Add(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 34, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -3321,7 +3323,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)             # <<<<<<<<<<<<<<
  *             if isinstance(self,int) or isinstance(self,float):
- *                 return listm([y[i]*self for i in range(N)])
+ *                 return listm([y[i]+self for i in range(N)])
  */
   /*else*/ {
     __pyx_t_2 = PyObject_Length(__pyx_v_y); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 37, __pyx_L1_error)
@@ -3331,7 +3333,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
- *                 return listm([y[i]*self for i in range(N)])
+ *                 return listm([y[i]+self for i in range(N)])
  *             else:
  */
     __pyx_t_3 = PyInt_Check(((PyObject *)__pyx_v_self)); 
@@ -3348,9 +3350,9 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
       /* "CatanUtils.pyx":39
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):
- *                 return listm([y[i]*self for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([y[i]+self for i in range(N)])             # <<<<<<<<<<<<<<
  *             else:
- *                 return listm([self[i]*y[i] for i in range(N)])
+ *                 return listm([self[i]+y[i] for i in range(N)])
  */
       __Pyx_XDECREF(__pyx_r);
       { /* enter inner scope */
@@ -3362,7 +3364,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
           __pyx_8genexpr6__pyx_v_i = __pyx_t_7;
           __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_8genexpr6__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 39, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_8 = PyNumber_Multiply(__pyx_t_9, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 39, __pyx_L1_error)
+          __pyx_t_8 = PyNumber_Add(__pyx_t_9, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 39, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           if (unlikely(__Pyx_ListComp_Append(__pyx_t_10, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 39, __pyx_L1_error)
@@ -3380,17 +3382,17 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
- *                 return listm([y[i]*self for i in range(N)])
+ *                 return listm([y[i]+self for i in range(N)])
  *             else:
  */
     }
 
     /* "CatanUtils.pyx":41
- *                 return listm([y[i]*self for i in range(N)])
+ *                 return listm([y[i]+self for i in range(N)])
  *             else:
- *                 return listm([self[i]*y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]+y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  * 
- *     def __truediv__(self,y):
+ *     def __mul__(self,y):
  */
     /*else*/ {
       __Pyx_XDECREF(__pyx_r);
@@ -3405,7 +3407,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
           __Pyx_GOTREF(__pyx_t_10);
           __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_8genexpr7__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 41, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_4 = PyNumber_Multiply(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+          __pyx_t_4 = PyNumber_Add(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -3425,7 +3427,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
   /* "CatanUtils.pyx":26
  *                 return listm([self[i]+y[i] for i in range(N)])
  * 
- *     def __mul__(self,y):             # <<<<<<<<<<<<<<
+ *     def __iadd__(self,y):             # <<<<<<<<<<<<<<
  *         cdef int i,N
  * 
  */
@@ -3436,7 +3438,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_AddTraceback("CatanUtils.listm.__mul__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("CatanUtils.listm.__iadd__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3445,29 +3447,29 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_2__mul__(struct __pyx_obj_10CatanU
 }
 
 /* "CatanUtils.pyx":43
- *                 return listm([self[i]*y[i] for i in range(N)])
+ *                 return listm([self[i]+y[i] for i in range(N)])
  * 
- *     def __truediv__(self,y):             # <<<<<<<<<<<<<<
+ *     def __mul__(self,y):             # <<<<<<<<<<<<<<
  *         cdef int i,N
  * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10CatanUtils_5listm_5__truediv__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
-static PyObject *__pyx_pw_10CatanUtils_5listm_5__truediv__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
+static PyObject *__pyx_pw_10CatanUtils_5listm_5__mul__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
+static PyObject *__pyx_pw_10CatanUtils_5listm_5__mul__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__truediv__ (wrapper)", 0);
+  __Pyx_RefNannySetupContext("__mul__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_10CatanUtils_5listm_4__truediv__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
+  __pyx_r = __pyx_pf_10CatanUtils_5listm_4__mul__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
+static PyObject *__pyx_pf_10CatanUtils_5listm_4__mul__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
   int __pyx_v_N;
   int __pyx_8genexpr8__pyx_v_i;
   int __pyx_8genexpr9__pyx_v_i;
@@ -3488,7 +3490,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__truediv__", 1);
+  __Pyx_RefNannySetupContext("__mul__", 1);
 
   /* "CatanUtils.pyx":46
  *         cdef int i,N
@@ -3505,7 +3507,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
  *         if isinstance(self,listm):
  *             N=len(self)             # <<<<<<<<<<<<<<
  *             if isinstance(y,int) or isinstance(y,float):
- *                 return listm([self[i]/y for i in range(N)])
+ *                 return listm([self[i]*y for i in range(N)])
  */
     __pyx_t_2 = PyObject_Length(((PyObject *)__pyx_v_self)); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 47, __pyx_L1_error)
     __pyx_v_N = __pyx_t_2;
@@ -3514,7 +3516,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
  *         if isinstance(self,listm):
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
- *                 return listm([self[i]/y for i in range(N)])
+ *                 return listm([self[i]*y for i in range(N)])
  *             else:
  */
     __pyx_t_3 = PyInt_Check(__pyx_v_y); 
@@ -3531,9 +3533,9 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
       /* "CatanUtils.pyx":49
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):
- *                 return listm([self[i]/y for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]*y for i in range(N)])             # <<<<<<<<<<<<<<
  *             else:
- *                 return listm([self[i]/y[i] for i in range(N)])
+ *                 return listm([self[i]*y[i] for i in range(N)])
  */
       __Pyx_XDECREF(__pyx_r);
       { /* enter inner scope */
@@ -3545,7 +3547,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
           __pyx_8genexpr8__pyx_v_i = __pyx_t_7;
           __pyx_t_8 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_8genexpr8__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 49, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 49, __pyx_L1_error)
+          __pyx_t_9 = PyNumber_Multiply(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 49, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 49, __pyx_L1_error)
@@ -3563,15 +3565,15 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
  *         if isinstance(self,listm):
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
- *                 return listm([self[i]/y for i in range(N)])
+ *                 return listm([self[i]*y for i in range(N)])
  *             else:
  */
     }
 
     /* "CatanUtils.pyx":51
- *                 return listm([self[i]/y for i in range(N)])
+ *                 return listm([self[i]*y for i in range(N)])
  *             else:
- *                 return listm([self[i]/y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]*y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  *         else:
  *             ### it is backwards, self is something else, y is a listm
  */
@@ -3588,7 +3590,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
           __Pyx_GOTREF(__pyx_t_4);
           __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_y, __pyx_8genexpr9__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 51, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_10 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 51, __pyx_L1_error)
+          __pyx_t_10 = PyNumber_Multiply(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 51, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -3618,7 +3620,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)             # <<<<<<<<<<<<<<
  *             if isinstance(self,int) or isinstance(self,float):
- *                 return listm([self/y[i] for i in range(N)])
+ *                 return listm([y[i]*self for i in range(N)])
  */
   /*else*/ {
     __pyx_t_2 = PyObject_Length(__pyx_v_y); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 54, __pyx_L1_error)
@@ -3628,7 +3630,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
- *                 return listm([self/y[i] for i in range(N)])
+ *                 return listm([y[i]*self for i in range(N)])
  *             else:
  */
     __pyx_t_3 = PyInt_Check(((PyObject *)__pyx_v_self)); 
@@ -3645,9 +3647,9 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
       /* "CatanUtils.pyx":56
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):
- *                 return listm([self/y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([y[i]*self for i in range(N)])             # <<<<<<<<<<<<<<
  *             else:
- *                 return listm([self[i]/y[i] for i in range(N)])
+ *                 return listm([self[i]*y[i] for i in range(N)])
  */
       __Pyx_XDECREF(__pyx_r);
       { /* enter inner scope */
@@ -3659,7 +3661,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
           __pyx_9genexpr10__pyx_v_i = __pyx_t_7;
           __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr10__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 56, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_8 = __Pyx_PyNumber_Divide(((PyObject *)__pyx_v_self), __pyx_t_9); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L1_error)
+          __pyx_t_8 = PyNumber_Multiply(__pyx_t_9, ((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           if (unlikely(__Pyx_ListComp_Append(__pyx_t_10, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 56, __pyx_L1_error)
@@ -3677,17 +3679,17 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
- *                 return listm([self/y[i] for i in range(N)])
+ *                 return listm([y[i]*self for i in range(N)])
  *             else:
  */
     }
 
     /* "CatanUtils.pyx":58
- *                 return listm([self/y[i] for i in range(N)])
+ *                 return listm([y[i]*self for i in range(N)])
  *             else:
- *                 return listm([self[i]/y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]*y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  * 
- *     def __sub__(self,y):
+ *     def __truediv__(self,y):
  */
     /*else*/ {
       __Pyx_XDECREF(__pyx_r);
@@ -3702,7 +3704,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
           __Pyx_GOTREF(__pyx_t_10);
           __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr11__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 58, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 58, __pyx_L1_error)
+          __pyx_t_4 = PyNumber_Multiply(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 58, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -3720,9 +3722,9 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
   }
 
   /* "CatanUtils.pyx":43
- *                 return listm([self[i]*y[i] for i in range(N)])
+ *                 return listm([self[i]+y[i] for i in range(N)])
  * 
- *     def __truediv__(self,y):             # <<<<<<<<<<<<<<
+ *     def __mul__(self,y):             # <<<<<<<<<<<<<<
  *         cdef int i,N
  * 
  */
@@ -3733,7 +3735,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_AddTraceback("CatanUtils.listm.__truediv__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("CatanUtils.listm.__mul__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3742,29 +3744,29 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_4__truediv__(struct __pyx_obj_10Ca
 }
 
 /* "CatanUtils.pyx":60
- *                 return listm([self[i]/y[i] for i in range(N)])
+ *                 return listm([self[i]*y[i] for i in range(N)])
  * 
- *     def __sub__(self,y):             # <<<<<<<<<<<<<<
+ *     def __truediv__(self,y):             # <<<<<<<<<<<<<<
  *         cdef int i,N
  * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10CatanUtils_5listm_7__sub__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
-static PyObject *__pyx_pw_10CatanUtils_5listm_7__sub__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
+static PyObject *__pyx_pw_10CatanUtils_5listm_7__truediv__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
+static PyObject *__pyx_pw_10CatanUtils_5listm_7__truediv__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__sub__ (wrapper)", 0);
+  __Pyx_RefNannySetupContext("__truediv__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_10CatanUtils_5listm_6__sub__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
+  __pyx_r = __pyx_pf_10CatanUtils_5listm_6__truediv__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
+static PyObject *__pyx_pf_10CatanUtils_5listm_6__truediv__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
   int __pyx_v_N;
   int __pyx_9genexpr12__pyx_v_i;
   int __pyx_9genexpr13__pyx_v_i;
@@ -3785,7 +3787,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__sub__", 1);
+  __Pyx_RefNannySetupContext("__truediv__", 1);
 
   /* "CatanUtils.pyx":63
  *         cdef int i,N
@@ -3802,7 +3804,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
  *         if isinstance(self,listm):
  *             N=len(self)             # <<<<<<<<<<<<<<
  *             if isinstance(y,int) or isinstance(y,float):
- *                 return listm([self[i]-y for i in range(N)])
+ *                 return listm([self[i]/y for i in range(N)])
  */
     __pyx_t_2 = PyObject_Length(((PyObject *)__pyx_v_self)); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 64, __pyx_L1_error)
     __pyx_v_N = __pyx_t_2;
@@ -3811,7 +3813,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
  *         if isinstance(self,listm):
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
- *                 return listm([self[i]-y for i in range(N)])
+ *                 return listm([self[i]/y for i in range(N)])
  *             else:
  */
     __pyx_t_3 = PyInt_Check(__pyx_v_y); 
@@ -3828,9 +3830,9 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
       /* "CatanUtils.pyx":66
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):
- *                 return listm([self[i]-y for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]/y for i in range(N)])             # <<<<<<<<<<<<<<
  *             else:
- *                 return listm([self[i]-y[i] for i in range(N)])
+ *                 return listm([self[i]/y[i] for i in range(N)])
  */
       __Pyx_XDECREF(__pyx_r);
       { /* enter inner scope */
@@ -3842,7 +3844,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
           __pyx_9genexpr12__pyx_v_i = __pyx_t_7;
           __pyx_t_8 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_9genexpr12__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 66, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_9 = PyNumber_Subtract(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 66, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 66, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 66, __pyx_L1_error)
@@ -3860,15 +3862,15 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
  *         if isinstance(self,listm):
  *             N=len(self)
  *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
- *                 return listm([self[i]-y for i in range(N)])
+ *                 return listm([self[i]/y for i in range(N)])
  *             else:
  */
     }
 
     /* "CatanUtils.pyx":68
- *                 return listm([self[i]-y for i in range(N)])
+ *                 return listm([self[i]/y for i in range(N)])
  *             else:
- *                 return listm([self[i]-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]/y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  *         else:
  *             ### it is backwards, self is something else, y is a listm
  */
@@ -3885,7 +3887,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
           __Pyx_GOTREF(__pyx_t_4);
           __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr13__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 68, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_10 = PyNumber_Subtract(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 68, __pyx_L1_error)
+          __pyx_t_10 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 68, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -3915,7 +3917,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)             # <<<<<<<<<<<<<<
  *             if isinstance(self,int) or isinstance(self,float):
- *                 return listm([self-y[i] for i in range(N)])
+ *                 return listm([self/y[i] for i in range(N)])
  */
   /*else*/ {
     __pyx_t_2 = PyObject_Length(__pyx_v_y); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 71, __pyx_L1_error)
@@ -3925,7 +3927,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
- *                 return listm([self-y[i] for i in range(N)])
+ *                 return listm([self/y[i] for i in range(N)])
  *             else:
  */
     __pyx_t_3 = PyInt_Check(((PyObject *)__pyx_v_self)); 
@@ -3942,9 +3944,9 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
       /* "CatanUtils.pyx":73
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):
- *                 return listm([self-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self/y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  *             else:
- *                 return listm([self[i]-y[i] for i in range(N)])
+ *                 return listm([self[i]/y[i] for i in range(N)])
  */
       __Pyx_XDECREF(__pyx_r);
       { /* enter inner scope */
@@ -3956,7 +3958,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
           __pyx_9genexpr14__pyx_v_i = __pyx_t_7;
           __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr14__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 73, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_8 = PyNumber_Subtract(((PyObject *)__pyx_v_self), __pyx_t_9); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 73, __pyx_L1_error)
+          __pyx_t_8 = __Pyx_PyNumber_Divide(((PyObject *)__pyx_v_self), __pyx_t_9); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 73, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           if (unlikely(__Pyx_ListComp_Append(__pyx_t_10, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 73, __pyx_L1_error)
@@ -3974,17 +3976,17 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
  *             ### it is backwards, self is something else, y is a listm
  *             N=len(y)
  *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
- *                 return listm([self-y[i] for i in range(N)])
+ *                 return listm([self/y[i] for i in range(N)])
  *             else:
  */
     }
 
     /* "CatanUtils.pyx":75
- *                 return listm([self-y[i] for i in range(N)])
+ *                 return listm([self/y[i] for i in range(N)])
  *             else:
- *                 return listm([self[i]-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]/y[i] for i in range(N)])             # <<<<<<<<<<<<<<
  * 
- * def CanAfford(listm resources, listm price):
+ *     def __sub__(self,y):
  */
     /*else*/ {
       __Pyx_XDECREF(__pyx_r);
@@ -3999,7 +4001,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
           __Pyx_GOTREF(__pyx_t_10);
           __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr15__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 75, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_4 = PyNumber_Subtract(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 75, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 75, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -4017,6 +4019,303 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
   }
 
   /* "CatanUtils.pyx":60
+ *                 return listm([self[i]*y[i] for i in range(N)])
+ * 
+ *     def __truediv__(self,y):             # <<<<<<<<<<<<<<
+ *         cdef int i,N
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_AddTraceback("CatanUtils.listm.__truediv__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "CatanUtils.pyx":77
+ *                 return listm([self[i]/y[i] for i in range(N)])
+ * 
+ *     def __sub__(self,y):             # <<<<<<<<<<<<<<
+ *         cdef int i,N
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10CatanUtils_5listm_9__sub__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
+static PyObject *__pyx_pw_10CatanUtils_5listm_9__sub__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__sub__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_10CatanUtils_5listm_8__sub__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10CatanUtils_5listm_8__sub__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
+  int __pyx_v_N;
+  int __pyx_9genexpr16__pyx_v_i;
+  int __pyx_9genexpr17__pyx_v_i;
+  int __pyx_9genexpr18__pyx_v_i;
+  int __pyx_9genexpr19__pyx_v_i;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  int __pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
+  int __pyx_t_5;
+  int __pyx_t_6;
+  int __pyx_t_7;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__sub__", 1);
+
+  /* "CatanUtils.pyx":80
+ *         cdef int i,N
+ * 
+ *         if isinstance(self,listm):             # <<<<<<<<<<<<<<
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):
+ */
+  __pyx_t_1 = __Pyx_TypeCheck(((PyObject *)__pyx_v_self), __pyx_ptype_10CatanUtils_listm); 
+  if (__pyx_t_1) {
+
+    /* "CatanUtils.pyx":81
+ * 
+ *         if isinstance(self,listm):
+ *             N=len(self)             # <<<<<<<<<<<<<<
+ *             if isinstance(y,int) or isinstance(y,float):
+ *                 return listm([self[i]-y for i in range(N)])
+ */
+    __pyx_t_2 = PyObject_Length(((PyObject *)__pyx_v_self)); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 81, __pyx_L1_error)
+    __pyx_v_N = __pyx_t_2;
+
+    /* "CatanUtils.pyx":82
+ *         if isinstance(self,listm):
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]-y for i in range(N)])
+ *             else:
+ */
+    __pyx_t_3 = PyInt_Check(__pyx_v_y); 
+    if (!__pyx_t_3) {
+    } else {
+      __pyx_t_1 = __pyx_t_3;
+      goto __pyx_L5_bool_binop_done;
+    }
+    __pyx_t_3 = PyFloat_Check(__pyx_v_y); 
+    __pyx_t_1 = __pyx_t_3;
+    __pyx_L5_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "CatanUtils.pyx":83
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):
+ *                 return listm([self[i]-y for i in range(N)])             # <<<<<<<<<<<<<<
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])
+ */
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr16__pyx_v_i = __pyx_t_7;
+          __pyx_t_8 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_9genexpr16__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 83, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __pyx_t_9 = PyNumber_Subtract(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 83, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 83, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_9 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 83, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_r = __pyx_t_9;
+      __pyx_t_9 = 0;
+      goto __pyx_L0;
+
+      /* "CatanUtils.pyx":82
+ *         if isinstance(self,listm):
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]-y for i in range(N)])
+ *             else:
+ */
+    }
+
+    /* "CatanUtils.pyx":85
+ *                 return listm([self[i]-y for i in range(N)])
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *         else:
+ *             ### it is backwards, self is something else, y is a listm
+ */
+    /*else*/ {
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 85, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr17__pyx_v_i = __pyx_t_7;
+          __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_9genexpr17__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 85, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr17__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 85, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __pyx_t_10 = PyNumber_Subtract(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 85, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_9, (PyObject*)__pyx_t_10))) __PYX_ERR(0, 85, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_10 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 85, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_r = __pyx_t_10;
+      __pyx_t_10 = 0;
+      goto __pyx_L0;
+    }
+
+    /* "CatanUtils.pyx":80
+ *         cdef int i,N
+ * 
+ *         if isinstance(self,listm):             # <<<<<<<<<<<<<<
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):
+ */
+  }
+
+  /* "CatanUtils.pyx":88
+ *         else:
+ *             ### it is backwards, self is something else, y is a listm
+ *             N=len(y)             # <<<<<<<<<<<<<<
+ *             if isinstance(self,int) or isinstance(self,float):
+ *                 return listm([self-y[i] for i in range(N)])
+ */
+  /*else*/ {
+    __pyx_t_2 = PyObject_Length(__pyx_v_y); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 88, __pyx_L1_error)
+    __pyx_v_N = __pyx_t_2;
+
+    /* "CatanUtils.pyx":89
+ *             ### it is backwards, self is something else, y is a listm
+ *             N=len(y)
+ *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self-y[i] for i in range(N)])
+ *             else:
+ */
+    __pyx_t_3 = PyInt_Check(((PyObject *)__pyx_v_self)); 
+    if (!__pyx_t_3) {
+    } else {
+      __pyx_t_1 = __pyx_t_3;
+      goto __pyx_L12_bool_binop_done;
+    }
+    __pyx_t_3 = PyFloat_Check(((PyObject *)__pyx_v_self)); 
+    __pyx_t_1 = __pyx_t_3;
+    __pyx_L12_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "CatanUtils.pyx":90
+ *             N=len(y)
+ *             if isinstance(self,int) or isinstance(self,float):
+ *                 return listm([self-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])
+ */
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_10 = PyList_New(0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 90, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr18__pyx_v_i = __pyx_t_7;
+          __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr18__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 90, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_8 = PyNumber_Subtract(((PyObject *)__pyx_v_self), __pyx_t_9); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 90, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_10, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 90, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_8 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 90, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_r = __pyx_t_8;
+      __pyx_t_8 = 0;
+      goto __pyx_L0;
+
+      /* "CatanUtils.pyx":89
+ *             ### it is backwards, self is something else, y is a listm
+ *             N=len(y)
+ *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self-y[i] for i in range(N)])
+ *             else:
+ */
+    }
+
+    /* "CatanUtils.pyx":92
+ *                 return listm([self-y[i] for i in range(N)])
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ * 
+ *     def __isub__(self,y):
+ */
+    /*else*/ {
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 92, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr19__pyx_v_i = __pyx_t_7;
+          __pyx_t_10 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_9genexpr19__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 92, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr19__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 92, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_4 = PyNumber_Subtract(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_8, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 92, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_r = __pyx_t_4;
+      __pyx_t_4 = 0;
+      goto __pyx_L0;
+    }
+  }
+
+  /* "CatanUtils.pyx":77
  *                 return listm([self[i]/y[i] for i in range(N)])
  * 
  *     def __sub__(self,y):             # <<<<<<<<<<<<<<
@@ -4038,6 +4337,303 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
   return __pyx_r;
 }
 
+/* "CatanUtils.pyx":94
+ *                 return listm([self[i]-y[i] for i in range(N)])
+ * 
+ *     def __isub__(self,y):             # <<<<<<<<<<<<<<
+ *         cdef int i,N
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10CatanUtils_5listm_11__isub__(PyObject *__pyx_v_self, PyObject *__pyx_v_y); /*proto*/
+static PyObject *__pyx_pw_10CatanUtils_5listm_11__isub__(PyObject *__pyx_v_self, PyObject *__pyx_v_y) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__isub__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_10CatanUtils_5listm_10__isub__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), ((PyObject *)__pyx_v_y));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10CatanUtils_5listm_10__isub__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v_y) {
+  int __pyx_v_N;
+  int __pyx_9genexpr20__pyx_v_i;
+  int __pyx_9genexpr21__pyx_v_i;
+  int __pyx_9genexpr22__pyx_v_i;
+  int __pyx_9genexpr23__pyx_v_i;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  int __pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
+  int __pyx_t_5;
+  int __pyx_t_6;
+  int __pyx_t_7;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__isub__", 1);
+
+  /* "CatanUtils.pyx":97
+ *         cdef int i,N
+ * 
+ *         if isinstance(self,listm):             # <<<<<<<<<<<<<<
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):
+ */
+  __pyx_t_1 = __Pyx_TypeCheck(((PyObject *)__pyx_v_self), __pyx_ptype_10CatanUtils_listm); 
+  if (__pyx_t_1) {
+
+    /* "CatanUtils.pyx":98
+ * 
+ *         if isinstance(self,listm):
+ *             N=len(self)             # <<<<<<<<<<<<<<
+ *             if isinstance(y,int) or isinstance(y,float):
+ *                 return listm([self[i]-y for i in range(N)])
+ */
+    __pyx_t_2 = PyObject_Length(((PyObject *)__pyx_v_self)); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 98, __pyx_L1_error)
+    __pyx_v_N = __pyx_t_2;
+
+    /* "CatanUtils.pyx":99
+ *         if isinstance(self,listm):
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]-y for i in range(N)])
+ *             else:
+ */
+    __pyx_t_3 = PyInt_Check(__pyx_v_y); 
+    if (!__pyx_t_3) {
+    } else {
+      __pyx_t_1 = __pyx_t_3;
+      goto __pyx_L5_bool_binop_done;
+    }
+    __pyx_t_3 = PyFloat_Check(__pyx_v_y); 
+    __pyx_t_1 = __pyx_t_3;
+    __pyx_L5_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "CatanUtils.pyx":100
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):
+ *                 return listm([self[i]-y for i in range(N)])             # <<<<<<<<<<<<<<
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])
+ */
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr20__pyx_v_i = __pyx_t_7;
+          __pyx_t_8 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_9genexpr20__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 100, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __pyx_t_9 = PyNumber_Subtract(__pyx_t_8, __pyx_v_y); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 100, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 100, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_9 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_r = __pyx_t_9;
+      __pyx_t_9 = 0;
+      goto __pyx_L0;
+
+      /* "CatanUtils.pyx":99
+ *         if isinstance(self,listm):
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self[i]-y for i in range(N)])
+ *             else:
+ */
+    }
+
+    /* "CatanUtils.pyx":102
+ *                 return listm([self[i]-y for i in range(N)])
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *         else:
+ *             ### it is backwards, self is something else, y is a listm
+ */
+    /*else*/ {
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 102, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr21__pyx_v_i = __pyx_t_7;
+          __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_9genexpr21__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 102, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr21__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 102, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __pyx_t_10 = PyNumber_Subtract(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 102, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_9, (PyObject*)__pyx_t_10))) __PYX_ERR(0, 102, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_10 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 102, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_r = __pyx_t_10;
+      __pyx_t_10 = 0;
+      goto __pyx_L0;
+    }
+
+    /* "CatanUtils.pyx":97
+ *         cdef int i,N
+ * 
+ *         if isinstance(self,listm):             # <<<<<<<<<<<<<<
+ *             N=len(self)
+ *             if isinstance(y,int) or isinstance(y,float):
+ */
+  }
+
+  /* "CatanUtils.pyx":105
+ *         else:
+ *             ### it is backwards, self is something else, y is a listm
+ *             N=len(y)             # <<<<<<<<<<<<<<
+ *             if isinstance(self,int) or isinstance(self,float):
+ *                 return listm([self-y[i] for i in range(N)])
+ */
+  /*else*/ {
+    __pyx_t_2 = PyObject_Length(__pyx_v_y); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_v_N = __pyx_t_2;
+
+    /* "CatanUtils.pyx":106
+ *             ### it is backwards, self is something else, y is a listm
+ *             N=len(y)
+ *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self-y[i] for i in range(N)])
+ *             else:
+ */
+    __pyx_t_3 = PyInt_Check(((PyObject *)__pyx_v_self)); 
+    if (!__pyx_t_3) {
+    } else {
+      __pyx_t_1 = __pyx_t_3;
+      goto __pyx_L12_bool_binop_done;
+    }
+    __pyx_t_3 = PyFloat_Check(((PyObject *)__pyx_v_self)); 
+    __pyx_t_1 = __pyx_t_3;
+    __pyx_L12_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "CatanUtils.pyx":107
+ *             N=len(y)
+ *             if isinstance(self,int) or isinstance(self,float):
+ *                 return listm([self-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])
+ */
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_10 = PyList_New(0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 107, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr22__pyx_v_i = __pyx_t_7;
+          __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr22__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 107, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_8 = PyNumber_Subtract(((PyObject *)__pyx_v_self), __pyx_t_9); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 107, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_10, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 107, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_8 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 107, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_r = __pyx_t_8;
+      __pyx_t_8 = 0;
+      goto __pyx_L0;
+
+      /* "CatanUtils.pyx":106
+ *             ### it is backwards, self is something else, y is a listm
+ *             N=len(y)
+ *             if isinstance(self,int) or isinstance(self,float):             # <<<<<<<<<<<<<<
+ *                 return listm([self-y[i] for i in range(N)])
+ *             else:
+ */
+    }
+
+    /* "CatanUtils.pyx":109
+ *                 return listm([self-y[i] for i in range(N)])
+ *             else:
+ *                 return listm([self[i]-y[i] for i in range(N)])             # <<<<<<<<<<<<<<
+ * 
+ * def CanAfford(listm resources, listm price):
+ */
+    /*else*/ {
+      __Pyx_XDECREF(__pyx_r);
+      { /* enter inner scope */
+        __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 109, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_8);
+        __pyx_t_5 = __pyx_v_N;
+        __pyx_t_6 = __pyx_t_5;
+        for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+          __pyx_9genexpr23__pyx_v_i = __pyx_t_7;
+          __pyx_t_10 = __Pyx_GetItemInt(((PyObject *)__pyx_v_self), __pyx_9genexpr23__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 109, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_10);
+          __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_y, __pyx_9genexpr23__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 109, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_4 = PyNumber_Subtract(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_8, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 109, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        }
+      } /* exit inner scope */
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_r = __pyx_t_4;
+      __pyx_t_4 = 0;
+      goto __pyx_L0;
+    }
+  }
+
+  /* "CatanUtils.pyx":94
+ *                 return listm([self[i]-y[i] for i in range(N)])
+ * 
+ *     def __isub__(self,y):             # <<<<<<<<<<<<<<
+ *         cdef int i,N
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_AddTraceback("CatanUtils.listm.__isub__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
@@ -4045,15 +4641,15 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_6__sub__(struct __pyx_obj_10CatanU
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10CatanUtils_5listm_9__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_10CatanUtils_5listm_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_10CatanUtils_5listm_9__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_10CatanUtils_5listm_9__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_10CatanUtils_5listm_13__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_10CatanUtils_5listm_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -4078,14 +4674,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   if (unlikely(__pyx_nargs > 0)) {
     __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL;}
   if (unlikely(__pyx_kwds) && __Pyx_NumKwargs_FASTCALL(__pyx_kwds) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__reduce_cython__", 0))) return NULL;
-  __pyx_r = __pyx_pf_10CatanUtils_5listm_8__reduce_cython__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self));
+  __pyx_r = __pyx_pf_10CatanUtils_5listm_12__reduce_cython__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10CatanUtils_5listm_8__reduce_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self) {
+static PyObject *__pyx_pf_10CatanUtils_5listm_12__reduce_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self) {
   PyObject *__pyx_v_state = 0;
   PyObject *__pyx_v__dict = 0;
   int __pyx_v_use_setstate;
@@ -4299,15 +4895,15 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_8__reduce_cython__(struct __pyx_ob
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10CatanUtils_5listm_11__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_10CatanUtils_5listm_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_10CatanUtils_5listm_11__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_10CatanUtils_5listm_11__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_10CatanUtils_5listm_15__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_10CatanUtils_5listm_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -4381,7 +4977,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10CatanUtils_5listm_10__setstate_cython__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_10CatanUtils_5listm_14__setstate_cython__(((struct __pyx_obj_10CatanUtils_listm *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   {
@@ -4394,7 +4990,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10CatanUtils_5listm_10__setstate_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_10CatanUtils_5listm_14__setstate_cython__(struct __pyx_obj_10CatanUtils_listm *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -4433,7 +5029,7 @@ static PyObject *__pyx_pf_10CatanUtils_5listm_10__setstate_cython__(struct __pyx
   return __pyx_r;
 }
 
-/* "CatanUtils.pyx":77
+/* "CatanUtils.pyx":111
  *                 return listm([self[i]-y[i] for i in range(N)])
  * 
  * def CanAfford(listm resources, listm price):             # <<<<<<<<<<<<<<
@@ -4497,7 +5093,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -4505,14 +5101,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("CanAfford", 1, 2, 2, 1); __PYX_ERR(0, 77, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("CanAfford", 1, 2, 2, 1); __PYX_ERR(0, 111, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "CanAfford") < 0)) __PYX_ERR(0, 77, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "CanAfford") < 0)) __PYX_ERR(0, 111, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -4525,7 +5121,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CanAfford", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 77, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("CanAfford", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 111, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4539,8 +5135,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_resources), __pyx_ptype_10CatanUtils_listm, 1, "resources", 0))) __PYX_ERR(0, 77, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_price), __pyx_ptype_10CatanUtils_listm, 1, "price", 0))) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_resources), __pyx_ptype_10CatanUtils_listm, 1, "resources", 0))) __PYX_ERR(0, 111, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_price), __pyx_ptype_10CatanUtils_listm, 1, "price", 0))) __PYX_ERR(0, 111, __pyx_L1_error)
   __pyx_r = __pyx_pf_10CatanUtils_CanAfford(__pyx_self, __pyx_v_resources, __pyx_v_price);
 
   /* function exit code */
@@ -4572,7 +5168,7 @@ static PyObject *__pyx_pf_10CatanUtils_CanAfford(CYTHON_UNUSED PyObject *__pyx_s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("CanAfford", 1);
 
-  /* "CatanUtils.pyx":79
+  /* "CatanUtils.pyx":113
  * def CanAfford(listm resources, listm price):
  *     cdef int i
  *     for i in range(5):             # <<<<<<<<<<<<<<
@@ -4582,25 +5178,25 @@ static PyObject *__pyx_pf_10CatanUtils_CanAfford(CYTHON_UNUSED PyObject *__pyx_s
   for (__pyx_t_1 = 0; __pyx_t_1 < 5; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
 
-    /* "CatanUtils.pyx":80
+    /* "CatanUtils.pyx":114
  *     cdef int i
  *     for i in range(5):
  *         if price[i] > resources[i]:             # <<<<<<<<<<<<<<
  *             return False
  *     return True
  */
-    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_price), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_price), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_GetItemInt(((PyObject *)__pyx_v_resources), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt(((PyObject *)__pyx_v_resources), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 80, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (__pyx_t_5) {
 
-      /* "CatanUtils.pyx":81
+      /* "CatanUtils.pyx":115
  *     for i in range(5):
  *         if price[i] > resources[i]:
  *             return False             # <<<<<<<<<<<<<<
@@ -4612,7 +5208,7 @@ static PyObject *__pyx_pf_10CatanUtils_CanAfford(CYTHON_UNUSED PyObject *__pyx_s
       __pyx_r = Py_False;
       goto __pyx_L0;
 
-      /* "CatanUtils.pyx":80
+      /* "CatanUtils.pyx":114
  *     cdef int i
  *     for i in range(5):
  *         if price[i] > resources[i]:             # <<<<<<<<<<<<<<
@@ -4622,7 +5218,7 @@ static PyObject *__pyx_pf_10CatanUtils_CanAfford(CYTHON_UNUSED PyObject *__pyx_s
     }
   }
 
-  /* "CatanUtils.pyx":82
+  /* "CatanUtils.pyx":116
  *         if price[i] > resources[i]:
  *             return False
  *     return True             # <<<<<<<<<<<<<<
@@ -4634,7 +5230,7 @@ static PyObject *__pyx_pf_10CatanUtils_CanAfford(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_r = Py_True;
   goto __pyx_L0;
 
-  /* "CatanUtils.pyx":77
+  /* "CatanUtils.pyx":111
  *                 return listm([self[i]-y[i] for i in range(N)])
  * 
  * def CanAfford(listm resources, listm price):             # <<<<<<<<<<<<<<
@@ -4655,7 +5251,7 @@ static PyObject *__pyx_pf_10CatanUtils_CanAfford(CYTHON_UNUSED PyObject *__pyx_s
   return __pyx_r;
 }
 
-/* "CatanUtils.pyx":84
+/* "CatanUtils.pyx":118
  *     return True
  * 
  * def GetRandomBankTrade(listm playerResources, tradeRates):             # <<<<<<<<<<<<<<
@@ -4719,7 +5315,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 84, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -4727,14 +5323,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 84, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("GetRandomBankTrade", 1, 2, 2, 1); __PYX_ERR(0, 84, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("GetRandomBankTrade", 1, 2, 2, 1); __PYX_ERR(0, 118, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "GetRandomBankTrade") < 0)) __PYX_ERR(0, 84, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "GetRandomBankTrade") < 0)) __PYX_ERR(0, 118, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -4747,7 +5343,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("GetRandomBankTrade", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 84, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("GetRandomBankTrade", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 118, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4761,7 +5357,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_playerResources), __pyx_ptype_10CatanUtils_listm, 1, "playerResources", 0))) __PYX_ERR(0, 84, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_playerResources), __pyx_ptype_10CatanUtils_listm, 1, "playerResources", 0))) __PYX_ERR(0, 118, __pyx_L1_error)
   __pyx_r = __pyx_pf_10CatanUtils_2GetRandomBankTrade(__pyx_self, __pyx_v_playerResources, __pyx_v_tradeRates);
 
   /* function exit code */
@@ -4790,11 +5386,11 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
   PyObject *__pyx_v_expectedResources = NULL;
   PyObject *__pyx_v_give = NULL;
   PyObject *__pyx_v_get = NULL;
-  CYTHON_UNUSED int __pyx_9genexpr16__pyx_v_i;
-  CYTHON_UNUSED int __pyx_9genexpr17__pyx_v_j;
-  CYTHON_UNUSED int __pyx_9genexpr18__pyx_v_k;
-  CYTHON_UNUSED int __pyx_9genexpr19__pyx_v_l;
-  CYTHON_UNUSED int __pyx_9genexpr20__pyx_v_m;
+  CYTHON_UNUSED int __pyx_9genexpr24__pyx_v_i;
+  CYTHON_UNUSED int __pyx_9genexpr25__pyx_v_j;
+  CYTHON_UNUSED int __pyx_9genexpr26__pyx_v_k;
+  CYTHON_UNUSED int __pyx_9genexpr27__pyx_v_l;
+  CYTHON_UNUSED int __pyx_9genexpr28__pyx_v_m;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -4818,124 +5414,124 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("GetRandomBankTrade", 1);
 
-  /* "CatanUtils.pyx":87
+  /* "CatanUtils.pyx":121
  * 
  *     cdef int i, j, k, l, m
  *     cdef listm possibleTradeAmount = listm([0, 0, 0, 0, 0])             # <<<<<<<<<<<<<<
  *     candidateForTrade              = []
  * 
  */
-  __pyx_t_1 = PyList_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 0, __pyx_int_0)) __PYX_ERR(0, 87, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 0, __pyx_int_0)) __PYX_ERR(0, 121, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 1, __pyx_int_0)) __PYX_ERR(0, 87, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 1, __pyx_int_0)) __PYX_ERR(0, 121, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 2, __pyx_int_0)) __PYX_ERR(0, 87, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 2, __pyx_int_0)) __PYX_ERR(0, 121, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 3, __pyx_int_0)) __PYX_ERR(0, 87, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 3, __pyx_int_0)) __PYX_ERR(0, 121, __pyx_L1_error);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 4, __pyx_int_0)) __PYX_ERR(0, 87, __pyx_L1_error);
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 4, __pyx_int_0)) __PYX_ERR(0, 121, __pyx_L1_error);
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_10CatanUtils_listm), __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_possibleTradeAmount = ((struct __pyx_obj_10CatanUtils_listm *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "CatanUtils.pyx":88
+  /* "CatanUtils.pyx":122
  *     cdef int i, j, k, l, m
  *     cdef listm possibleTradeAmount = listm([0, 0, 0, 0, 0])
  *     candidateForTrade              = []             # <<<<<<<<<<<<<<
  * 
  *     minResourceAmount = min(playerResources[:-1]) #Don't count the 'UNKNOWN' resource
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_candidateForTrade = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "CatanUtils.pyx":90
+  /* "CatanUtils.pyx":124
  *     candidateForTrade              = []
  * 
  *     minResourceAmount = min(playerResources[:-1]) #Don't count the 'UNKNOWN' resource             # <<<<<<<<<<<<<<
  * 
  *     for i in range(len(possibleTradeAmount)):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetSlice(((PyObject *)__pyx_v_playerResources), 0, -1L, NULL, NULL, &__pyx_slice_, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetSlice(((PyObject *)__pyx_v_playerResources), 0, -1L, NULL, NULL, &__pyx_slice_, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_min, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_min, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_minResourceAmount = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "CatanUtils.pyx":92
+  /* "CatanUtils.pyx":126
  *     minResourceAmount = min(playerResources[:-1]) #Don't count the 'UNKNOWN' resource
  * 
  *     for i in range(len(possibleTradeAmount)):             # <<<<<<<<<<<<<<
  *         possibleTradeAmount[i] = int(playerResources[i] / tradeRates[i])
  *         if playerResources[i] == minResourceAmount:
  */
-  __pyx_t_3 = PyObject_Length(((PyObject *)__pyx_v_possibleTradeAmount)); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_3 = PyObject_Length(((PyObject *)__pyx_v_possibleTradeAmount)); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 126, __pyx_L1_error)
   __pyx_t_4 = __pyx_t_3;
   for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "CatanUtils.pyx":93
+    /* "CatanUtils.pyx":127
  * 
  *     for i in range(len(possibleTradeAmount)):
  *         possibleTradeAmount[i] = int(playerResources[i] / tradeRates[i])             # <<<<<<<<<<<<<<
  *         if playerResources[i] == minResourceAmount:
  *             candidateForTrade.append(i)
  */
-    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_playerResources), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_playerResources), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 127, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 127, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 127, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), __pyx_v_i, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), __pyx_v_i, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0))) __PYX_ERR(0, 127, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "CatanUtils.pyx":94
+    /* "CatanUtils.pyx":128
  *     for i in range(len(possibleTradeAmount)):
  *         possibleTradeAmount[i] = int(playerResources[i] / tradeRates[i])
  *         if playerResources[i] == minResourceAmount:             # <<<<<<<<<<<<<<
  *             candidateForTrade.append(i)
  * 
  */
-    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_playerResources), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_playerResources), __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 128, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = PyObject_RichCompare(__pyx_t_2, __pyx_v_minResourceAmount, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L1_error)
+    __pyx_t_6 = PyObject_RichCompare(__pyx_t_2, __pyx_v_minResourceAmount, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 128, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 94, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 128, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (__pyx_t_7) {
 
-      /* "CatanUtils.pyx":95
+      /* "CatanUtils.pyx":129
  *         possibleTradeAmount[i] = int(playerResources[i] / tradeRates[i])
  *         if playerResources[i] == minResourceAmount:
  *             candidateForTrade.append(i)             # <<<<<<<<<<<<<<
  * 
  *     #tradeAmount = random.randint(0, sum(possibleTradeAmount))
  */
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 95, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 129, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_candidateForTrade, __pyx_t_6); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 95, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_candidateForTrade, __pyx_t_6); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 129, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "CatanUtils.pyx":94
+      /* "CatanUtils.pyx":128
  *     for i in range(len(possibleTradeAmount)):
  *         possibleTradeAmount[i] = int(playerResources[i] / tradeRates[i])
  *         if playerResources[i] == minResourceAmount:             # <<<<<<<<<<<<<<
@@ -4945,16 +5541,16 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
     }
   }
 
-  /* "CatanUtils.pyx":98
+  /* "CatanUtils.pyx":132
  * 
  *     #tradeAmount = random.randint(0, sum(possibleTradeAmount))
  *     tradeAmount = int(random.random() * sum(possibleTradeAmount))             # <<<<<<<<<<<<<<
  * 
  *     if tradeAmount > 0 and len(candidateForTrade) > 0:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -4975,44 +5571,44 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
     PyObject *__pyx_callargs[2] = {__pyx_t_2, NULL};
     __pyx_t_6 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 98, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_sum, ((PyObject *)__pyx_v_possibleTradeAmount)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_sum, ((PyObject *)__pyx_v_possibleTradeAmount)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_tradeAmount = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "CatanUtils.pyx":100
+  /* "CatanUtils.pyx":134
  *     tradeAmount = int(random.random() * sum(possibleTradeAmount))
  * 
  *     if tradeAmount > 0 and len(candidateForTrade) > 0:             # <<<<<<<<<<<<<<
  * 
  *         possibleTradePopulation = [0 for i in range(0, possibleTradeAmount[0])] + \
  */
-  __pyx_t_1 = PyObject_RichCompare(__pyx_v_tradeAmount, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_9 < 0))) __PYX_ERR(0, 100, __pyx_L1_error)
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_tradeAmount, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_9 < 0))) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_9) {
   } else {
     __pyx_t_7 = __pyx_t_9;
     goto __pyx_L7_bool_binop_done;
   }
-  __pyx_t_3 = __Pyx_PyList_GET_SIZE(__pyx_v_candidateForTrade); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 100, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyList_GET_SIZE(__pyx_v_candidateForTrade); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 134, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_3 > 0);
   __pyx_t_7 = __pyx_t_9;
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_7) {
 
-    /* "CatanUtils.pyx":105
+    /* "CatanUtils.pyx":139
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \             # <<<<<<<<<<<<<<
@@ -5021,170 +5617,170 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
  */
     { /* enter inner scope */
 
-      /* "CatanUtils.pyx":102
+      /* "CatanUtils.pyx":136
  *     if tradeAmount > 0 and len(candidateForTrade) > 0:
  * 
  *         possibleTradePopulation = [0 for i in range(0, possibleTradeAmount[0])] + \             # <<<<<<<<<<<<<<
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  */
-      __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 102, __pyx_L1_error)
+      __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_2); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 102, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_2); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_11 = __pyx_t_10;
       for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_11; __pyx_t_5+=1) {
-        __pyx_9genexpr16__pyx_v_i = __pyx_t_5;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_int_0))) __PYX_ERR(0, 102, __pyx_L1_error)
+        __pyx_9genexpr24__pyx_v_i = __pyx_t_5;
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_int_0))) __PYX_ERR(0, 136, __pyx_L1_error)
       }
     } /* exit inner scope */
     { /* enter inner scope */
 
-      /* "CatanUtils.pyx":103
+      /* "CatanUtils.pyx":137
  * 
  *         possibleTradePopulation = [0 for i in range(0, possibleTradeAmount[0])] + \
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \             # <<<<<<<<<<<<<<
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \
  */
-      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L1_error)
+      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 103, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_6); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_6); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_11 = __pyx_t_10;
       for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_11; __pyx_t_5+=1) {
-        __pyx_9genexpr17__pyx_v_j = __pyx_t_5;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_1))) __PYX_ERR(0, 103, __pyx_L1_error)
+        __pyx_9genexpr25__pyx_v_j = __pyx_t_5;
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_1))) __PYX_ERR(0, 137, __pyx_L1_error)
       }
     } /* exit inner scope */
 
-    /* "CatanUtils.pyx":102
+    /* "CatanUtils.pyx":136
  *     if tradeAmount > 0 and len(candidateForTrade) > 0:
  * 
  *         possibleTradePopulation = [0 for i in range(0, possibleTradeAmount[0])] + \             # <<<<<<<<<<<<<<
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  */
-    __pyx_t_6 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 102, __pyx_L1_error)
+    __pyx_t_6 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 136, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     { /* enter inner scope */
 
-      /* "CatanUtils.pyx":104
+      /* "CatanUtils.pyx":138
  *         possibleTradePopulation = [0 for i in range(0, possibleTradeAmount[0])] + \
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \             # <<<<<<<<<<<<<<
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \
  *                                   [4 for m in range(0, possibleTradeAmount[4])]
  */
-      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 104, __pyx_L1_error)
+      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 138, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_1); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_1); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 138, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_11 = __pyx_t_10;
       for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_11; __pyx_t_5+=1) {
-        __pyx_9genexpr18__pyx_v_k = __pyx_t_5;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_2))) __PYX_ERR(0, 104, __pyx_L1_error)
+        __pyx_9genexpr26__pyx_v_k = __pyx_t_5;
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_2))) __PYX_ERR(0, 138, __pyx_L1_error)
       }
     } /* exit inner scope */
 
-    /* "CatanUtils.pyx":103
+    /* "CatanUtils.pyx":137
  * 
  *         possibleTradePopulation = [0 for i in range(0, possibleTradeAmount[0])] + \
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \             # <<<<<<<<<<<<<<
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \
  */
-    __pyx_t_1 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 103, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     { /* enter inner scope */
 
-      /* "CatanUtils.pyx":105
+      /* "CatanUtils.pyx":139
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \             # <<<<<<<<<<<<<<
  *                                   [4 for m in range(0, possibleTradeAmount[4])]
  * 
  */
-      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 139, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_6); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 105, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_6); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_11 = __pyx_t_10;
       for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_11; __pyx_t_5+=1) {
-        __pyx_9genexpr19__pyx_v_l = __pyx_t_5;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_3))) __PYX_ERR(0, 105, __pyx_L1_error)
+        __pyx_9genexpr27__pyx_v_l = __pyx_t_5;
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_3))) __PYX_ERR(0, 139, __pyx_L1_error)
       }
     } /* exit inner scope */
 
-    /* "CatanUtils.pyx":104
+    /* "CatanUtils.pyx":138
  *         possibleTradePopulation = [0 for i in range(0, possibleTradeAmount[0])] + \
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \             # <<<<<<<<<<<<<<
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \
  *                                   [4 for m in range(0, possibleTradeAmount[4])]
  */
-    __pyx_t_6 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 104, __pyx_L1_error)
+    __pyx_t_6 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 138, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     { /* enter inner scope */
 
-      /* "CatanUtils.pyx":106
+      /* "CatanUtils.pyx":140
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \
  *                                   [4 for m in range(0, possibleTradeAmount[4])]             # <<<<<<<<<<<<<<
  * 
  *         chosenResources   = random.sample(possibleTradePopulation, tradeAmount)
  */
-      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
+      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 140, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(((PyObject *)__pyx_v_possibleTradeAmount), 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_1); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 106, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_t_1); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 140, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_11 = __pyx_t_10;
       for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_11; __pyx_t_5+=1) {
-        __pyx_9genexpr20__pyx_v_m = __pyx_t_5;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_4))) __PYX_ERR(0, 106, __pyx_L1_error)
+        __pyx_9genexpr28__pyx_v_m = __pyx_t_5;
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_int_4))) __PYX_ERR(0, 140, __pyx_L1_error)
       }
     } /* exit inner scope */
 
-    /* "CatanUtils.pyx":105
+    /* "CatanUtils.pyx":139
  *                                   [1 for j in range(0, possibleTradeAmount[1])] + \
  *                                   [2 for k in range(0, possibleTradeAmount[2])] + \
  *                                   [3 for l in range(0, possibleTradeAmount[3])] + \             # <<<<<<<<<<<<<<
  *                                   [4 for m in range(0, possibleTradeAmount[4])]
  * 
  */
-    __pyx_t_1 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_possibleTradePopulation = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "CatanUtils.pyx":108
+    /* "CatanUtils.pyx":142
  *                                   [4 for m in range(0, possibleTradeAmount[4])]
  * 
  *         chosenResources   = random.sample(possibleTradePopulation, tradeAmount)             # <<<<<<<<<<<<<<
  * 
  *         expectedResources = []
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 142, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_sample); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 108, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_sample); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 142, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_2 = NULL;
@@ -5205,47 +5801,47 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
       PyObject *__pyx_callargs[3] = {__pyx_t_2, __pyx_v_possibleTradePopulation, __pyx_v_tradeAmount};
       __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_5, 2+__pyx_t_5);
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __pyx_v_chosenResources = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "CatanUtils.pyx":110
+    /* "CatanUtils.pyx":144
  *         chosenResources   = random.sample(possibleTradePopulation, tradeAmount)
  * 
  *         expectedResources = []             # <<<<<<<<<<<<<<
  *         for i in range(0, tradeAmount):
  *             expectedResources.append(candidateForTrade[int(random.random() * len(candidateForTrade))])
  */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 110, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_expectedResources = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "CatanUtils.pyx":111
+    /* "CatanUtils.pyx":145
  * 
  *         expectedResources = []
  *         for i in range(0, tradeAmount):             # <<<<<<<<<<<<<<
  *             expectedResources.append(candidateForTrade[int(random.random() * len(candidateForTrade))])
  * 
  */
-    __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_v_tradeAmount); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_long(__pyx_v_tradeAmount); if (unlikely((__pyx_t_10 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L1_error)
     __pyx_t_11 = __pyx_t_10;
     for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_11; __pyx_t_5+=1) {
       __pyx_v_i = __pyx_t_5;
 
-      /* "CatanUtils.pyx":112
+      /* "CatanUtils.pyx":146
  *         expectedResources = []
  *         for i in range(0, tradeAmount):
  *             expectedResources.append(candidateForTrade[int(random.random() * len(candidateForTrade))])             # <<<<<<<<<<<<<<
  * 
  *         give = [chosenResources.count(0) * tradeRates[0], chosenResources.count(1) * tradeRates[1],
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_random); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 112, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_random); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_6 = NULL;
@@ -5266,35 +5862,35 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
         PyObject *__pyx_callargs[2] = {__pyx_t_6, NULL};
         __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_12, 0+__pyx_t_12);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       }
-      __pyx_t_3 = __Pyx_PyList_GET_SIZE(__pyx_v_candidateForTrade); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 112, __pyx_L1_error)
-      __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyList_GET_SIZE(__pyx_v_candidateForTrade); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 112, __pyx_L1_error)
+      __pyx_t_6 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_candidateForTrade, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 112, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_candidateForTrade, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_expectedResources, __pyx_t_6); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 112, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_expectedResources, __pyx_t_6); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
 
-    /* "CatanUtils.pyx":114
+    /* "CatanUtils.pyx":148
  *             expectedResources.append(candidateForTrade[int(random.random() * len(candidateForTrade))])
  * 
  *         give = [chosenResources.count(0) * tradeRates[0], chosenResources.count(1) * tradeRates[1],             # <<<<<<<<<<<<<<
  *                 chosenResources.count(2) * tradeRates[2], chosenResources.count(3) * tradeRates[3],
  *                 chosenResources.count(4) * tradeRates[4]]
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = NULL;
     __pyx_t_5 = 0;
@@ -5314,17 +5910,17 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
       PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_int_0};
       __pyx_t_6 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_5, 1+__pyx_t_5);
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 114, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_13 = NULL;
     __pyx_t_5 = 0;
@@ -5344,25 +5940,25 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
       PyObject *__pyx_callargs[2] = {__pyx_t_13, __pyx_int_1};
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_5, 1+__pyx_t_5);
       __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
-    __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_tradeRates, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_tradeRates, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_13 = PyNumber_Multiply(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_13 = PyNumber_Multiply(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "CatanUtils.pyx":115
+    /* "CatanUtils.pyx":149
  * 
  *         give = [chosenResources.count(0) * tradeRates[0], chosenResources.count(1) * tradeRates[1],
  *                 chosenResources.count(2) * tradeRates[2], chosenResources.count(3) * tradeRates[3],             # <<<<<<<<<<<<<<
  *                 chosenResources.count(4) * tradeRates[4]]
  * 
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_14 = NULL;
     __pyx_t_5 = 0;
@@ -5382,17 +5978,17 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
       PyObject *__pyx_callargs[2] = {__pyx_t_14, __pyx_int_2};
       __pyx_t_6 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_5, 1+__pyx_t_5);
       __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_14 = PyNumber_Multiply(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_14 = PyNumber_Multiply(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_15 = NULL;
     __pyx_t_5 = 0;
@@ -5412,25 +6008,25 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
       PyObject *__pyx_callargs[2] = {__pyx_t_15, __pyx_int_3};
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_5, 1+__pyx_t_5);
       __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
-    __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_tradeRates, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_tradeRates, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_15 = PyNumber_Multiply(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_15 = PyNumber_Multiply(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_15);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "CatanUtils.pyx":116
+    /* "CatanUtils.pyx":150
  *         give = [chosenResources.count(0) * tradeRates[0], chosenResources.count(1) * tradeRates[1],
  *                 chosenResources.count(2) * tradeRates[2], chosenResources.count(3) * tradeRates[3],
  *                 chosenResources.count(4) * tradeRates[4]]             # <<<<<<<<<<<<<<
  * 
  *         get  = [expectedResources.count(0), expectedResources.count(1),
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_chosenResources, __pyx_n_s_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_16 = NULL;
     __pyx_t_5 = 0;
@@ -5450,36 +6046,36 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
       PyObject *__pyx_callargs[2] = {__pyx_t_16, __pyx_int_4};
       __pyx_t_6 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_5, 1+__pyx_t_5);
       __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 150, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_tradeRates, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_16 = PyNumber_Multiply(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 116, __pyx_L1_error)
+    __pyx_t_16 = PyNumber_Multiply(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 150, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_16);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "CatanUtils.pyx":114
+    /* "CatanUtils.pyx":148
  *             expectedResources.append(candidateForTrade[int(random.random() * len(candidateForTrade))])
  * 
  *         give = [chosenResources.count(0) * tradeRates[0], chosenResources.count(1) * tradeRates[1],             # <<<<<<<<<<<<<<
  *                 chosenResources.count(2) * tradeRates[2], chosenResources.count(3) * tradeRates[3],
  *                 chosenResources.count(4) * tradeRates[4]]
  */
-    __pyx_t_2 = PyList_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_2 = PyList_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_GIVEREF(__pyx_t_1);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_13);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 1, __pyx_t_13)) __PYX_ERR(0, 114, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 1, __pyx_t_13)) __PYX_ERR(0, 148, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_14);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 2, __pyx_t_14)) __PYX_ERR(0, 114, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 2, __pyx_t_14)) __PYX_ERR(0, 148, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_15);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 3, __pyx_t_15)) __PYX_ERR(0, 114, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 3, __pyx_t_15)) __PYX_ERR(0, 148, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_16);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 4, __pyx_t_16)) __PYX_ERR(0, 114, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 4, __pyx_t_16)) __PYX_ERR(0, 148, __pyx_L1_error);
     __pyx_t_1 = 0;
     __pyx_t_13 = 0;
     __pyx_t_14 = 0;
@@ -5488,59 +6084,59 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
     __pyx_v_give = ((PyObject*)__pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "CatanUtils.pyx":118
+    /* "CatanUtils.pyx":152
  *                 chosenResources.count(4) * tradeRates[4]]
  * 
  *         get  = [expectedResources.count(0), expectedResources.count(1),             # <<<<<<<<<<<<<<
  *                 expectedResources.count(2), expectedResources.count(3),
  *                 expectedResources.count(4)]
  */
-    __pyx_t_2 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_16 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_16);
 
-    /* "CatanUtils.pyx":119
+    /* "CatanUtils.pyx":153
  * 
  *         get  = [expectedResources.count(0), expectedResources.count(1),
  *                 expectedResources.count(2), expectedResources.count(3),             # <<<<<<<<<<<<<<
  *                 expectedResources.count(4)]
  * 
  */
-    __pyx_t_15 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_2); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __pyx_t_15 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_2); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 153, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_15);
-    __pyx_t_14 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_3); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_3); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 153, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
 
-    /* "CatanUtils.pyx":120
+    /* "CatanUtils.pyx":154
  *         get  = [expectedResources.count(0), expectedResources.count(1),
  *                 expectedResources.count(2), expectedResources.count(3),
  *                 expectedResources.count(4)]             # <<<<<<<<<<<<<<
  * 
  *         return give, get
  */
-    __pyx_t_13 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_count, __pyx_v_expectedResources, __pyx_int_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 154, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
 
-    /* "CatanUtils.pyx":118
+    /* "CatanUtils.pyx":152
  *                 chosenResources.count(4) * tradeRates[4]]
  * 
  *         get  = [expectedResources.count(0), expectedResources.count(1),             # <<<<<<<<<<<<<<
  *                 expectedResources.count(2), expectedResources.count(3),
  *                 expectedResources.count(4)]
  */
-    __pyx_t_1 = PyList_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_GIVEREF(__pyx_t_2);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 0, __pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 0, __pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_16);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 1, __pyx_t_16)) __PYX_ERR(0, 118, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 1, __pyx_t_16)) __PYX_ERR(0, 152, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_15);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 2, __pyx_t_15)) __PYX_ERR(0, 118, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 2, __pyx_t_15)) __PYX_ERR(0, 152, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_14);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 3, __pyx_t_14)) __PYX_ERR(0, 118, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 3, __pyx_t_14)) __PYX_ERR(0, 152, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_13);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 4, __pyx_t_13)) __PYX_ERR(0, 118, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 4, __pyx_t_13)) __PYX_ERR(0, 152, __pyx_L1_error);
     __pyx_t_2 = 0;
     __pyx_t_16 = 0;
     __pyx_t_15 = 0;
@@ -5549,7 +6145,7 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
     __pyx_v_get = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "CatanUtils.pyx":122
+    /* "CatanUtils.pyx":156
  *                 expectedResources.count(4)]
  * 
  *         return give, get             # <<<<<<<<<<<<<<
@@ -5557,19 +6153,19 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
  *         return None
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_give);
     __Pyx_GIVEREF(__pyx_v_give);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_give)) __PYX_ERR(0, 122, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_give)) __PYX_ERR(0, 156, __pyx_L1_error);
     __Pyx_INCREF(__pyx_v_get);
     __Pyx_GIVEREF(__pyx_v_get);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_get)) __PYX_ERR(0, 122, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_get)) __PYX_ERR(0, 156, __pyx_L1_error);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "CatanUtils.pyx":100
+    /* "CatanUtils.pyx":134
  *     tradeAmount = int(random.random() * sum(possibleTradeAmount))
  * 
  *     if tradeAmount > 0 and len(candidateForTrade) > 0:             # <<<<<<<<<<<<<<
@@ -5578,7 +6174,7 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
  */
   }
 
-  /* "CatanUtils.pyx":124
+  /* "CatanUtils.pyx":158
  *         return give, get
  *     else:
  *         return None             # <<<<<<<<<<<<<<
@@ -5589,7 +6185,7 @@ static PyObject *__pyx_pf_10CatanUtils_2GetRandomBankTrade(CYTHON_UNUSED PyObjec
     goto __pyx_L0;
   }
 
-  /* "CatanUtils.pyx":84
+  /* "CatanUtils.pyx":118
  *     return True
  * 
  * def GetRandomBankTrade(listm playerResources, tradeRates):             # <<<<<<<<<<<<<<
@@ -6111,7 +6707,7 @@ static PyObject *__pyx_nb_subtract_10CatanUtils_listm(PyObject *left, PyObject *
             || __Pyx_TypeCheck(left, __pyx_ptype_10CatanUtils_listm);
     if (maybe_self_is_left) {
         PyObject *res;
-        res = __pyx_pw_10CatanUtils_5listm_7__sub__(left, right);
+        res = __pyx_pw_10CatanUtils_5listm_9__sub__(left, right);
         if (res != Py_NotImplemented) return res;
         Py_DECREF(res);
     }
@@ -6146,7 +6742,7 @@ static PyObject *__pyx_nb_multiply_10CatanUtils_listm(PyObject *left, PyObject *
             || __Pyx_TypeCheck(left, __pyx_ptype_10CatanUtils_listm);
     if (maybe_self_is_left) {
         PyObject *res;
-        res = __pyx_pw_10CatanUtils_5listm_3__mul__(left, right);
+        res = __pyx_pw_10CatanUtils_5listm_5__mul__(left, right);
         if (res != Py_NotImplemented) return res;
         Py_DECREF(res);
     }
@@ -6181,7 +6777,7 @@ static PyObject *__pyx_nb_true_divide_10CatanUtils_listm(PyObject *left, PyObjec
             || __Pyx_TypeCheck(left, __pyx_ptype_10CatanUtils_listm);
     if (maybe_self_is_left) {
         PyObject *res;
-        res = __pyx_pw_10CatanUtils_5listm_5__truediv__(left, right);
+        res = __pyx_pw_10CatanUtils_5listm_7__truediv__(left, right);
         if (res != Py_NotImplemented) return res;
         Py_DECREF(res);
     }
@@ -6199,8 +6795,8 @@ static PyObject *__pyx_nb_true_divide_10CatanUtils_listm(PyObject *left, PyObjec
 
 
 static PyMethodDef __pyx_methods_10CatanUtils_listm[] = {
-  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10CatanUtils_5listm_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
@@ -6208,6 +6804,8 @@ static PyType_Slot __pyx_type_10CatanUtils_listm_slots[] = {
   {Py_nb_add, (void *)__pyx_nb_add_10CatanUtils_listm},
   {Py_nb_subtract, (void *)__pyx_nb_subtract_10CatanUtils_listm},
   {Py_nb_multiply, (void *)__pyx_nb_multiply_10CatanUtils_listm},
+  {Py_nb_inplace_add, (void *)__pyx_pw_10CatanUtils_5listm_3__iadd__},
+  {Py_nb_inplace_subtract, (void *)__pyx_pw_10CatanUtils_5listm_11__isub__},
   {Py_nb_true_divide, (void *)__pyx_nb_true_divide_10CatanUtils_listm},
   {Py_tp_doc, (void *)PyDoc_STR("\n    See http://docs.cython.org/src/userguide/special_methods.html\n    ")},
   {Py_tp_traverse, (void *)__pyx_tp_traverse_10CatanUtils_listm},
@@ -6260,8 +6858,8 @@ static PyNumberMethods __pyx_tp_as_number_listm = {
   #if PY_MAJOR_VERSION < 3 || (CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX < 0x03050000)
   0, /*nb_hex*/
   #endif
-  0, /*nb_inplace_add*/
-  0, /*nb_inplace_subtract*/
+  __pyx_pw_10CatanUtils_5listm_3__iadd__, /*nb_inplace_add*/
+  __pyx_pw_10CatanUtils_5listm_11__isub__, /*nb_inplace_subtract*/
   0, /*nb_inplace_multiply*/
   #if PY_MAJOR_VERSION < 3 || (CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX < 0x03050000)
   0, /*nb_inplace_divide*/
@@ -6462,8 +7060,8 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 15, __pyx_L1_error)
-  __pyx_builtin_min = __Pyx_GetBuiltinName(__pyx_n_s_min); if (!__pyx_builtin_min) __PYX_ERR(0, 90, __pyx_L1_error)
-  __pyx_builtin_sum = __Pyx_GetBuiltinName(__pyx_n_s_sum); if (!__pyx_builtin_sum) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_builtin_min = __Pyx_GetBuiltinName(__pyx_n_s_min); if (!__pyx_builtin_min) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_builtin_sum = __Pyx_GetBuiltinName(__pyx_n_s_sum); if (!__pyx_builtin_sum) __PYX_ERR(0, 132, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -6474,14 +7072,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "CatanUtils.pyx":90
+  /* "CatanUtils.pyx":124
  *     candidateForTrade              = []
  * 
  *     minResourceAmount = min(playerResources[:-1]) #Don't count the 'UNKNOWN' resource             # <<<<<<<<<<<<<<
  * 
  *     for i in range(len(possibleTradeAmount)):
  */
-  __pyx_slice_ = PySlice_New(Py_None, __pyx_int_neg_1, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_slice_ = PySlice_New(Py_None, __pyx_int_neg_1, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
 
@@ -6517,29 +7115,29 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__8);
   __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(1, 16, __pyx_L1_error)
 
-  /* "CatanUtils.pyx":77
+  /* "CatanUtils.pyx":111
  *                 return listm([self[i]-y[i] for i in range(N)])
  * 
  * def CanAfford(listm resources, listm price):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(5):
  */
-  __pyx_tuple__10 = PyTuple_Pack(3, __pyx_n_s_resources, __pyx_n_s_price, __pyx_n_s_i); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(3, __pyx_n_s_resources, __pyx_n_s_price, __pyx_n_s_i); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
-  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_CatanUtils_pyx, __pyx_n_s_CanAfford, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_CatanUtils_pyx, __pyx_n_s_CanAfford, 111, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 111, __pyx_L1_error)
 
-  /* "CatanUtils.pyx":84
+  /* "CatanUtils.pyx":118
  *     return True
  * 
  * def GetRandomBankTrade(listm playerResources, tradeRates):             # <<<<<<<<<<<<<<
  * 
  *     cdef int i, j, k, l, m
  */
-  __pyx_tuple__12 = PyTuple_Pack(21, __pyx_n_s_playerResources, __pyx_n_s_tradeRates, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_m, __pyx_n_s_possibleTradeAmount, __pyx_n_s_candidateForTrade, __pyx_n_s_minResourceAmount, __pyx_n_s_tradeAmount, __pyx_n_s_possibleTradePopulation, __pyx_n_s_chosenResources, __pyx_n_s_expectedResources, __pyx_n_s_give, __pyx_n_s_get, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_m); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(21, __pyx_n_s_playerResources, __pyx_n_s_tradeRates, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_m, __pyx_n_s_possibleTradeAmount, __pyx_n_s_candidateForTrade, __pyx_n_s_minResourceAmount, __pyx_n_s_tradeAmount, __pyx_n_s_possibleTradePopulation, __pyx_n_s_chosenResources, __pyx_n_s_expectedResources, __pyx_n_s_give, __pyx_n_s_get, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_m); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 118, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
-  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 21, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_CatanUtils_pyx, __pyx_n_s_GetRandomBankTrade, 84, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 21, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_CatanUtils_pyx, __pyx_n_s_GetRandomBankTrade, 118, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 118, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_listm(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
@@ -6981,7 +7579,7 @@ if (!__Pyx_RefNanny) {
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_5listm_9__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_listm___reduce_cython, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_5listm_13__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_listm___reduce_cython, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_10CatanUtils_listm, __pyx_n_s_reduce_cython, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6993,34 +7591,34 @@ if (!__Pyx_RefNanny) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_listm__set_state(self, __pyx_state)
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_5listm_11__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_listm___setstate_cython, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_5listm_15__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_listm___setstate_cython, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_10CatanUtils_listm, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_10CatanUtils_listm);
 
-  /* "CatanUtils.pyx":77
+  /* "CatanUtils.pyx":111
  *                 return listm([self[i]-y[i] for i in range(N)])
  * 
  * def CanAfford(listm resources, listm price):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(5):
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_1CanAfford, 0, __pyx_n_s_CanAfford, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_1CanAfford, 0, __pyx_n_s_CanAfford, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CanAfford, __pyx_t_2) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CanAfford, __pyx_t_2) < 0) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "CatanUtils.pyx":84
+  /* "CatanUtils.pyx":118
  *     return True
  * 
  * def GetRandomBankTrade(listm playerResources, tradeRates):             # <<<<<<<<<<<<<<
  * 
  *     cdef int i, j, k, l, m
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_3GetRandomBankTrade, 0, __pyx_n_s_GetRandomBankTrade, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__13)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10CatanUtils_3GetRandomBankTrade, 0, __pyx_n_s_GetRandomBankTrade, NULL, __pyx_n_s_CatanUtils, __pyx_d, ((PyObject *)__pyx_codeobj__13)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_GetRandomBankTrade, __pyx_t_2) < 0) __PYX_ERR(0, 84, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_GetRandomBankTrade, __pyx_t_2) < 0) __PYX_ERR(0, 118, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":1

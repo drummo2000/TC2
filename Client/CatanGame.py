@@ -4,6 +4,7 @@ import cPickle
 import datetime
 from GameData import GameData
 
+# Represents a single game, has game state property and Creates the board
 class Game:
 
     def __init__(self, gameState):
@@ -53,6 +54,7 @@ class Game:
         #for nodeIndex, node in self.gameState.boardNodes.items():
         #    logging.debug("Node id = {0}, Port Type = {1}".format(hex(nodeIndex), node.portType))
 
+# Contains all info on current game and methods to update state
 class GameState(object):
 
     def __init__(self):

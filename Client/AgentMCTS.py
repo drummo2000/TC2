@@ -450,8 +450,8 @@ class AgentMCTS(AgentRandom):
             possibleActions = self.GetPossibleActions(gameState,
                                                       gameState.players[gameState.currPlayer],
                                                       atRandom=True)
-            #if possibleActions is None:
-            #    #print("ERROR!")
+            if possibleActions is None:
+               print("ERROR!: Possible Actions is None")
             #    possibleActions = self.GetPossibleActions(gameState,
             #                                              gameState.players[gameState.currPlayer],
             #                                              atRandom=True)
@@ -502,9 +502,11 @@ class AgentMCTS(AgentRandom):
 
     def GetPossibleActions(self, gameState, player, atRandom=False, fromRootNode=False):
 
-        if not atRandom and self.useModel and \
-                gameState.currState == "PLAY1" or gameState.currState == "PLAY" or not gameState.setupDone:
-            return Player.GetModelSelectedActions(gameState, player, model=self.model)
+        # Before self.useModel was in second conditional and it going into loop when false
+        if self.useModel:
+            if not atRandom and \
+                    gameState.currState == "PLAY1" or gameState.currState == "PLAY" or not gameState.setupDone:
+                return Player.GetModelSelectedActions(gameState, player, model=self.model)
 
         if not gameState.setupDone:
             return self.GetPossibleActions_SetupTurns(gameState, player, True)

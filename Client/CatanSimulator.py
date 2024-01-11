@@ -119,6 +119,7 @@ def CreateNewBoard():
 
     return resultString
 
+# Sets up players and new board and returns new Game object
 def CreateGame(players, recordData = False, customBoard = None):
 
     game = Game(GameState())
@@ -149,6 +150,7 @@ def CreateGame(players, recordData = False, customBoard = None):
 
 defaultGame = CreateGame(defaultPlayers)
 
+# Runs game loop for a single game
 def RunSingleGame(game):
 
     game = cPickle.loads(cPickle.dumps(game, -1))
@@ -157,11 +159,13 @@ def RunSingleGame(game):
 
         currPlayer  = game.gameState.players[game.gameState.currPlayer]
 
+        # Returns list of actions chosen by player (here would call agent which would use policy to get actions)
         agentAction = currPlayer.DoMove(game)
 
         if agentAction is None:
             print(game.gameState.currState)
 
+        # Then apply the actions chosen by agent
         if isinstance(agentAction, list):
             for action in agentAction:
                 if game.recordData:
@@ -528,6 +532,7 @@ def RunModelTesting(numberOfTests, loadModel, customBoard = None):
 
 if __name__ == '__main__':
 
+    # I think these might be for ML models not MCTS
     # RunModelTraining(numberOfTrainings=2000, modelName="Test06")
     # RunModelTesting(numberOfTests=20, loadModel="Test06")
 
@@ -535,18 +540,28 @@ if __name__ == '__main__':
     #    print(RunGame(saveImgLog=False))
 
     players = [
-        AgentRandom("P4", 3),
-        AgentRandom("P4", 3),
-        AgentRandom("P2", 1),
-        AgentRandom("P3", 2)]
-    players_ = [
-        AgentUCT("P0", 0, choiceTime=0.1, useModel=True),
-        AgentUCT("P1", 1, choiceTime=0.1, useModel=True),
-        AgentMCTS("P2", 2, choiceTime=0.1, useModel=True),
-        AgentMCTS("P3", 3, choiceTime=0.1, useModel=True)]
+        # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, useModel=False),
+        # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
+        # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
+        # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
+        AgentRandom("P0", 0),
+        AgentRandom("P1", 1),
+        AgentRandom("P2", 2),
+        AgentRandom("P3", 3)]
+    # players_ = [
+    #     AgentUCT("P0", 0, choiceTime=0.1, useModel=True),
+    #     AgentUCT("P1", 1, choiceTime=0.1, useModel=True),
+    #     AgentMCTS("P2", 2, choiceTime=0.1, useModel=True),
+    #     AgentMCTS("P3", 3, choiceTime=0.1, useModel=True)]
     
-    for i in range(0, 500):
-        print(RunGame(players=random.shuffle(players), showLog=False))
+    start_time = time.time()
+    results = [0, 0, 0, 0]
+    for i in range(0, 1000):
+        winner = RunGame(players=players)
+        results[winner] += 1
+    end_time = time.time()
+    print(results)
+    print("Time: ", end_time-start_time)
 
     # for i in range(0, 1000):
     #     RunGame(saveImgLog=False)
@@ -564,3 +579,8 @@ if __name__ == '__main__':
 
     # # SIMULATOR PROFILER
     # RunProfiler()
+
+
+
+# Times:
+    # Random Agents python listm: 17.5s
