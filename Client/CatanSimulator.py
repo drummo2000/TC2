@@ -556,7 +556,7 @@ if __name__ == '__main__':
     
     start_time = time.time()
     results = [0, 0, 0, 0]
-    for i in range(0, 1000):
+    for i in range(0, 1):
         winner = RunGame(players=players)
         results[winner] += 1
     end_time = time.time()
@@ -579,8 +579,3 @@ if __name__ == '__main__':
 
     # # SIMULATOR PROFILER
     # RunProfiler()
-
-
-
-# Times:
-    # Random Agents python listm: 17.5s

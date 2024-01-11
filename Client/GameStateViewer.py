@@ -254,10 +254,10 @@ def GetGameStateImage(gameState):
             coloredHex = tintImage(hexImg, terrainColor[boardHex.terrain])
 
             if boardHexIndex in portPos:
-                print(boardHexIndex)
+                # print(boardHexIndex)
                 for adjacentNode in boardHex.adjacentNodes:
                     node = gameState.boardNodes[adjacentNode]
-                    print(node.portType)
+                    # print(node.portType)
                     if node.portType is not None:
                         coloredHex = tintImage(hexImg, portColor[node.portType])
                         break
