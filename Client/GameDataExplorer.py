@@ -1,8 +1,8 @@
 from CatanGame import *
 import numpy as np
 import glob
-import cPickle
-from tkFileDialog import askopenfilename
+import pickle
+from tkinter.filedialog import askopenfilename
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -22,7 +22,7 @@ def OpenAllSaveData(path):
     for f in files:
         try:
             with open('{0}'.format(f), 'rb') as handle:
-                allGameData.append(cPickle.load(handle))
+                allGameData.append(pickle.load(handle))
         except EOFError as exc:
             print(exc)
 

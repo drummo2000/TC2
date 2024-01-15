@@ -17,8 +17,8 @@ class AgentRandom(Player):
         self.filterSetupSettlements = False
         self.filterEndTurnAction    = False
         self.useModel               = useModel
-        if self.useModel:
-            Player.LoadModel()
+        # if self.useModel:
+        #     Player.LoadModel()
 
     # Returns list of possible actions in given state
     def GetPossibleActions(self, gameState, player = None):
@@ -410,7 +410,7 @@ class AgentRandom(Player):
 
         minResourceAmount = min(player.resources[:-1])
 
-        for i in xrange(0, len(player.resources) - 1):
+        for i in range(0, len(player.resources) - 1):
 
             if player.resources[i] == minResourceAmount:
                 candidateResource.append(i + 1)
@@ -441,7 +441,7 @@ class AgentRandom(Player):
 
         minResourceAmount = min(player.resources[:-1])
 
-        for i in xrange(0, len(player.resources) - 1):
+        for i in range(0, len(player.resources) - 1):
 
             if player.resources[i] == minResourceAmount:
                 candidateResource.append(i)

@@ -17,6 +17,7 @@ import multiprocessing
 import CSVGenerator
 from CatanUtilsPy import listm
 import random
+import pickle
 
 # -- ML STUFF --
 import sklearn
@@ -153,7 +154,7 @@ defaultGame = CreateGame(defaultPlayers)
 # Runs game loop for a single game
 def RunSingleGame(game):
 
-    game = cPickle.loads(cPickle.dumps(game, -1))
+    game = pickle.loads(pickle.dumps(game, -1))
 
     while True:
 
@@ -169,7 +170,7 @@ def RunSingleGame(game):
         if isinstance(agentAction, list):
             for action in agentAction:
                 if game.recordData:
-                    #cPickle.load(cPickle.dump(game.gameState, cPickle.HIGHEST_PROTOCOL)
+                    #pickle.load(pickle.dump(game.gameState, pickle.HIGHEST_PROTOCOL)
                     game.gameData.AddRecord(action, game.gameState)
                 action.ApplyAction(game.gameState)
         else:
@@ -215,7 +216,7 @@ def RunGame(inGame = None, players = None, saveImgLog = False, showLog = False, 
 
         # Store the last GameState
         with open('GameStates/{0}.pickle'.format(currGameStateName), 'wb') as handle:
-            cPickle.dump(game.gameState, handle, protocol=cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(game.gameState, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         GameStateViewer.SaveGameStateImage(game.gameState, 'GameStates/{0}.png'.format(currGameStateName))
 
@@ -329,7 +330,7 @@ def RunGame(inGame = None, players = None, saveImgLog = False, showLog = False, 
 
         # Review:
         with open('GameStates/{0}.pickle'.format(currGameStateName), 'wb') as handle:
-            cPickle.dump(game.gameState, handle, protocol=cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(game.gameState, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         return game.gameState.winner, logstr
 
@@ -478,7 +479,7 @@ def RunModelTraining(numberOfTrainings, modelName, loadModel = None, customBoard
 
     if loadModel is not None:
         with open('Models/{0}.mod'.format(loadModel), 'rb') as handle:
-            model = cPickle.load(handle)
+            model = pickle.load(handle)
     else:
         model = SGDRegressor()
 
@@ -503,13 +504,13 @@ def RunModelTraining(numberOfTrainings, modelName, loadModel = None, customBoard
                      "SAVING AT 'Models/{0}.mod'".format(modelName))
 
     with open("Models/{0}.mod".format(modelName), 'wb') as handle:
-        cPickle.dump(model, handle, protocol=cPickle.HIGHEST_PROTOCOL)
+        pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 #Model Testing
 def RunModelTesting(numberOfTests, loadModel, customBoard = None):
 
     with open('Models/{0}.mod'.format(loadModel), 'rb') as handle:
-        model = cPickle.load(handle)
+        model = pickle.load(handle)
 
     start_time = time.time()
 
@@ -540,12 +541,12 @@ if __name__ == '__main__':
     #    print(RunGame(saveImgLog=False))
 
     players = [
-        # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, useModel=False),
-        # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
+        AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
+        AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
-        AgentRandom("P0", 0),
-        AgentRandom("P1", 1),
+        # AgentRandom("P0", 0),
+        # AgentRandom("P1", 1),
         AgentRandom("P2", 2),
         AgentRandom("P3", 3)]
     # players_ = [
@@ -556,7 +557,7 @@ if __name__ == '__main__':
     
     start_time = time.time()
     results = [0, 0, 0, 0]
-    for i in range(0, 1):
+    for i in range(0, 10):
         winner = RunGame(players=players)
         results[winner] += 1
     end_time = time.time()

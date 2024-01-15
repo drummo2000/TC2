@@ -4,14 +4,14 @@ import os
 gameStatsColumns = [
                     ("Winner",       np.str_, 16),
                     ("Points",       np.str_, 16),
-                    ("Turns",        np.int),
-                    ("Agent Points", np.int),
-                    ("Roads",        np.int),
-                    ("Settlements",  np.int),
-                    ("Cities",       np.int),
-                    ("Knights",      np.int),
-                    ("Largest Road", np.int),
-                    ("Largest Army", np.int)
+                    ("Turns",        np.int32),
+                    ("Agent Points", np.int32),
+                    ("Roads",        np.int32),
+                    ("Settlements",  np.int32),
+                    ("Cities",       np.int32),
+                    ("Knights",      np.int32),
+                    ("Largest Road", np.int32),
+                    ("Largest Army", np.int32)
                    ]
 
 

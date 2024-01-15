@@ -1,6 +1,6 @@
 import os
 from CatanAction import *
-import cPickle
+import pickle
 import datetime
 from GameData import GameData
 
@@ -22,7 +22,7 @@ class Game:
         self.gameState.boardConfig = message.text
 
         # Hexes
-        for i in xrange(0, len(message.hexes)):
+        for i in range(0, len(message.hexes)):
 
             self.gameState.boardHexes[g_boardHexes[i]].SetTerrain(message.hexes[i])
 
@@ -40,7 +40,7 @@ class Game:
 
         hex_indicies   = [0, 2, 8, 9, 21, 22, 32, 33, 35]
 
-        for i in xrange(0, len(hex_indicies)):
+        for i in range(0, len(hex_indicies)):
 
             portType = g_board_indicators[ message.hexes[hex_indicies[i]] ]
 
@@ -69,9 +69,9 @@ class GameState(object):
         self.updatePlayerEdges  = [True, True, True, True]
         
         # keeps track of constructable Nodes/Edges and possible robber position, to save processing time
-        self.constructableNodes = cPickle.loads(cPickle.dumps(g_constructableNodes, -1))
-        self.constructableEdges = cPickle.loads(cPickle.dumps(g_constructableEdges, -1))
-        self.possibleRobberPos  = cPickle.loads(cPickle.dumps(g_possibleRobberPos,  -1))
+        self.constructableNodes = pickle.loads(pickle.dumps(g_constructableNodes, -1))
+        self.constructableEdges = pickle.loads(pickle.dumps(g_constructableEdges, -1))
+        self.possibleRobberPos  = pickle.loads(pickle.dumps(g_possibleRobberPos,  -1))
 
         self.currState            = None
         self.currPlayer           = -1
@@ -436,7 +436,7 @@ class GameState(object):
 
             usedDevCards = random.sample(currDevCardsPopulation, diff)
 
-            for index in xrange(0, len(usedDevCards)):
+            for index in range(0, len(usedDevCards)):
                 self.developmentCardsDeck[usedDevCards[index]] -= 1
 
     def SetLargestArmy(self, playerNumber):
@@ -499,7 +499,7 @@ class GameState(object):
 
         roadCount = [0 for i in range(0, len(self.players))]
 
-        for i in xrange(0, len(self.players)):
+        for i in range(0, len(self.players)):
             roadCount[i] = self.players[i].CountRoads(self)
             self.players[i].updateVictoryPoints = True
 

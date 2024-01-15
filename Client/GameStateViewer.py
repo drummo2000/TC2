@@ -1,9 +1,9 @@
 from CatanGame import *
 
-import cPickle
+import pickle
 from PIL import Image, ImageChops, ImageDraw, ImageFont
-from Tkinter import Tk
-from tkFileDialog import askopenfilename
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 import logging
 
 
@@ -365,7 +365,7 @@ if __name__ == '__main__':
     savedGameState = None
 
     with open('{0}'.format(filename), 'rb') as handle:
-        savedGameState = cPickle.load(handle)
+        savedGameState = pickle.load(handle)
 
     if savedGameState is not None:
 

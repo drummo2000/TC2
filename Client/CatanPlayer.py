@@ -3,7 +3,7 @@ import math
 import sys
 from CatanUtilsPy import CanAfford as cf
 from CatanUtilsPy import listm
-import cPickle
+import pickle
 from GameDataExplorer import GetGameStateDataFrame
 
 class PlayerStats(object):
@@ -82,11 +82,11 @@ class Player(object):
         self.roadCount = 0
         self.agentName = "RANDOM"
 
-    @staticmethod
-    def LoadModel():
+    # @staticmethod
+    # def LoadModel():
 
-        with open('Models/mainModel.mod', 'rb') as handle:
-            Player.Model = cPickle.load(handle)
+    #     with open('Models/Test06.mod', 'rb') as handle:
+    #         Player.Model = pickle.load(handle)
 
     def UpdateTradeRates(self, gameState):
 
@@ -169,13 +169,13 @@ class Player(object):
     def UpdateMayPlayDevCards(self, recentlyCardIndex = None, canUseAll = False):
 
         if canUseAll:
-            for i in xrange(0, len(self.developmentCards)):
+            for i in range(0, len(self.developmentCards)):
                 self.mayPlayDevCards[i] = self.developmentCards[i] > 0
                 self.recentCard[i]      = 0
 
         else:
             if recentlyCardIndex is None:
-                for i in xrange(0, len(self.developmentCards)):
+                for i in range(0, len(self.developmentCards)):
                     self.mayPlayDevCards[i] = self.developmentCards[i] > 0
 
             else:
@@ -185,7 +185,7 @@ class Player(object):
 
                 self.recentCard[recentlyCardIndex] += 1
 
-                for i in xrange(0, len(self.developmentCards)):
+                for i in range(0, len(self.developmentCards)):
                     self.mayPlayDevCards[i] = self.recentCard[i] < self.developmentCards[i]
 
     def CanAfford(self, price):
@@ -290,7 +290,7 @@ class Player(object):
 
                     self.resources[g_resources.index('UNKNOWN')] = resourceAmount
 
-                    for index in xrange(len(self.resources) - 1):
+                    for index in range(len(self.resources) - 1):
                         self.resources[index] = 0
                 else:
                     self.resources[g_resources.index(element)] -= value
@@ -546,7 +546,7 @@ class Player(object):
     @staticmethod
     def GetModelSelectedActions(gameState, player, model=None):
 
-        #shiftedGame = cPickle.loads(cPickle.dumps(gameState, -1))
+        #shiftedGame = pickle.loads(pickle.dumps(gameState, -1))
         #shiftedGame.ShiftPlayerToFirstSeat(player)
 
         if model is None:
@@ -713,43 +713,43 @@ class Player(object):
 
             return RejectTradeOfferAction(playerNumber=player.seatNumber)
 
-    def FilterActionsWithModel(self, gameState, model, actions, justBest = False):
+    # def FilterActionsWithModel(self, gameState, model, actions, justBest = False):
 
-        if len(actions) > 1:
+    #     if len(actions) > 1:
 
-            actionValues = []
+    #         actionValues = []
 
-            for action in actions:
-                gameStateCopy = cPickle.loads(cPickle.dumps(gameState, -1))
-                action.ApplyAction(gameStateCopy)
-                dataFrame = GetGameStateDataFrame(gameStateCopy, action, gameState.boardConfig)
-                score = model.predict(dataFrame)
-                actionValues.append((score, action))
+    #         for action in actions:
+    #             gameStateCopy = pickle.loads(pickle.dumps(gameState, -1))
+    #             action.ApplyAction(gameStateCopy)
+    #             dataFrame = GetGameStateDataFrame(gameStateCopy, action, gameState.boardConfig)
+    #             score = model.predict(dataFrame)
+    #             actionValues.append((score, action))
 
-            actionValues = sorted(actionValues, key=lambda actval: actval[0])
-            result = []
-            best = -1
-            worstDelta = actionValues[0][0] - actionValues[-1][0]
-            for actionVal in actionValues:
-                if best == -1:
-                    best = actionVal[0]
-                    result.append(actionVal[1])
-                else:
-                    if justBest:
-                        if best - actionVal[0] == 0:
-                            result.append(actionVal[1])
-                        else:
-                            break
-                    else:
-                        if best - actionVal[0] <= worstDelta * 0.5:
-                            result.append(actionVal[1])
-                        else:
-                            break
+    #         actionValues = sorted(actionValues, key=lambda actval: actval[0])
+    #         result = []
+    #         best = -1
+    #         worstDelta = actionValues[0][0] - actionValues[-1][0]
+    #         for actionVal in actionValues:
+    #             if best == -1:
+    #                 best = actionVal[0]
+    #                 result.append(actionVal[1])
+    #             else:
+    #                 if justBest:
+    #                     if best - actionVal[0] == 0:
+    #                         result.append(actionVal[1])
+    #                     else:
+    #                         break
+    #                 else:
+    #                     if best - actionVal[0] <= worstDelta * 0.5:
+    #                         result.append(actionVal[1])
+    #                     else:
+    #                         break
 
-            return result
+    #         return result
 
-        else:
-            return actions
+    #     else:
+    #         return actions
 
     def GetPossibleActions(self, game, player=None, gameState=None, ignoreTurn=False):
         pass

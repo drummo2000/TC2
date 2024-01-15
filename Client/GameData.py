@@ -86,8 +86,8 @@ class GameData:
     def GetBoardTerrainAndNumbers(self):
 
         data    = self.boardConfig.split(",")
-        hexes   = map(int, data[1:38])
-        numbers = map(int, data[38:38 + 37])
+        hexes   = list(map(int, data[1:38]))
+        numbers = list(map(int, data[38:38 + 37]))
 
         numbers = [numbers[i] for i in range(0, len(numbers)) if hexes[i] < 6]
         hexes   = [h for h in hexes if h < 6]

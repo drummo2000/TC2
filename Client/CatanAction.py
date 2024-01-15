@@ -239,7 +239,7 @@ class RollDicesAction(Action):
 
             discardRound = False
 
-            for index in xrange(0, len(gameState.players)):
+            for index in range(0, len(gameState.players)):
 
                 if sum(gameState.players[index].resources) > 7:
                     discardRound = True
@@ -363,7 +363,7 @@ class UseMonopolyCardAction(UseDevelopmentCardAction):
 
         total = 0
 
-        for index in xrange(0, len(gameState.players)):
+        for index in range(0, len(gameState.players)):
 
             if index == self.playerNumber:
                 continue

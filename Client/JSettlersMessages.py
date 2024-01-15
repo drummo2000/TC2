@@ -297,16 +297,16 @@ class BoardLayoutMessage(Message):
 
     def to_cmd(self):
         return "{0}|{1},{2},{3},{4}".format(self.id, self.game
-                                            , ",".join(map(str, self.hexes))
-                                            , ",".join(map(str, self.numbers))
+                                            , ",".join(list(map(str, self.hexes)))
+                                            , ",".join(list(map(str, self.numbers)))
                                             , self.robberpos)
 
     @staticmethod
     def parse(text):
         data = text.split(",")
         gameName = data[0]
-        hexes = map(int, data[1:38])
-        numbers = map(int, data[38:38 + 37])
+        hexes = list(map(int, data[1:38]))
+        numbers = list(map(int, data[38:38 + 37]))
         robberpos = int(data[-1])
         return BoardLayoutMessage(gameName, hexes, numbers, robberpos, text)
 
@@ -706,7 +706,7 @@ class DiscardMessage(Message):
 
     @staticmethod
     def parse(text):
-        g, c, o, s, wh, wo, u = map(int, text.split(","))
+        g, c, o, s, wh, wo, u = list(map(int, text.split(",")))
         return DiscardMessage(g, c, o, s, wh, wo, u)
 
 class MakeOfferMessage(Message):
@@ -721,18 +721,18 @@ class MakeOfferMessage(Message):
 
     def to_cmd(self):
         return "{0}|{1},{2},{3},{4},{5}".format(self.id, self.game, self.fr
-                                                , ','.join(map(str, self.to))
-                                                , ','.join(map(str, self.give))
-                                                , ','.join(map(str, self.get)))
+                                                , ','.join(list(map(str, self.to)))
+                                                , ','.join(list(map(str, self.give)))
+                                                , ','.join(list(map(str, self.get))))
 
     @staticmethod
     def parse(text):
         data = text.split(",")
         game = data[0]
         fr   = data[1]
-        to   = map(str_to_bool, data[2:6])   # 4 players game
-        give = map(int,         data[6:11])
-        get  = map(int,         data[11:])
+        to   = list(map(str_to_bool, data[2:6]))   # 4 players game
+        give = list(map(int,         data[6:11]))
+        get  = list(map(int,         data[11:]))
         return MakeOfferMessage(game, int(fr), to, give, get)
 
 class RejectOfferMessage(Message):
@@ -855,15 +855,15 @@ class BankTradeMessage(Message):
 
     def to_cmd(self):
         return "{0}|{1},{2},{3}".format(self.id, self.game
-                                        , ','.join(map(str, self.give))
-                                        , ','.join(map(str, self.get)))
+                                        , ','.join(list(map(str, self.give)))
+                                        , ','.join(list(map(str, self.get))))
 
     @staticmethod
     def parse(text):
         data = text.split(",")
         game = data[0]
-        give = map(int, data[1:6])
-        got = map(int, data[6:11])
+        give = list(map(int, data[1:6]))
+        got = list(map(int, data[6:11]))
         return BankTradeMessage(game, give, got)
 
 class BuyCardRequestMessage(Message):
@@ -920,13 +920,13 @@ class DiscoveryPickMessage(Message):
         self.resources = resources
 
     def to_cmd(self):
-        return "{0}|{1},{2}".format(self.id, self.gameName, ",".join(map(str, self.resources)))
+        return "{0}|{1},{2}".format(self.id, self.gameName, ",".join(list(map(str, self.resources))))
 
     @staticmethod
     def parse(text):
         data = text.split(",")
         gameName = data[0]
-        resources = map(int, data[1:])
+        resources = list(map(int, data[1:]))
         return DiscoveryPickMessage(gameName, resources)
 
 class MonopolyPickMessage(Message):

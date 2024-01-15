@@ -3,7 +3,7 @@ from datetime import datetime
 from datetime import timedelta
 import multiprocessing as mp
 import threading
-import cPickle
+import pickle
 
 # * OPTION (for performance)*#    implement nodes as a tuple (worse to read/understand)
 # MCTS TREE NODE STRUCTURE:
@@ -14,7 +14,7 @@ class MCTSNode:
     def __init__(self, player, state, action, qValue, nValue, parent, children, actionsFunction, virtualWins=False):
 
         self.actingPlayer    = player
-        self.gameState       = cPickle.dumps(state, -1) # current gameState
+        self.gameState       = pickle.dumps(state, -1) # current gameState
         self.action          = action  # action that led to this state
         self.QValue          = qValue  # node estimated reward value
         self.NValue          = nValue  # number of visits
@@ -53,20 +53,20 @@ class MCTSNode:
 
     def GetState(self):
         if self.NValue < self.saveNodeValue:
-            return cPickle.loads(self.gameState)
+            return pickle.loads(self.gameState)
         else:
             return self.gameState
 
     def GetStateCopy(self):
         if self.NValue < self.saveNodeValue:
-            return cPickle.loads(self.gameState)
+            return pickle.loads(self.gameState)
         else:
-            return cPickle.loads(cPickle.dumps(self.gameState, -1))
+            return pickle.loads(pickle.dumps(self.gameState, -1))
 
     def UpdateNValue(self):
         self.NValue += 1
         if self.NValue == self.saveNodeValue:
-            self.gameState = cPickle.loads(self.gameState)
+            self.gameState = pickle.loads(self.gameState)
 
     def UpdateQValue(self, addValue):
         self.QValueHist.append(addValue)
@@ -126,7 +126,7 @@ class AgentMCTS(AgentRandom):
     def LoadModel(self):
 
         with open('Models/mainModel.mod', 'rb') as handle:
-            return cPickle.load(handle)
+            return pickle.load(handle)
 
     def DoMove(self, game):
 
@@ -142,7 +142,7 @@ class AgentMCTS(AgentRandom):
             return None
         #If the server is waiting for discards, respond, if needed...
         if game.gameState.currState == "WAITING_FOR_DISCARDS":
-            copyState = cPickle.loads(cPickle.dumps(game.gameState, -1))
+            copyState = pickle.loads(pickle.dumps(game.gameState, -1))
             copyState.playerBeforeDiscards = copyState.currPlayer
             copyState.currPlayer = self.seatNumber
 
@@ -186,9 +186,9 @@ class AgentMCTS(AgentRandom):
         self.simulationCounter = 0
 
         if copyState is None:
-            state = cPickle.loads(cPickle.dumps(game.gameState, -1))
+            state = pickle.loads(pickle.dumps(game.gameState, -1))
         else:
-            state = cPickle.loads(cPickle.dumps(copyState, -1))
+            state = pickle.loads(pickle.dumps(copyState, -1))
 
         AgentMCTS.PrepareGameStateForSimulation(state)
 
@@ -229,7 +229,7 @@ class AgentMCTS(AgentRandom):
                 return None
 
             processes = [mp.Process(target=self.MonteCarloTreeSearch, args=(state, ct, coreSimCount, True, i, resultNodes,
-                                                                            cPickle.loads(cPickle.dumps(rootNode, -1))))
+                                                                            pickle.loads(pickle.dumps(rootNode, -1))))
                          for i in range(numCores)]  # I am running as many processes as CPU my machine has (is this wise?).
             for proc in processes:
                 proc.start()
@@ -633,7 +633,7 @@ class AgentMCTS(AgentRandom):
 
         actionPossibilities = []
 
-        for i in xrange(0, len(player.resources) - 1):
+        for i in range(0, len(player.resources) - 1):
             actionPossibilities.append(UseMonopolyCardAction(player.seatNumber, i+1))
 
         return actionPossibilities
@@ -645,8 +645,8 @@ class AgentMCTS(AgentRandom):
 
         actionPossibilities = []
 
-        for i in xrange(0, 5):
-            for j in xrange(0, 5):
+        for i in range(0, 5):
+            for j in range(0, 5):
                 chosenResources = [0, 0, 0, 0, 0]
                 chosenResources[i] += 1
                 chosenResources[j] += 1
@@ -665,7 +665,7 @@ class AgentMCTS(AgentRandom):
 
         # create a new state for each possible dice outcome
         if not player.rolledTheDices:
-            return [RollDicesAction( player.seatNumber, i ) for i in xrange(2, 13)]
+            return [RollDicesAction( player.seatNumber, i ) for i in range(2, 13)]
 
     def GetPossibleActions_SpecialTurns(self, gameState, player, atRandom):
 
