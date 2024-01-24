@@ -63,7 +63,7 @@ class Player(object):
         }
 
         # keeps track of trade rates
-        self.tradeRates = [4, 4, 4, 4, 4, 4]
+        self.tradeRates = [4, 4, 4, 4, 4]
 
         self.possibleRoads         = []
         self.possibleSettlements   = []
@@ -604,16 +604,18 @@ class Player(object):
 
     @staticmethod
     def GetAllPossibleActions_PreDiceRoll(player):
-
+        possibleActions = []
         if not player.rolledTheDices and \
                 not player.playedDevCard and \
                 player.mayPlayDevCards[KNIGHT_CARD_INDEX] and \
                 player.developmentCards[KNIGHT_CARD_INDEX] > 0:
-            return [UseKnightsCardAction(player.seatNumber, None, None)]
+            possibleActions.append(UseKnightsCardAction(player.seatNumber, None, None))
 
         # NOTE: removing if part and just returning fixed an error before
-        if not player.rolledTheDices:
-            return [RollDicesAction(player.seatNumber)]
+        # if not player.rolledTheDices:
+        possibleActions.append(RollDicesAction(player.seatNumber))
+        
+        return possibleActions
 
     @staticmethod
     def GetAllPossibleActions_RegularTurns(gameState, player):

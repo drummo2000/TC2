@@ -1,4 +1,5 @@
 from CatanBoard2 import *
+from typing import Union
 
 g_boardHexes = \
                     [0x17, 0x39, 0x5b, 0x7d,
@@ -14,6 +15,17 @@ g_boardHexes = \
                  0x51, 0x73, 0x95, 0xb7, 0xd9,
 
                     0x71, 0x93, 0xb5, 0xd7]
+
+constructableHexesList = \
+                     [0x37, 0x59, 0x7b,
+
+                    0x35, 0x57, 0x79, 0x9b,
+
+                 0x33, 0x55, 0x77, 0x99, 0xbb,
+
+                    0x53, 0x75, 0x97, 0xb9,
+
+                       0x73, 0x95, 0xb7]
 
 g_boardNodes = \
                 [0x18,   0x3a,   0x5c,   0x7e,
@@ -39,6 +51,28 @@ g_boardNodes = \
 
              0x70,   0x92,   0xb4,   0xd6,   0xf8,
                  0x81,   0xa3,   0xc5,   0xe7]
+
+
+constructableNodesList = \
+[
+                     0x38,   0x5a,   0x7c,
+                0x27,   0x49,   0x6b,   0x8d,
+
+                 0x36,   0x58,   0x7a,   0x9c,
+             0x25,   0x47,   0x69,   0x8b,   0xad,  
+
+             0x34,   0x56,   0x78,   0x9a,   0xbc,   
+         0x23,   0x45,   0x67,   0x89,   0xab,   0xcd,
+
+         0x32,   0x54,   0x76,   0x98,   0xba,   0xdc,
+             0x43,   0x65,   0x87,   0xa9,   0xcb,
+
+             0x52,   0x74,   0x96,   0xb8,   0xda, 
+                 0x63,   0x85,   0xa7,   0xc9,  
+
+                 0x72,   0x94,   0xb6,   0xd8,  
+                     0x83,   0xa5,   0xc7,  
+]
 
 g_boardEdges = \
                           [0x07,  0x18,  0x29,  0x3a,  0x4b,  0x5c,  0x6d,  0x7e,
@@ -71,11 +105,44 @@ g_boardEdges = \
 
                            0x70,  0x81,  0x92,  0xa3,  0xb4,  0xc5,  0xd6,  0xe7]
 
+constructableEdgesList = \
+[
+
+                                  0x27,  0x38,  0x49,  0x5a,  0x6b,  0x7c,
+
+                               0x26,         0x48,         0x6a,         0x8c,
+
+                           0x25,  0x36,  0x47,  0x58,  0x69,  0x7a,  0x8b,  0x9c,
+
+                       0x024,        0x46,          0x68,         0x8a,          0xac,
+
+                    0x23,  0x34,  0x45,  0x56,  0x67,  0x78,  0x89,  0x9a,  0xab,  0xbc,
+
+                 0x22,         0x44,         0x66,         0x88,         0xaa,        0xcc,
+
+                    0x32,  0x43,  0x54,  0x65,  0x76,  0x87,  0x98,  0xa9,  0xba,  0xcb,
+
+                       0x42,          0x64,         0x86,         0xa8,         0xca,
+
+                           0x52,  0x63,  0x74,  0x85,  0x96,  0xa7,  0xb8,  0xc9,
+
+                               0x62,         0x84,         0xa6,         0xc8,
+
+                                  0x72,  0x83,  0x94,  0xa5,  0xb6,  0xc7]
+
+
 g_constructionTypes = [
     ('ROAD'      , 0),
     ('SETTLEMENT', 1),
     ('CITY'      , 2)
 ]
+
+constructionTypeIndex = {
+    'ROAD': 0,
+    'SETTLEMENT': 1,
+    'CITY' : 2,
+    None: 3
+}
 
 g_portType = [
     'BrickHarbor',
@@ -85,6 +152,16 @@ g_portType = [
     'LumberHarbor',
     '3for1'
 ]
+
+portTypeIndex = {
+    'BrickHarbor': 0,
+    'OreHarbor': 1,
+    'WoolHarbor': 2,
+    'GrainHarbor': 3,
+    'LumberHarbor': 4,
+    '3for1': 5,
+    None: 6
+}
 
 g_terrains = [
     ('DESERT'   , None    ),
@@ -105,6 +182,15 @@ g_resources = [
     'UNKNOWN'
 ]
 
+resourceIndex = {
+    'BRICK': 0,
+    'ORE': 1,
+    'WOOL': 2,
+    'GRAIN': 3,
+    'LUMBER': 4,
+    None: 5
+}
+
 g_developmentCards = [
     'KNIGHT',
     'ROAD_BUILDING',
@@ -124,6 +210,20 @@ g_pieces = [
     'SETTLEMENTS',
     'CITIES'
 ]
+
+numberDotsMapping = {
+    0: 0,
+    2: 1,
+    3: 2,
+    4: 3,
+    5: 4,
+    6: 5,
+    8: 5,
+    9: 4,
+    10: 3,
+    11: 2,
+    12: 1
+}
 
 class BoardHex:
 
@@ -184,7 +284,7 @@ class BoardNode:
     def __init__(self, index):
 
         self.index        = index
-        self.construction = None
+        self.construction: Union[None, Construction] = None
         self.portType     = None
 
         self.adjacentHexes = g_boardNodes2[index][0]

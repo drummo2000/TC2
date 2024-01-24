@@ -12,6 +12,7 @@ from AgentMCTS import AgentMCTS
 from AgentUCT import AgentUCT
 from AgentRAVE import AgentRAVE
 from AgentAlphabeta import AgentAlphabeta
+from AgentPolicy import AgentPolicy
 from joblib import Parallel, delayed
 import multiprocessing
 import CSVGenerator
@@ -162,9 +163,6 @@ def RunSingleGame(game):
 
         # Returns list of actions chosen by player (here would call agent which would use policy to get actions)
         agentAction = currPlayer.DoMove(game)
-
-        if agentAction is None:
-            print(game.gameState.currState)
 
         # Then apply the actions chosen by agent
         if isinstance(agentAction, list):
@@ -541,12 +539,12 @@ if __name__ == '__main__':
     #    print(RunGame(saveImgLog=False))
 
     players = [
-        AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
-        AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
+        # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
+        # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
-        # AgentRandom("P0", 0),
-        # AgentRandom("P1", 1),
+        AgentPolicy("P0", 0),
+        AgentRandom("P1", 1),
         AgentRandom("P2", 2),
         AgentRandom("P3", 3)]
     # players_ = [
@@ -557,11 +555,11 @@ if __name__ == '__main__':
     
     start_time = time.time()
     results = [0, 0, 0, 0]
-    for i in range(0, 10):
+    for i in range(0, 1000):
         winner = RunGame(players=players)
         results[winner] += 1
     end_time = time.time()
-    print(results)
+    print(f"\n\nResults: {results}")
     print("Time: ", end_time-start_time)
 
     # for i in range(0, 1000):
