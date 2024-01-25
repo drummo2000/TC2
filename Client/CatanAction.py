@@ -652,6 +652,9 @@ class MakeTradeOfferAction(Action):
         self.toPlayerNumbers.remove(gameState.currPlayer)
         gameState.currTradeOffer = self
 
+    def getString(self):
+        return f"{self.type}{self.giveResources[0]}{self.giveResources[1]}{self.giveResources[2]}{self.giveResources[3]}{self.giveResources[4]}_{self.getResources[0]}{self.getResources[1]}{self.getResources[2]}{self.getResources[3]}{self.getResources[4]}"
+
 
 class RejectTradeOfferAction(Action):
 
@@ -675,6 +678,9 @@ class RejectTradeOfferAction(Action):
             currPlayerIndex = int(random.random() * len(gameState.currTradeOffer.toPlayerNumbers))
             gameState.currPlayer = gameState.currTradeOffer.toPlayerNumbers[currPlayerIndex]
             gameState.currTradeOffer.toPlayerNumbers.remove(gameState.currPlayer)
+    
+    def getString(self):
+        return f"{self.type}"
 
 class AcceptTradeOfferAction(Action):
 
@@ -704,6 +710,9 @@ class AcceptTradeOfferAction(Action):
         gameState.players[self.playerNumber].resources      += listm(get )
 
         gameState.currTradeOffer = None
+    
+    def getString(self):
+        return f"{self.type}"
 
 class BankTradeOfferAction(Action):
 

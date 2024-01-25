@@ -46,6 +46,7 @@ class Player(object):
         self.knights          = 0
         self.playedDevCard    = False
         self.discardCardCount = 0
+        self.tradeCount       = 0
 
         # keeps track of resources that are generated after a certain dice roll to save up processing time
         self.diceProduction = \

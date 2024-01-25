@@ -38,7 +38,7 @@ for hexNumber in constructableHexesList:
     placeRobberActions.append(f"PlaceRobber{hexNumber}")
 
 choosePlayerToStealFromActions = []
-for i in range(1, 4):
+for i in range(0, 4):
     choosePlayerToStealFromActions.append(f"ChoosePlayerToStealFrom{i}")
 
 endTurnAction = "EndTurn"
@@ -70,6 +70,22 @@ for tradeRate in tradeRates:
             get[index] = 1
             bankTradeOfferActions.append(f"BankTradeOffer{give[0]}{give[1]}{give[2]}{give[3]}{give[4]}_{get[0]}{get[1]}{get[2]}{get[3]}{get[4]}")
 
+makeTradeOfferActions = []
+playerResources = [5, 5, 5, 5, 5]
+for giveAmount in [1, 2]:
+    for i in range(5):
+        if playerResources[i] > 0:
+            give    = [0, 0, 0, 0, 0]
+            give[i] = giveAmount
+            for j in range(5):
+                if j != i:
+                    get    = [0, 0, 0, 0, 0]
+                    get[j] = 1
+                    makeTradeOfferActions.append(f"MakeTradeOffer{give[0]}{give[1]}{give[2]}{give[3]}{give[4]}_{get[0]}{get[1]}{get[2]}{get[3]}{get[4]}")
+
+rejectTradeOfferAction = "RejectTradeOffer"
+acceptTradeOfferAction = "AcceptTradeOffer"
+
 allActionsList = [*buildRoadActions,
                   *buildSettlementActions,
                   *buildCityActions,
@@ -83,7 +99,10 @@ allActionsList = [*buildRoadActions,
                   *choosePlayerToStealFromActions,
                   endTurnAction,
                   *discardResourcesActions,
-                  *bankTradeOfferActions
+                  *bankTradeOfferActions,
+                  *makeTradeOfferActions,
+                  rejectTradeOfferAction,
+                  acceptTradeOfferAction
                   ]
 
 # print(len(allActionsList))
@@ -106,7 +125,7 @@ def getActionMask(possibleActions: list[Action]):
     # create new dictionary: {57: Action(), 68: Action()}
     indexActionDict = {}
 
-    mask = [0] * 485
+    mask = [0] * 528
     for action in possibleActions:
         mask[allActionsDict[action.getString()]] = 1
         indexActionDict[allActionsDict[action.getString()]] = action

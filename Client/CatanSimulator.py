@@ -13,6 +13,7 @@ from AgentUCT import AgentUCT
 from AgentRAVE import AgentRAVE
 from AgentAlphabeta import AgentAlphabeta
 from AgentPolicy import AgentPolicy
+from AgentRandom2 import AgentRandom2
 from joblib import Parallel, delayed
 import multiprocessing
 import CSVGenerator
@@ -160,7 +161,7 @@ def RunSingleGame(game):
 
     while True:
 
-        currPlayer  = game.gameState.players[game.gameState.currPlayer]
+        currPlayer:Player  = game.gameState.players[game.gameState.currPlayer]
 
         # Returns list of actions chosen by player (here would call agent which would use policy to get actions)
         agentAction = currPlayer.DoMove(game)
@@ -532,14 +533,7 @@ def RunModelTesting(numberOfTests, loadModel, customBoard = None):
 
 if __name__ == '__main__':
 
-    # I think these might be for ML models not MCTS
-    # RunModelTraining(numberOfTrainings=2000, modelName="Test06")
-    # RunModelTesting(numberOfTests=20, loadModel="Test06")
-
-    # for i in range(0, 500):
-    #    print(RunGame(saveImgLog=False))
-
-    network = PolicyNetwork(2740, 485, 256)
+    network = PolicyNetwork(2740, 528, 256)
 
     players = [
         # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
@@ -547,34 +541,21 @@ if __name__ == '__main__':
         # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
         AgentPolicy("P0", 0, network),
-        AgentRandom("P1", 1),
-        AgentRandom("P2", 2),
-        AgentRandom("P3", 3)]
-    # players_ = [
-    #     AgentUCT("P0", 0, choiceTime=0.1, useModel=True),
-    #     AgentUCT("P1", 1, choiceTime=0.1, useModel=True),
-    #     AgentMCTS("P2", 2, choiceTime=0.1, useModel=True),
-    #     AgentMCTS("P3", 3, choiceTime=0.1, useModel=True)]
+        AgentPolicy("P1", 1, network),
+        AgentPolicy("P2", 2, network),
+        AgentPolicy("P3", 3, network)
+    ]
+
     
     start_time = time.time()
     results = [0, 0, 0, 0]
-    for i in range(0, 1000):
+    for i in range(0, 100):
         winner = RunGame(players=players)
         results[winner] += 1
     end_time = time.time()
     print(f"\n\nResults: {results}")
     print("Time: ", end_time-start_time)
 
-    # for i in range(0, 1000):
-    #     RunGame(saveImgLog=False)
-
-    #     if i == 0 or i == 999:
-    #         print(" --- GAME {0} : {1} --- ".format(i, datetime.datetime.utcnow()))
-
-    # # RUN WITH LOGGING
-    # RunWithLogging(300, saveGameStateLogs=False, multiprocess=True, players=defaultPlayers)
-
-    # RunWithCSVSaving(1000, multiprocess=False)
 
     # # SPEED TEST
     # RunSpeedTest(50)
