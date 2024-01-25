@@ -5,16 +5,53 @@ from CatanAction import *
 from itertools import combinations
 import math
 import random
+from ActionMask import getActionMask
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+import numpy as np
+from ActionMask import allActionsList
 
+class PolicyNetwork(nn.Module):
+    # sets up the shape of the NN and the optimizer used to update parameters
+    def __init__(self, num_inputs, num_actions, hidden_size, learning_rate=3e-4):
+        super(PolicyNetwork, self).__init__()
+        
+        self.num_actions = num_actions
+        self.linear1 = nn.Linear(num_inputs, hidden_size)
+        self.linear2 = nn.Linear(hidden_size, num_actions)
+        self.optimizer = optim.Adam(self.parameters(), lr=learning_rate)
+
+    # Takes in the current state and returns the probabilities of taking the action
+    def forward(self, state):
+        x = F.relu(self.linear1(state))
+        x = F.softmax(self.linear2(x), dim=1)
+        return x 
     
+    def get_action(self, state, action_mask):
+        state = torch.from_numpy(state).float().reshape(-1).unsqueeze(0)
+
+        probs = self.forward(state)
+        # Must reduce prob of masked actions to 0
+        probs = probs * torch.from_numpy(action_mask).float().reshape(-1).unsqueeze(0)
+
+        # Normalize the masked probabilities
+        sum_masked_probs = torch.sum(probs)
+        probs = probs / sum_masked_probs
+
+        highest_prob_action = np.random.choice(self.num_actions, p=np.squeeze(probs.detach().numpy()))
+        log_prob = torch.log(probs.squeeze(0)[highest_prob_action])
+        return highest_prob_action, log_prob
 
 
 class AgentPolicy(Player):
 
-    def __init__(self, name, seatNumber):
+    def __init__(self, name, seatNumber, network: PolicyNetwork):
 
         super(AgentPolicy, self).__init__(name, seatNumber)
         self.agentName              = name
+        self.network                = network
     
     def GetAllPossibleActions_RegularTurns(self, gameState: GameState, player: Player):
 
@@ -139,15 +176,21 @@ class AgentPolicy(Player):
 
         possibleActions = self.GetPossibleActions(game.gameState)
 
-        if possibleActions is not None:
-            if type(possibleActions) == list:
-                return random.choice(possibleActions)
-            else:
-                return possibleActions
+        if type(possibleActions) != list:
+            possibleActions = [possibleActions]
 
-        raise("My agent has no possible actions returning NONE")
+        if len(possibleActions) == 1:
+            return possibleActions[0]
+        else:
+            actionMask, indexActionDict = getActionMask(possibleActions)
+            state = getInputState(game.gameState)
+
+            # action is the index of selected action
+            actionIndex, log_prob = self.network.get_action(state, actionMask)
+            return indexActionDict[actionIndex]
+
+
         # NOTE: If no actions returned should we return EndTurn/RollDice?
-        return None
 
     # TODO: later if discarding more than 4 resources, choose first 4 then the rest choose randomly
     def ChooseCardsToDiscard(self):
@@ -220,14 +263,12 @@ class AgentPolicy(Player):
 
         return possibleTrades
 
-
     def GetMonopolyResource(self, game, player):
 
         if player is None:
             player = self
 
         return [ UseMonopolyCardAction(player.seatNumber, resource) for resource in range(5) ]
-
 
     def GetYearOfPlentyResource(self, game, player):
 
@@ -300,7 +341,7 @@ def getInputState(gameState: GameState):
         edgeInfo.extend(getEdgeRepresentation(gameState.boardEdges[edgeIndex], gameState))
 
     output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, *longestRoadPlayer, *largestArmyPlayer, player1VP, player2VP, player3VP, *nodeInfo, *hexInfo, *edgeInfo]
-    return output
+    return np.array(output)
 
 # Get players victory points not including dev card vp's
 def getVisibleVictoryPoints(player: Player) -> int:

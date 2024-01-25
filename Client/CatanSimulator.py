@@ -19,6 +19,7 @@ import CSVGenerator
 from CatanUtilsPy import listm
 import random
 import pickle
+from AgentPolicy import PolicyNetwork
 
 # -- ML STUFF --
 import sklearn
@@ -538,12 +539,14 @@ if __name__ == '__main__':
     # for i in range(0, 500):
     #    print(RunGame(saveImgLog=False))
 
+    network = PolicyNetwork(2740, 485, 256)
+
     players = [
         # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
         # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
-        AgentPolicy("P0", 0),
+        AgentPolicy("P0", 0, network),
         AgentRandom("P1", 1),
         AgentRandom("P2", 2),
         AgentRandom("P3", 3)]

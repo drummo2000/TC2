@@ -76,7 +76,7 @@ class Client:
 
             self.socket.setblocking(1)
 
-        except socket.error, exc:
+        except socket.error as exc:
 
             logging.critical("Caught exception socket.error : %s" % exc)
 

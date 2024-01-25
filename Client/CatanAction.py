@@ -32,6 +32,9 @@ class Action(object):
                 return True
             return False
         return self.__dict__ == other.__dict__
+    
+    def getString(self):
+        pass
 
 class BuildAction(Action):
 
@@ -137,6 +140,9 @@ class BuildRoadAction(BuildAction):
 
         elif gameState.currState == "PLACING_FREE_ROAD2":
             gameState.currState = "PLAY1"
+    
+    def getString(self):
+        return f"{self.type}{self.position}"
 
 
 class BuildSettlementAction(BuildAction):
@@ -187,6 +193,9 @@ class BuildSettlementAction(BuildAction):
             gameState.players[self.playerNumber].GetStartingResources(gameState)
 
             gameState.currState = "START2B"
+    
+    def getString(self):
+        return f"{self.type}{self.position}"
 
 
 class BuildCityAction(BuildAction):
@@ -210,6 +219,9 @@ class BuildCityAction(BuildAction):
 
         super(BuildCityAction, self).ApplyAction(gameState)
     '''
+
+    def getString(self):
+        return f"{self.type}{self.position}"
 
 class RollDicesAction(Action):
 
@@ -262,6 +274,9 @@ class RollDicesAction(Action):
 
             gameState.currState = "PLAY1"
 
+    def getString(self):
+        return f"{self.type}"
+
 class BuyDevelopmentCardAction(Action):
 
     type = 'BuyDevelopmentCard'
@@ -296,6 +311,9 @@ class BuyDevelopmentCardAction(Action):
             self.players[self.playerNumber].DiscountAtRandom(discountCount)
 
         gameState.DrawDevCard(self.playerNumber)
+    
+    def getString(self):
+        return f"{self.type}"
 
 class UseDevelopmentCardAction(Action):
 
@@ -339,6 +357,9 @@ class UseKnightsCardAction(UseDevelopmentCardAction):
         gameState.players[self.playerNumber].knights += 1
 
         gameState.UpdateLargestArmy()
+    
+    def getString(self):
+        return f"{self.type}"
 
 class UseMonopolyCardAction(UseDevelopmentCardAction):
 
@@ -375,6 +396,9 @@ class UseMonopolyCardAction(UseDevelopmentCardAction):
             total += amount
 
         gameState.players[self.playerNumber].resources[self.resource] += total
+    
+    def getString(self):
+        return f"{self.type}{self.resource}"
 
 class UseYearOfPlentyCardAction(UseDevelopmentCardAction):
 
@@ -400,6 +424,9 @@ class UseYearOfPlentyCardAction(UseDevelopmentCardAction):
         gameState.players[self.playerNumber].resources[self.resources[0]] += 1
 
         gameState.players[self.playerNumber].resources[self.resources[1]] += 1
+    
+    def getString(self):
+        return f"{self.type}{self.resources[0]}{self.resources[1]}{self.resources[2]}{self.resources[3]}{self.resources[4]}"
 
 class UseFreeRoadsCardAction(UseDevelopmentCardAction):
 
@@ -423,6 +450,10 @@ class UseFreeRoadsCardAction(UseDevelopmentCardAction):
         super(UseFreeRoadsCardAction, self).ApplyAction(gameState)
 
         gameState.currState = "PLACING_FREE_ROAD1"
+    
+    def getString(self):
+        return f"{self.type}"
+    
 
 class PlaceRobberAction(Action):
 
@@ -459,6 +490,9 @@ class PlaceRobberAction(Action):
                     gameState.currState = "PLAY1"
                 else:
                     gameState.currState = "PLAY"
+
+    def getString(self):
+        return f"{self.type}{self.robberPos}"
 
 class EndTurnAction(Action):
 
@@ -497,6 +531,9 @@ class EndTurnAction(Action):
             gameState.players[gameState.currPlayer].UpdateMayPlayDevCards(canUseAll=True)
             gameState.players[gameState.currPlayer].playedDevCard = False
 
+    def getString(self):
+        return f"{self.type}"
+
 class DiscardResourcesAction(Action):
 
     type = 'DiscardResources'
@@ -527,6 +564,13 @@ class DiscardResourcesAction(Action):
             gameState.playerBeforeDiscards = -1
 
             gameState.currState = "PLACING_ROBBER"
+
+    def getString(self):
+        # Note self.resources is the discard resources
+        if sum(self.resources) <= 5:
+            return f"{self.type}{self.resources[0]}{self.resources[1]}{self.resources[2]}{self.resources[3]}{self.resources[4]}{self.resources[5]}"
+        else:
+            return f"{self.type}>5"
 
 class ChoosePlayerToStealFromAction(Action):
 
@@ -566,6 +610,9 @@ class ChoosePlayerToStealFromAction(Action):
             gameState.currState = "PLAY1"
         else:
             gameState.currState = "PLAY"
+        
+    def getString(self):
+        return f"{self.type}{self.targetPlayerNumber}"
 
 class MakeTradeOfferAction(Action):
 
@@ -682,6 +729,9 @@ class BankTradeOfferAction(Action):
 
         gameState.players[self.playerNumber].resources -= listm(give)
         gameState.players[self.playerNumber].resources += listm(get )
+    
+    def getString(self):
+        return f"{self.type}{self.giveResources[0]}{self.giveResources[1]}{self.giveResources[2]}{self.giveResources[3]}{self.giveResources[4]}_{self.getResources[0]}{self.getResources[1]}{self.getResources[2]}{self.getResources[3]}{self.getResources[4]}"
 
 class ChangeGameStateAction(Action):
 
