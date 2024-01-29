@@ -21,6 +21,7 @@ from CatanUtilsPy import listm
 import random
 import pickle
 from AgentPolicy import PolicyNetwork
+from ModelState import getInputState
 
 # -- ML STUFF --
 import sklearn
@@ -533,23 +534,23 @@ def RunModelTesting(numberOfTests, loadModel, customBoard = None):
 
 if __name__ == '__main__':
 
-    network = PolicyNetwork(2740, 528, 256)
+    network = PolicyNetwork(2350, 528, 256)
 
     players = [
         # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
         # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
-        AgentPolicy("P0", 0, network),
-        AgentPolicy("P1", 1, network),
-        AgentPolicy("P2", 2, network),
-        AgentPolicy("P3", 3, network)
+        AgentPolicy("P0", 0, network, playerTrading=False),
+        AgentRandom2("P1", 1, playerTrading=False),
+        AgentRandom2("P2", 2, playerTrading=False),
+        AgentRandom2("P3", 3, playerTrading=False)
     ]
 
     
     start_time = time.time()
     results = [0, 0, 0, 0]
-    for i in range(0, 100):
+    for i in range(0, 1000):
         winner = RunGame(players=players)
         results[winner] += 1
     end_time = time.time()

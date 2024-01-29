@@ -7,10 +7,11 @@ import random
 
 class AgentRandom2(Player):
 
-    def __init__(self, name, seatNumber):
+    def __init__(self, name, seatNumber, playerTrading: bool=True):
 
         super(AgentRandom2, self).__init__(name, seatNumber)
         self.agentName              = name
+        self.playerTrading          = playerTrading
     
     def GetAllPossibleActions_RegularTurns(self, gameState: GameState, player: Player):
 
@@ -64,10 +65,11 @@ class AgentRandom2(Player):
             possibleActions += possibleBankTrades
         
         # Can only offer 3 player trades per turn
-        if self.tradeCount <= 3:
-            possiblePlayerTrades = self.GetPossiblePlayerTrades(gameState, player)
-            if possiblePlayerTrades is not None and possiblePlayerTrades:
-                possibleActions += possiblePlayerTrades
+        if self.playerTrading:
+            if self.tradeCount <= 3:
+                possiblePlayerTrades = self.GetPossiblePlayerTrades(gameState, player)
+                if possiblePlayerTrades is not None and possiblePlayerTrades:
+                    possibleActions += possiblePlayerTrades
 
         possibleActions.append(EndTurnAction(playerNumber=player.seatNumber))
 

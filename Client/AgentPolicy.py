@@ -13,6 +13,7 @@ import torch.nn.functional as F
 import numpy as np
 from ActionMask import allActionsList
 from AgentRandom2 import AgentRandom2
+from ModelState import getInputState
 
 class PolicyNetwork(nn.Module):
     # sets up the shape of the NN and the optimizer used to update parameters
@@ -44,18 +45,38 @@ class PolicyNetwork(nn.Module):
         highest_prob_action = np.random.choice(self.num_actions, p=np.squeeze(probs.detach().numpy()))
         log_prob = torch.log(probs.squeeze(0)[highest_prob_action])
         return highest_prob_action, log_prob
+    
+    # pass the network, list of rewards, list of log(probs) of actions taken
+    def update_policy(self, reward, log_probs):
+
+        # Convert the episode return to a tensor
+        return_tensor = torch.tensor(reward, dtype=torch.float)
+
+        # get the policy gradient for each timestep
+        policy_gradient = []
+        for log_prob in log_probs:
+            policy_gradient.append(-log_prob * return_tensor)
+        
+        # Reset parameter gradients
+        self.optimizer.zero_grad()
+        # we get the total (loss), gradient term which we must optimize our parameters around(i think the -log_prob turns it into minimization)
+        policy_gradient = torch.stack(policy_gradient).sum()
+        # Compute gradients of weights with respect to policy gradient term
+        policy_gradient.backward()
+        # optimize weights
+        self.optimizer.step()
 
 
 class AgentPolicy(AgentRandom2):
 
-    def __init__(self, name, seatNumber, network):
+    def __init__(self, name, seatNumber, network: PolicyNetwork, playerTrading=True):
 
-        super(AgentPolicy, self).__init__(name, seatNumber)
+        super(AgentPolicy, self).__init__(name, seatNumber, playerTrading)
         self.agentName              = name
         self.network                = network
     
     # Return selected action
-    def DoMove(self, game):
+    def DoMove(self, game) -> (Action, list):
 
         # If not my turn and were not in WAITING_FOR_DISCARDS phase then return None
         if game.gameState.currPlayer != self.seatNumber and \
@@ -68,155 +89,11 @@ class AgentPolicy(AgentRandom2):
             possibleActions = [possibleActions]
 
         if len(possibleActions) == 1:
-            return possibleActions[0]
+            return possibleActions[0], None
         else:
             actionMask, indexActionDict = getActionMask(possibleActions)
             state = getInputState(game.gameState)
 
             # action is the index of selected action
-            actionIndex, log_prob = self.network.get_action(state, actionMask)
-            return indexActionDict[actionIndex]
-
-
-        # NOTE: If no actions returned should we return EndTurn/RollDice?
-
-
-
-
-####################################################################################################################################
-####################################################################################################################################
-####################################################################################################################################
-
-
-
-
-# Need to return 1D array with all info for policy
-def getInputState(gameState: GameState):
-    player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
-    # TODO: if its in same order everytime just fetch
-    player1 = next(filter(lambda p: p.name=="P1", gameState.players), None)
-    player2 = next(filter(lambda p: p.name=="P2", gameState.players), None)
-    player3 = next(filter(lambda p: p.name=="P3", gameState.players), None)
-
-    ## My info ##
-    myResources = player.resources
-    developmentCards = player.developmentCards
-    myVictoryPoints = player.victoryPoints
-    moreThan7Resources = int(len(myResources) > 7)
-    tradeRates = player.tradeRates
-    knights = player.knights
-    roadCount = player.roadCount
-
-    ## Other players info ##
-    longestRoadPlayer = [0, 0, 0, 0, 0]
-    longestRoadPlayer[gameState.longestRoadPlayer] = 1
-    largestArmyPlayer = [0, 0, 0, 0, 0]
-    largestArmyPlayer[gameState.largestArmyPlayer] = 1
-    player1VP = getVisibleVictoryPoints(player1)
-    player2VP = getVisibleVictoryPoints(player2)
-    player3VP = getVisibleVictoryPoints(player3)
-
-    # Get Node info
-    nodes = gameState.boardNodes
-    nodeInfo = []
-    for nodeIndex in constructableNodesList:
-        nodeInfo.extend(getNodeRepresentation(nodes[nodeIndex], gameState))
-
-    # Get hex info
-    hexes = gameState.boardHexes
-    hexInfo = []
-    for hexIndex in constructableHexesList:
-        hexInfo.extend(getHexRepresentation(hexes[hexIndex], gameState))
-
-    # Get edge info
-    edgeInfo = []
-    for edgeIndex in constructableEdgesList:
-        edgeInfo.extend(getEdgeRepresentation(gameState.boardEdges[edgeIndex], gameState))
-
-    output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, *longestRoadPlayer, *largestArmyPlayer, player1VP, player2VP, player3VP, *nodeInfo, *hexInfo, *edgeInfo]
-    return np.array(output)
-
-# Get players victory points not including dev card vp's
-def getVisibleVictoryPoints(player: Player) -> int:
-
-    constructionPoints = len(player.settlements) + len(player.cities) * 2
-
-    achievementPoints = 0
-    if player.biggestRoad:
-        achievementPoints += 2
-    if player.biggestArmy:
-        achievementPoints += 2
-
-    player.victoryPoints = constructionPoints + achievementPoints
-
-    return player.victoryPoints
-
-
-# For each node get: owner, constructionType, portType, dotList, production
-def getNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
-    owner = [0, 0, 0, 0, 0]
-    constructionType = [0, 0, 0, 0]
-    portType = [0, 0, 0, 0, 0, 0, 0]
-
-    if node.construction != None:
-        owner[node.construction.owner] = 1
-        constructionType[constructionTypeIndex[node.construction.type]] = 1
-    else:
-        owner[-1] = 1
-        constructionType[-1] = 1
-
-    portType[portTypeIndex[node.portType]] = 1
-
-    # Get production of a given node
-    dotList = [0, 0, 0, 0, 0]
-    adjTileNumbers = node.GetAdjacentHexes()
-    adjTiles = [gameState.boardHexes[tileNumber] for tileNumber in adjTileNumbers if tileNumber != None]
-    for tile in adjTiles:
-        if tile.production == None:
-            continue
-        dotList[resourceIndex[tile.production]] += numberDotsMapping[tile.number]
-
-    dotTotal = sum(dotList)
-    #       cat    cat               cat       num             num
-    return [*owner, *constructionType, *portType, *dotList, dotTotal]
-
-# For each hex get number, resource, for each surrounding node get: owner, resource type,
-def getHexRepresentation(hex: BoardHex, gameState: GameState) -> list:
-    dot = numberDotsMapping[hex.number]
-    resource = [0, 0, 0, 0, 0, 0]
-    resource[resourceIndex[hex.production]] = 1
-    
-    # For each adjacent node add owner, construction type
-    adjNodesInfo = []
-    nodeIndexes = hex.GetAdjacentNodes()
-    for nodeIndex in nodeIndexes:
-        owner = [0, 0, 0, 0, 0]
-        constructionType = [0, 0, 0, 0]
-        node = gameState.boardNodes[nodeIndex]
-        if node.construction == None:
-            owner[-1] = 1
-            constructionType[-1] = 1
-        else:
-            owner[node.construction.owner] = 1
-            constructionType[constructionTypeIndex[node.construction.type]] = 1
-        adjNodesInfo.extend([*owner, *constructionType])
-    #       num,   cat,      (cat, cat)
-    return [dot, *resource, *adjNodesInfo]
-
-# For each edge get owner
-def getEdgeRepresentation(edge: BoardEdge, gameState: GameState) -> list:
-    owner = [0, 0, 0, 0, 0]
-    if edge.construction == None:
-        owner[-1] = 1
-    else:
-        # cat
-        owner[edge.construction.owner] = 1
-    return owner
-
-
-
-
-
-# Other possible inputs
-    # possibleRoads = player.possibleRoads
-    # possibleSettlements = player.possibleSettlements
+            actionIndex, logProb = self.network.get_action(state, actionMask)
+            return indexActionDict[actionIndex], logProb

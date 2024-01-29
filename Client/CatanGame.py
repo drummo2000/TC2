@@ -4,56 +4,6 @@ import pickle
 import datetime
 from GameData import GameData
 
-# Represents a single game, has game state property and Creates the board
-class Game:
-
-    def __init__(self, gameState):
-
-        self.gameState   = gameState
-        self.gameData    = GameData()
-        self.recordData  = False
-
-    def AddPlayer(self, player, index):
-
-        self.gameState.players[index] = player
-
-    def CreateBoard(self, message):
-
-        self.gameState.boardConfig = message.text
-
-        # Hexes
-        for i in range(0, len(message.hexes)):
-
-            self.gameState.boardHexes[g_boardHexes[i]].SetTerrain(message.hexes[i])
-
-            self.gameState.boardHexes[g_boardHexes[i]].number = g_messageNumberToGameNumber[message.numbers[i]]
-
-        # DEBUG FOR HEXES:
-        #indexedHex = [self.gameState.boardHexes[g_boardHexes[i]] for i in range(len(g_boardHexes))]
-        #logging.debug("Board Hexes   = {0}".format([h.terrain for h in indexedHex]))
-        #logging.debug("Board Numbers = {0}".format([h.number  for h in indexedHex]))
-
-        # HARBORS (nodes):
-        harbour_coords = [(0x27, 0x38), (0x5a, 0x6b), (0x9c, 0xad),
-                          (0x25, 0x34), (0xcd, 0xdc), (0x43, 0x52),
-                          (0xc9, 0xda), (0x72, 0x83), (0xa5, 0xb6)]
-
-        hex_indicies   = [0, 2, 8, 9, 21, 22, 32, 33, 35]
-
-        for i in range(0, len(hex_indicies)):
-
-            portType = g_board_indicators[ message.hexes[hex_indicies[i]] ]
-
-            self.gameState.boardNodes[ harbour_coords[i][0] ].portType = portType
-            self.gameState.boardNodes[ harbour_coords[i][1] ].portType = portType
-
-        # Robber:
-        self.gameState.robberPos = message.robberpos
-
-        # DEBUG FOR HARBORS:
-        #for nodeIndex, node in self.gameState.boardNodes.items():
-        #    logging.debug("Node id = {0}, Port Type = {1}".format(hex(nodeIndex), node.portType))
-
 # Contains all info on current game and methods to update state
 class GameState(object):
 
@@ -567,3 +517,54 @@ class GameState(object):
              0xb5, 0xd7]
 
         return list(set(g_boardHexes) - set(invalidHexes))
+
+
+# Represents a single game, has game state property and Creates the board
+class Game:
+
+    def __init__(self, gameState: GameState):
+
+        self.gameState   = gameState
+        self.gameData    = GameData()
+        self.recordData  = False
+
+    def AddPlayer(self, player, index):
+
+        self.gameState.players[index] = player
+
+    def CreateBoard(self, message):
+
+        self.gameState.boardConfig = message.text
+
+        # Hexes
+        for i in range(0, len(message.hexes)):
+
+            self.gameState.boardHexes[g_boardHexes[i]].SetTerrain(message.hexes[i])
+
+            self.gameState.boardHexes[g_boardHexes[i]].number = g_messageNumberToGameNumber[message.numbers[i]]
+
+        # DEBUG FOR HEXES:
+        #indexedHex = [self.gameState.boardHexes[g_boardHexes[i]] for i in range(len(g_boardHexes))]
+        #logging.debug("Board Hexes   = {0}".format([h.terrain for h in indexedHex]))
+        #logging.debug("Board Numbers = {0}".format([h.number  for h in indexedHex]))
+
+        # HARBORS (nodes):
+        harbour_coords = [(0x27, 0x38), (0x5a, 0x6b), (0x9c, 0xad),
+                          (0x25, 0x34), (0xcd, 0xdc), (0x43, 0x52),
+                          (0xc9, 0xda), (0x72, 0x83), (0xa5, 0xb6)]
+
+        hex_indicies   = [0, 2, 8, 9, 21, 22, 32, 33, 35]
+
+        for i in range(0, len(hex_indicies)):
+
+            portType = g_board_indicators[ message.hexes[hex_indicies[i]] ]
+
+            self.gameState.boardNodes[ harbour_coords[i][0] ].portType = portType
+            self.gameState.boardNodes[ harbour_coords[i][1] ].portType = portType
+
+        # Robber:
+        self.gameState.robberPos = message.robberpos
+
+        # DEBUG FOR HARBORS:
+        #for nodeIndex, node in self.gameState.boardNodes.items():
+        #    logging.debug("Node id = {0}, Port Type = {1}".format(hex(nodeIndex), node.portType))
