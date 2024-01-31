@@ -7,7 +7,7 @@ import random
 
 class AgentRandom2(Player):
 
-    def __init__(self, name, seatNumber, playerTrading: bool=True):
+    def __init__(self, name, seatNumber, playerTrading: bool=False):
 
         super(AgentRandom2, self).__init__(name, seatNumber)
         self.agentName              = name
@@ -121,7 +121,7 @@ class AgentRandom2(Player):
 
         if player is None:
             player = self
-
+        
         # Call function based on game phase
         if not gameState.setupDone:
             return self.GetAllPossibleActions_Setup(gameState, player)
@@ -145,11 +145,15 @@ class AgentRandom2(Player):
         possibleActions = self.GetPossibleActions(game.gameState)
 
         if type(possibleActions) != list:
-            possibleActions = [possibleActions]
-
-        chosenAction = random.choice(possibleActions)
+            # possibleActions = [possibleActions]
+            return possibleActions
+        
+        randIndex = random.randint(0, len(possibleActions)-1)
+        chosenAction = possibleActions[randIndex]
+        
         if chosenAction.type == "MakeTradeOffer":
             self.tradeCount += 1
+        
         return chosenAction
         # NOTE: If no actions returned should we return EndTurn/RollDice?
 

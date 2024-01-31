@@ -12,7 +12,6 @@ from AgentMCTS import AgentMCTS
 from AgentUCT import AgentUCT
 from AgentRAVE import AgentRAVE
 from AgentAlphabeta import AgentAlphabeta
-from AgentPolicy import AgentPolicy
 from AgentRandom2 import AgentRandom2
 from joblib import Parallel, delayed
 import multiprocessing
@@ -20,8 +19,6 @@ import CSVGenerator
 from CatanUtilsPy import listm
 import random
 import pickle
-from AgentPolicy import PolicyNetwork
-from ModelState import getInputState
 
 # -- ML STUFF --
 import sklearn
@@ -125,7 +122,7 @@ def CreateNewBoard():
     return resultString
 
 # Sets up players and new board and returns new Game object
-def CreateGame(players, recordData = False, customBoard = None):
+def CreateGame(players, recordData = False, customBoard = None)->Game:
 
     game = Game(GameState())
 
@@ -159,6 +156,7 @@ defaultGame = CreateGame(defaultPlayers)
 def RunSingleGame(game):
 
     game = pickle.loads(pickle.dumps(game, -1))
+    # print(f"pickle.loads: {(t2-t1)*1000}")
 
     while True:
 
@@ -182,6 +180,7 @@ def RunSingleGame(game):
         if game.gameState.currState == "OVER":
             game.gameData.AddRecord(agentAction, game.gameState)
             return game
+
 
 def RunGame(inGame = None, players = None, saveImgLog = False, showLog = False, showFullLog = False, returnLog=False, saveCSV=False):
 
@@ -534,23 +533,21 @@ def RunModelTesting(numberOfTests, loadModel, customBoard = None):
 
 if __name__ == '__main__':
 
-    network = PolicyNetwork(2350, 528, 256)
-
     players = [
         # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
         # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
         # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
-        AgentPolicy("P0", 0, network, playerTrading=False),
-        AgentRandom2("P1", 1, playerTrading=False),
-        AgentRandom2("P2", 2, playerTrading=False),
-        AgentRandom2("P3", 3, playerTrading=False)
+        AgentRandom2("P0", 0),
+        AgentRandom2("P1", 1),
+        AgentRandom2("P2", 2),
+        AgentRandom2("P3", 3)
     ]
 
     
     start_time = time.time()
     results = [0, 0, 0, 0]
-    for i in range(0, 1000):
+    for i in range(0, 1):
         winner = RunGame(players=players)
         results[winner] += 1
     end_time = time.time()

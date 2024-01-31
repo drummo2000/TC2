@@ -38,6 +38,7 @@ class Player(object):
         self.mayPlayDevCards  = [ False for i in range(0, len(g_developmentCards))]
         self.recentCard       = [ 0 for i in range(0, len(g_developmentCards))]
         self.roads            = [ ]
+        # list of positions of built settlements
         self.settlements      = [ ]
         self.cities           = [ ]
         self.biggestRoad      = False

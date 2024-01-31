@@ -1,11 +1,13 @@
 import random
+import numpy as np
 
 class listm(list):
     """
     See http://docs.cython.org/src/userguide/special_methods.html
     """
+
+    
     def __add__(self,y):
-        # print("\ADDITION\n")
 
         if isinstance(self,listm):
             N=len(self)
@@ -22,7 +24,6 @@ class listm(list):
                 return listm([self[i]+y[i] for i in range(N)])
     
     def __iadd__(self, y):
-        # print("\IIIIIADDITION\n")
 
         if isinstance(self,listm):
             N=len(self)
@@ -39,7 +40,6 @@ class listm(list):
                 return listm([self[i]+y[i] for i in range(N)])
 
     def __mul__(self,y):
-        # print("\nMUL\n")
 
         if isinstance(self,listm):
             N=len(self)
@@ -73,7 +73,6 @@ class listm(list):
                 return listm([self[i]/y[i] for i in range(N)])
 
     def __sub__(self,y):
-        # print("\nSUBTRACTION\n", len(self), len(y))
 
         if isinstance(self,listm):
             N=len(self)
