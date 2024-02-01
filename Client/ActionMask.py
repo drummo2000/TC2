@@ -105,6 +105,8 @@ allActionsList = [*buildRoadActions,
                   acceptTradeOfferAction
                   ]
 
+setupActionsList = [*buildSettlementActions]
+
 # print(len(allActionsList))
 
 # print(f"BuildRoad: {len(buildRoadActions)}")
@@ -119,6 +121,7 @@ allActionsList = [*buildRoadActions,
 
 # e.g: {BuildRoad77: 5, BuildRoad79: 6, ...}
 allActionsDict = {action: index for index, action in enumerate(allActionsList)}
+setupActionsDict = {action: index for index, action in enumerate(setupActionsList)}
 
 # Takes in list of possible actions and returns action mask for Network
 def getActionMask(possibleActions: list[Action]):
@@ -130,3 +133,15 @@ def getActionMask(possibleActions: list[Action]):
         mask[allActionsDict[action.getString()]] = 1
         indexActionDict[allActionsDict[action.getString()]] = action
     return np.array(mask), indexActionDict
+
+# For now only do settlements
+def getSetupActionMask(possibleActions: list[Action]):
+    indexActionDict = {}
+
+    mask = [0] * 54
+    for action in possibleActions:
+        mask[setupActionsDict[action.getString()]] = 1
+        indexActionDict[setupActionsDict[action.getString()]] = action
+    return np.array(mask), indexActionDict
+
+print(setupActionsDict)

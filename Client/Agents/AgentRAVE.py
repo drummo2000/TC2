@@ -1,4 +1,4 @@
-from AgentUCT import AgentUCT
+from .AgentUCT import AgentUCT
 import math
 
 class AgentRAVE(AgentUCT):

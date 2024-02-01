@@ -1,4 +1,4 @@
-from AgentRandom import *
+from .AgentRandom import *
 from datetime import datetime
 from datetime import timedelta
 import multiprocessing as mp

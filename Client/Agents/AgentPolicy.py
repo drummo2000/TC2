@@ -12,7 +12,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
 from ActionMask import allActionsList
-from AgentRandom2 import AgentRandom2
+from .AgentRandom2 import AgentRandom2
 from ModelState import getInputState
 from PPO import PPO
 
@@ -23,7 +23,6 @@ class AgentPolicy(AgentRandom2):
         super(AgentPolicy, self).__init__(name, seatNumber, playerTrading)
         self.agentName              = name
         self.network                = network
-        self.doRandomMoves          = doRandomMoves
     
     # Return selected action
     def DoMove(self, game) -> Action:

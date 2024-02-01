@@ -7,12 +7,12 @@ import time
 import os.path
 import socket
 from CatanGame import *
-from AgentRandom import *
-from AgentMCTS import AgentMCTS
-from AgentUCT import AgentUCT
-from AgentRAVE import AgentRAVE
-from AgentAlphabeta import AgentAlphabeta
-from AgentRandom2 import AgentRandom2
+from Agents.AgentRandom import *
+from Agents.AgentMCTS import AgentMCTS
+from Agents.AgentUCT import AgentUCT
+from Agents.AgentRAVE import AgentRAVE
+from Agents.AgentAlphabeta import AgentAlphabeta
+from Agents.AgentRandom2 import AgentRandom2
 from joblib import Parallel, delayed
 import multiprocessing
 import CSVGenerator
@@ -587,10 +587,3 @@ if __name__ == '__main__':
     # end_time = time.time()
     # print(f"\n\nResults: {results}")
     # print("Time: ", end_time-start_time)
-
-
-    # # SPEED TEST
-    # RunSpeedTest(50)
-
-    # # SIMULATOR PROFILER
-    # RunProfiler()

@@ -1,4 +1,4 @@
-from AgentMCTS import AgentMCTS
+from Agents.AgentMCTS import AgentMCTS
 import math
 import random
 

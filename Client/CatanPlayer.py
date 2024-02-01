@@ -570,7 +570,7 @@ class Player(object):
     @staticmethod
     def GetAllPossibleActions_Setup(gameState, player):
 
-        if   gameState.currState == 'START1A':
+        if gameState.currState == 'START1A':
 
             if player.firstSettlementBuild:
                 return None

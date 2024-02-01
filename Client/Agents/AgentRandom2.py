@@ -133,7 +133,6 @@ class AgentRandom2(Player):
         else:
             return self.GetAllPossibleActions_SpecialTurns(gameState, player)
 
-
     # Return selected action
     def DoMove(self, game):
 

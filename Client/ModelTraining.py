@@ -7,13 +7,13 @@ import time
 import os.path
 import socket
 from CatanGame import *
-from AgentRandom import *
-from AgentMCTS import AgentMCTS
-from AgentUCT import AgentUCT
-from AgentRAVE import AgentRAVE
-from AgentAlphabeta import AgentAlphabeta
-from AgentPolicy import AgentPolicy
-from AgentRandom2 import AgentRandom2
+from Agents.AgentRandom import *
+from Client.Agents.AgentMCTS import AgentMCTS
+from Agents.AgentUCT import AgentUCT
+from Agents.AgentRAVE import AgentRAVE
+from Agents.AgentAlphabeta import AgentAlphabeta
+from Agents.AgentPolicy import AgentPolicy
+from Agents.AgentRandom2 import AgentRandom2
 from joblib import Parallel, delayed
 import multiprocessing
 import CSVGenerator
@@ -41,10 +41,7 @@ def RunSingleGame(game: Game) -> (Game, list):
         currPlayer:Player = game.gameState.players[game.gameState.currPlayer]
 
         # Returns list of actions chosen by player (here would call agent which would use policy to get actions)
-        if currPlayer.seatNumber == 0:
-            agentAction = currPlayer.DoMove(game)
-        else:
-            agentAction = currPlayer.DoMove(game)
+        agentAction = currPlayer.DoMove(game)
 
         agentAction.ApplyAction(game.gameState)
 
@@ -66,7 +63,7 @@ random_seed = 0         # set random seed if required (0 = no random seed)
 
 UPDATE_FREQ = 10
 
-STATE_SIZE = 2350
+STATE_SIZE = 2351
 ACTION_SIZE = 528
 
 TRAIN = False

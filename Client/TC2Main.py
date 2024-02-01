@@ -6,7 +6,7 @@ import argparse
 
 from Client import *
 from AgentRandom import *
-from AgentMCTS import AgentMCTS
+from Agents.AgentMCTS import AgentMCTS
 from AgentUCT  import AgentUCT
 from AgentRAVE import AgentRAVE
 from AgentUCTParanoid import AgentUCTParanoid

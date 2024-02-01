@@ -4,6 +4,17 @@ from CatanBoard import BoardNode, BoardHex, BoardEdge, g_portType, portTypeIndex
 from CatanAction import *
 import numpy as np
 
+def getSetupInputState(gameState: GameState):
+    player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
+
+    # Get Node info
+    nodes = gameState.boardNodes
+    nodeInfo = []
+    for nodeIndex in constructableNodesList:
+        nodeInfo.extend(getSetupNodeRepresentation(nodes[nodeIndex], gameState))
+    
+    return np.array(nodeInfo)
+
 
 # Need to return 1D array with all info for policy
 def getInputState(gameState: GameState):
@@ -65,6 +76,22 @@ def getVisibleVictoryPoints(player: Player) -> int:
 
     return constructionPoints + achievementPoints
 
+# For each node get: owner, constructionType, portType, dotList, production
+def getSetupNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
+
+    # Get production of a given node
+    dotList = [0, 0, 0, 0, 0]
+    adjTileNumbers = node.GetAdjacentHexes()
+    adjTiles = [gameState.boardHexes[tileNumber] for tileNumber in adjTileNumbers if tileNumber != None]
+    for tile in adjTiles:
+        if tile.production == None:
+            continue
+        dotList[resourceIndex[tile.production]] += numberDotsMapping[tile.number]
+    dotTotal = sum(dotList)
+
+    #       cat    cat               cat       num          num
+    return [dotTotal]
+
 
 # For each node get: owner, constructionType, portType, dotList, production
 def getNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
@@ -89,9 +116,10 @@ def getNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
         if tile.production == None:
             continue
         dotList[resourceIndex[tile.production]] += numberDotsMapping[tile.number]
+    dotTotal = sum(dotList)
 
-    #       cat    cat               cat       num
-    return [*owner, *constructionType, *portType, *dotList]
+    #       cat    cat               cat       num          num
+    return [*owner, *constructionType, *portType, *dotList, dotTotal]
 
 # For each hex get number, resource, for each surrounding node get: owner, construction type,
 def getHexRepresentation(hex: BoardHex, gameState: GameState) -> list:

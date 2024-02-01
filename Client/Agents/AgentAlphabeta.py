@@ -1,4 +1,4 @@
-from AgentRandom import *
+from .AgentRandom import *
 import random
 import logging
 import math

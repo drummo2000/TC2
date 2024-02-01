@@ -57,11 +57,13 @@ class ActorCritic(nn.Module):
 
         # actor
         self.actor = nn.Sequential(
-                        nn.Linear(state_dim, 64),
+                        nn.Linear(state_dim, 128),
                         nn.Tanh(),
-                        nn.Linear(64, 64),
+                        nn.Linear(128, 128),
                         nn.Tanh(),
-                        nn.Linear(64, action_dim),
+                        nn.Linear(128, 128),
+                        nn.Tanh(),
+                        nn.Linear(128, action_dim),
                         nn.Softmax(dim=-1)
                     )
 
@@ -144,20 +146,21 @@ class PPO:
         return action.item()
 
 
-    def update(self):
+    def update(self, disableDiscountReward:bool=False):
 
         # Monte Carlo estimate of returns
         rewards = []
+
         discounted_reward = 0
         for reward, is_terminal in zip(reversed(self.buffer.rewards), reversed(self.buffer.is_terminals)):
-            if is_terminal:
+            if is_terminal or disableDiscountReward:
                 discounted_reward = 0
             discounted_reward = reward + (self.gamma * discounted_reward)
             rewards.insert(0, discounted_reward)
             
         # Normalizing the rewards
         rewards = torch.tensor(rewards, dtype=torch.float32).to(device)
-        rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-7)
+        # rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-7)
 
         # convert list to tensor
         old_states = torch.squeeze(torch.stack(self.buffer.states, dim=0)).detach().to(device)
