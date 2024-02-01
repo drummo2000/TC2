@@ -23,6 +23,7 @@ class AgentPolicy(AgentRandom2):
         super(AgentPolicy, self).__init__(name, seatNumber, playerTrading)
         self.agentName              = name
         self.network                = network
+        self.doRandomMoves          = doRandomMoves
     
     # Return selected action
     def DoMove(self, game) -> Action:

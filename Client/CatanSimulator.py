@@ -26,6 +26,10 @@ import sklearn
 from sklearn.linear_model import SGDRegressor
 from GameDataExplorer import GetGameTrainingDataFrame
 
+from multiprocessing import Process
+import concurrent.futures
+
+
 #Suggested Board from Catan's Rules Book
 suggestedBoard    = "1014|TestGame,7,6,20,6,6,2,3,5,34,53,4,1,3,1," \
                      "6,6,4,5,0,4,2,8,49,5,2,4,3,6,6,1,4,3,67,9,6," \
@@ -182,7 +186,7 @@ def RunSingleGame(game):
             return game
 
 
-def RunGame(inGame = None, players = None, saveImgLog = False, showLog = False, showFullLog = False, returnLog=False, saveCSV=False):
+def RunGame(players, inGame = None, saveImgLog = False, showLog = False, showFullLog = False, returnLog=False, saveCSV=False):
 
     if players is None:
         players = copy.deepcopy(defaultPlayers)
@@ -531,28 +535,58 @@ def RunModelTesting(numberOfTests, loadModel, customBoard = None):
                          "TIME ELAPSED = {2}".format(score, float(i + 1) / numberOfTests * 100,
                                                      time.strftime("%H:%M:%S", time.gmtime(elapsed_time))))
 
-if __name__ == '__main__':
-
-    players = [
-        # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
-        # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
-        # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
-        # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
-        AgentRandom2("P0", 0),
-        AgentRandom2("P1", 1),
-        AgentRandom2("P2", 2),
-        AgentRandom2("P3", 3)
-    ]
-
-    
-    start_time = time.time()
+def runMultipleGames(numGames)-> list:
     results = [0, 0, 0, 0]
-    for i in range(0, 1):
+    for i in range(0, numGames):
         winner = RunGame(players=players)
         results[winner] += 1
+    return results
+
+def runParallelGames(totalGames, numProcesses) -> list:
+    finalresults = [0, 0, 0, 0]
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        # Submit each game simulation to the executor
+        futures = [executor.submit(runMultipleGames, int(totalGames/numProcesses)) for i in range(numProcesses)]
+
+        # Process the results as they become available
+        for future in concurrent.futures.as_completed(futures):
+            results = future.result()
+            finalresults = [a + b for a, b in zip(results, finalresults)]
+    return finalresults
+
+players = [
+    # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
+    # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
+    # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
+    # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
+    AgentRandom2("P0", 0),
+    AgentRandom2("P1", 1),
+    AgentRandom2("P2", 2),
+    AgentRandom2("P3", 3)
+]
+
+if __name__ == '__main__':
+
+    numGames = 10000
+    numProcesses = 6
+
+    start_time = time.time()
+    
+    results = runParallelGames(numGames, numProcesses)
+
     end_time = time.time()
     print(f"\n\nResults: {results}")
     print("Time: ", end_time-start_time)
+
+    
+    # start_time = time.time()
+    # results = [0, 0, 0, 0]
+    # for i in range(0, 1):
+    #     winner = RunGame(players=players)
+    #     results[winner] += 1
+    # end_time = time.time()
+    # print(f"\n\nResults: {results}")
+    # print("Time: ", end_time-start_time)
 
 
     # # SPEED TEST
