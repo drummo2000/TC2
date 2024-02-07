@@ -16,7 +16,7 @@ def getSetupInputState(gameState: GameState):
     return np.array(nodeInfo)
 
 
-# Need to return 1D array with all info for policy
+# returns 2350 length 1D array
 def getInputState(gameState: GameState):
     player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
     # TODO: if its in same order everytime just fetch

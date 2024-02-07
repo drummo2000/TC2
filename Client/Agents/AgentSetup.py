@@ -1,6 +1,3 @@
-from CatanGame import GameState, constructableNodesList, constructableHexesList, constructableEdgesList
-from CatanPlayer import Player
-from CatanBoard import BoardNode, BoardHex, BoardEdge, g_portType, portTypeIndex, resourceIndex, constructionTypeIndex, numberDotsMapping
 from CatanAction import *
 from itertools import combinations
 import math
@@ -31,7 +28,7 @@ class AgentSetup(AgentRandom2):
     # Return selected action
     def DoMove(self, game) -> Action:
 
-        if game.gameState.currState == "START1A" or game.gameState.currState == "START2A":
+        if game.gameState.currState == "START1A": #or game.gameState.currState == "START2A":
 
             possibleActions = self.GetAllPossibleActions_Setup(game.gameState, self)
 

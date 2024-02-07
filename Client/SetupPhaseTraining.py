@@ -1,14 +1,3 @@
-
-
-# Use model for initial placement phase (up to the first PLAY)
-# Then switch to using random moves for the rest of the game
-# the reward will be winning the game to start with
-
-import GameStateViewer
-import copy
-import cProfile
-import pstats
-import timeit
 import time
 from CatanGame import *
 from Agents.AgentRandom import *
@@ -24,10 +13,10 @@ from ModelState import getInputState
 import numpy as np
 import matplotlib.pyplot as plt
 from CatanBoard import numberDotsMapping
-
 from CatanSimulator import CreateGame
-
 from PPO import PPO
+from VPG import VPGNetwork, AgentVPG
+from GameStateViewer import SaveGameStateImage
 
 # Takes in list of production for each dice number and returns weighted sum
 def getProductionReward(productionDict: dict) -> int:
@@ -44,13 +33,15 @@ def RunSingleGame(game: Game) -> (Game, list):
     while True:
 
         currPlayer:Player = game.gameState.players[game.gameState.currPlayer]
-        # Returns list of actions chosen by player (here would call agent which would use policy to get actions)
+
         agentAction = currPlayer.DoMove(game)
         agentAction.ApplyAction(game.gameState)
 
-        if game.gameState.currState == "PLAY":
+        # Once initial placement is over return
+        if game.gameState.currState == "START2A":
+            # SaveGameStateImage(game.gameState, "TESTIMAGE.png")
             return game
-        
+
 
 ################ PPO hyperparameters ################
 
@@ -59,18 +50,18 @@ K_epochs = 5#40               # update policy for K epochs
 eps_clip = 0.2              # clip parameter for PPO
 gamma = 0.99                # discount factor
 
-lr_actor = 0.003#0.0003       # learning rate for actor network
-lr_critic = 0.01#0.001       # learning rate for critic network
+lr_actor = 0.0003       # learning rate for actor network
+lr_critic = 0.001       # learning rate for critic network
 
 random_seed = 0         # set random seed if required (0 = no random seed)
 
-UPDATE_FREQ = 4
+UPDATE_FREQ = 1
 
 STATE_SIZE = 54
 ACTION_SIZE = 54
 
 TRAIN = True
-NUM_SIMULATIONS = 1000
+NUM_SIMULATIONS = 1
 
 if __name__ == '__main__':
 
@@ -82,9 +73,12 @@ if __name__ == '__main__':
     productionRewardList100 = []
 
     ppo = PPO(STATE_SIZE, ACTION_SIZE, lr_actor, lr_critic, gamma, K_epochs, eps_clip)
+    vpg = VPGNetwork(STATE_SIZE, ACTION_SIZE, 256)
+
 
     players = [
         AgentSetup("P0", 0, ppo),
+        # AgentVPG("P0", 0, vpg),
         AgentRandom2("P1", 1),
         AgentRandom2("P2", 2),
         AgentRandom2("P3", 3)
@@ -95,12 +89,16 @@ if __name__ == '__main__':
 
 
     for episode in range(0, NUM_SIMULATIONS):
-        inGame = CreateGame(players)
+        custom_board = "1014|TestGame,7,6,20,6,6,2,3,5,34,53,4,1,3,1," \
+                     "6,6,4,5,0,4,2,8,49,5,2,4,3,6,6,1,4,3,67,9,6," \
+                     "10,6,-1,-1,-1,-1,-1,7,0,6,-1,-1,9,4,2,7,-1,-1," \
+                     "6,8,-1,1,5,-1,-1,5,1,2,3,-1,-1,3,4,8,-1,-1,-1,-1,-1,85"
+        inGame = CreateGame(players, customBoard=custom_board)
         game = RunSingleGame(inGame)
 
         # winner = game.gameState.winner
 
-        agent:AgentPolicy = game.gameState.players[0]
+        agent:AgentVPG = game.gameState.players[0]
 
         # winReward = 0
         # if winner == 0:
@@ -112,14 +110,15 @@ if __name__ == '__main__':
         # winList.append(winReward)
 
         production = getProductionReward(agent.diceProduction)
-        productionRewardList.append(production-18)
+        productionRewardList.append(production-8)
 
-        agent.network.buffer.rewards[-2:] = 2*[production-18]
-        # agent.network.buffer.is_terminals[-1] = True
+        agent.network.buffer.rewards[-2:] = [production-8]
+        agent.network.buffer.is_terminals[-1] = True
 
         if TRAIN:
             if episode % UPDATE_FREQ == 0:
                 agent.network.update(disableDiscountReward=True)
+                # agent.network.update_policy(production-8)
 
         # results[winner] += 1
 

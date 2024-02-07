@@ -1,3 +1,5 @@
+# https://github.com/nikhilbarhate99/PPO-PyTorch/blob/master/PPO.py
+
 ############################### Import libraries ###############################
 
 import os
@@ -17,7 +19,7 @@ import matplotlib.pyplot as plt
 
 ################################## set device ##################################
 
-print("============================================================================================")
+# print("============================================================================================")
 
 # set device to cpu or cuda
 device = torch.device('cpu')
@@ -29,7 +31,7 @@ device = torch.device('cpu')
 # else:
 #     print("Device set to : cpu")
     
-print("============================================================================================")
+# print("============================================================================================")
 ################################## PPO Policy ##################################
 
 class RolloutBuffer:
@@ -86,9 +88,9 @@ class ActorCritic(nn.Module):
 
         action_probs = self.actor(state)
         # zero the unavailable actions
-        masked_action_probs = action_probs * action_mask
-        norm_probs = masked_action_probs / torch.sum(masked_action_probs)
-        dist = Categorical(norm_probs)
+        # masked_action_probs = action_probs * action_mask
+        # norm_probs = masked_action_probs / torch.sum(masked_action_probs)
+        dist = Categorical(action_probs)
 
         action = dist.sample()
         action_logprob = dist.log_prob(action)

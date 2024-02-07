@@ -210,10 +210,10 @@ portColor = {
 }
 
 playerColor = [
-    (249,  65,  52),
-    ( 26,  58, 242),
-    (237,  14, 199),
-    (131, 255,  22)
+    (249,  65,  52), # red
+    ( 26,  58, 242), # blue
+    (237,  14, 199), # pink
+    (131, 255,  22)  # yellowish
 ]
 
 def GetGameStateImage(gameState):
@@ -250,7 +250,7 @@ def GetGameStateImage(gameState):
 
         portPos = [0x17, 0x5b, 0x9d, 0x13, 0xdd, 0x31, 0xd9, 0x71, 0xb5]
 
-        for boardHexIndex, boardHex in gameState.boardHexes.iteritems():
+        for boardHexIndex, boardHex in gameState.boardHexes.items():
             coloredHex = tintImage(hexImg, terrainColor[boardHex.terrain])
 
             if boardHexIndex in portPos:
@@ -262,8 +262,8 @@ def GetGameStateImage(gameState):
                         coloredHex = tintImage(hexImg, portColor[node.portType])
                         break
 
-            hexImgPos = (hexPositions[boardHexIndex][0] - hexImg.size[0] / 2,
-                         hexPositions[boardHexIndex][1] - hexImg.size[1] / 2)
+            hexImgPos = (int(hexPositions[boardHexIndex][0] - hexImg.size[0] / 2),
+                         int(hexPositions[boardHexIndex][1] - hexImg.size[1] / 2))
             mainImg.paste(coloredHex, hexImgPos, hexImg)
 
             if boardHex.number is not None and boardHex.number > 0:
@@ -299,20 +299,20 @@ def GetGameStateImage(gameState):
 
                 if road in straightRoadsPos:
 
-                    roadImgPos = (straightRoadsPos[road][0] - roadStraightImg.size[0] / 2,
-                                  straightRoadsPos[road][1] - roadStraightImg.size[1] / 2)
+                    roadImgPos = (int(straightRoadsPos[road][0] - roadStraightImg.size[0] / 2),
+                                  int(straightRoadsPos[road][1] - roadStraightImg.size[1] / 2))
                     mainImg.paste(coloredStraightRoad, roadImgPos, roadStraightImg)
 
                 elif road in leftRoadsPos:
 
-                    roadImgPos = (leftRoadsPos[road][0] - roadLeftImg.size[0] / 2,
-                                  leftRoadsPos[road][1] - roadLeftImg.size[1] / 2)
+                    roadImgPos = (int(leftRoadsPos[road][0] - roadLeftImg.size[0] / 2),
+                                  int(leftRoadsPos[road][1] - roadLeftImg.size[1] / 2))
                     mainImg.paste(coloredLeftRoad, roadImgPos, roadLeftImg)
 
                 elif road in rightRoadsPos:
 
-                    roadImgPos = (rightRoadsPos[road][0] - roadRightImg.size[0] / 2,
-                                  rightRoadsPos[road][1] - roadRightImg.size[1] / 2)
+                    roadImgPos = (int(rightRoadsPos[road][0] - roadRightImg.size[0] / 2),
+                                  int(rightRoadsPos[road][1] - roadRightImg.size[1] / 2))
                     mainImg.paste(coloredRightRoad, roadImgPos, roadRightImg)
 
         for playerIndex in range(0, len(gameState.players)):
@@ -323,8 +323,8 @@ def GetGameStateImage(gameState):
             coloredCity = tintImage(cityImg, playerColor[player.seatNumber])
 
             for settlement in player.settlements:
-                settlementImgPos = (citySettlementPos[settlement][0] - settlementImg.size[0] / 2,
-                                    citySettlementPos[settlement][1] - settlementImg.size[1] / 2)
+                settlementImgPos = (int(citySettlementPos[settlement][0] - settlementImg.size[0] / 2),
+                                    int(citySettlementPos[settlement][1] - settlementImg.size[1] / 2))
                 mainImg.paste(coloredSettlement, settlementImgPos, settlementImg)
 
             for city in player.cities:

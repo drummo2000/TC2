@@ -99,10 +99,10 @@ allActionsList = [*buildRoadActions,
                   *choosePlayerToStealFromActions,
                   endTurnAction,
                   *discardResourcesActions,
-                  *bankTradeOfferActions,
-                  *makeTradeOfferActions,
-                  rejectTradeOfferAction,
-                  acceptTradeOfferAction
+                  *bankTradeOfferActions
+                #   *makeTradeOfferActions,
+                #   rejectTradeOfferAction,
+                #   acceptTradeOfferAction
                   ]
 
 setupActionsList = [*buildSettlementActions]
@@ -123,12 +123,12 @@ setupActionsList = [*buildSettlementActions]
 allActionsDict = {action: index for index, action in enumerate(allActionsList)}
 setupActionsDict = {action: index for index, action in enumerate(setupActionsList)}
 
-# Takes in list of possible actions and returns action mask for Network
+# Takes in list of possible actions and returns action mask for Network (486 right now)
 def getActionMask(possibleActions: list[Action]):
     # create new dictionary: {57: Action(), 68: Action()}
     indexActionDict = {}
 
-    mask = [0] * 528
+    mask = [0] * len(allActionsList)
     for action in possibleActions:
         mask[allActionsDict[action.getString()]] = 1
         indexActionDict[allActionsDict[action.getString()]] = action
@@ -143,5 +143,3 @@ def getSetupActionMask(possibleActions: list[Action]):
         mask[setupActionsDict[action.getString()]] = 1
         indexActionDict[setupActionsDict[action.getString()]] = action
     return np.array(mask), indexActionDict
-
-print(setupActionsDict)

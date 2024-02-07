@@ -106,11 +106,12 @@ class AgentRandom2(Player):
             possibleRoads = gameState.GetPossibleRoads(player)
 
             if possibleRoads is None or not possibleRoads or player.numberOfPieces[0] <= 0:
-                return [ ChangeGameStateAction("PLAY1") ]
-
-            return [BuildRoadAction(player.seatNumber, roadEdge,
-                                    len(player.roads))
-                    for roadEdge in possibleRoads]
+                action = [ ChangeGameStateAction("PLAY1") ]
+            else:
+                action = [BuildRoadAction(player.seatNumber, roadEdge,
+                                        len(player.roads))
+                        for roadEdge in possibleRoads]
+            return action
 
         elif gameState.currState == "WAITING_FOR_TRADE":
 
@@ -124,28 +125,29 @@ class AgentRandom2(Player):
         
         # Call function based on game phase
         if not gameState.setupDone:
-            return self.GetAllPossibleActions_Setup(gameState, player)
+            actions = self.GetAllPossibleActions_Setup(gameState, player)
         elif gameState.currState == "PLAY":
             self.tradeCount = 0
-            return self.GetAllPossibleActions_PreDiceRoll(player)
+            actions = self.GetAllPossibleActions_PreDiceRoll(player)
         elif gameState.currState == "PLAY1":
-            return self.GetAllPossibleActions_RegularTurns(gameState, player)
+            actions = self.GetAllPossibleActions_RegularTurns(gameState, player)
         else:
-            return self.GetAllPossibleActions_SpecialTurns(gameState, player)
+            actions = self.GetAllPossibleActions_SpecialTurns(gameState, player)
+        
+        if type(actions) != list:
+            actions = [actions]
+        return actions
 
     # Return selected action
     def DoMove(self, game):
 
-        # If not my turn and were not in WAITING_FOR_DISCARDS phase then return None
-        if game.gameState.currPlayer != self.seatNumber and \
-            game.gameState.currState != "WAITING_FOR_DISCARDS":
-            return None
+        if game.gameState.currPlayer != self.seatNumber and game.gameState.currState != "WAITING_FOR_DISCARDS":
+            raise Exception("\n\nReturning None Action - INVESTIGATE\n\n")
 
         possibleActions = self.GetPossibleActions(game.gameState)
 
-        if type(possibleActions) != list:
-            # possibleActions = [possibleActions]
-            return possibleActions
+        if len(possibleActions) == 1:
+            return possibleActions[0]
         
         randIndex = random.randint(0, len(possibleActions)-1)
         chosenAction = possibleActions[randIndex]

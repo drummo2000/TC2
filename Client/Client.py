@@ -5,8 +5,8 @@ from JSettlersMessages import *
 from CatanPlayer import *
 from CatanGame import *
 from CatanAction import *
-from AgentRandom import *
-from AgentAlphabeta import *
+from Agents.AgentRandom import *
+from Agents.AgentAlphabeta import *
 import os
 import CSVGenerator
 
