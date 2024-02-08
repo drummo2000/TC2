@@ -22,7 +22,6 @@ from ModelState import getInputState
 import numpy as np
 import matplotlib.pyplot as plt
 from CatanSimulator import CreateGame
-from SBPPO import PPO
 from ModelState import getInputState, getSetupInputState
 from ActionMask import getActionMask, getSetupActionMask
 from CatanPlayer import Player
@@ -99,9 +98,13 @@ class CatanEnv(gym.Env):
         return getInputState(self.game.gameState), actionMask, 0, done
 
 
-class CatanSetupEnv(gym.Env):
+######################################################################################################################################################
+    
+
+
+class CatanSetupEnvMask(gym.Env):
     def __init__(self, customBoard=None):
-        super(CatanSetupEnv, self).__init__()
+        super(CatanSetupEnvMask, self).__init__()
         self.action_space = spaces.Discrete(54)
         self.observation_space = spaces.Box(shape=(54,), low=0, high=13, dtype=np.int64) 
         self.game: Game = None
@@ -110,13 +113,16 @@ class CatanSetupEnv(gym.Env):
         self.agent = None
         self.lastReward = 0
         self.customBoard = customBoard
+        self.num_envs = 1
+        self.action_mask = None
+        self.seed = 1
 
     # Need to get to my players turn and return: observation, info
     def reset(self, players = [
         AgentRandom2("P0", 0),
-        # AgentRandom2("P1", 1),
-        # AgentRandom2("P2", 2),
-        # AgentRandom2("P3", 3)
+        AgentRandom2("P1", 1),
+        AgentRandom2("P2", 2),
+        AgentRandom2("P3", 3)
         ], seed=None):
         # Setup game
         inGame = CreateGame(players, self.customBoard)
@@ -134,8 +140,8 @@ class CatanSetupEnv(gym.Env):
 
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        actionMask, self.indexActionDict = getSetupActionMask(possibleActions)
-        return getSetupInputState(self.game.gameState), {"ActionMask": actionMask}
+        self.action_mask, self.indexActionDict = getSetupActionMask(possibleActions)
+        return getSetupInputState(self.game.gameState), {}
 
 
     # Takes in index of agents action and returns: observation, reward, terminated, truncated, info(actionMask)
@@ -144,17 +150,17 @@ class CatanSetupEnv(gym.Env):
         done = False
 
         # Apply action chosen by agent
-        try:
-            actionObj = self.indexActionDict[action]
-        except KeyError:
-            actionObj = next(iter(self.indexActionDict.values()))
+        # try:
+        actionObj = self.indexActionDict[action]
+        # except KeyError:
+        #     actionObj = next(iter(self.indexActionDict.values()))
         actionObj.ApplyAction(self.game.gameState)
 
         # Get reward for action
         reward = getProductionReward(self.agent.diceProduction) - self.lastReward
         self.lastReward = reward
 
-        adjReward = reward - 7
+        adjReward = reward - 0
 
         if self.game.gameState.currState == "PLAY":
             return None, adjReward, True, truncated, {"ActionMask": None}
@@ -173,7 +179,11 @@ class CatanSetupEnv(gym.Env):
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        actionMask, self.indexActionDict = getSetupActionMask(possibleActions)
+        self.action_mask, self.indexActionDict = getSetupActionMask(possibleActions)
 
-        # observation, action_mask, done, reward
-        return getSetupInputState(self.game.gameState), adjReward, done, truncated, {"ActionMask": actionMask}
+        # observation, reward, terminated, truncated, info
+        return getSetupInputState(self.game.gameState), adjReward, done, truncated, {}
+    
+    def action_masks(self):
+        return self.action_mask
+
