@@ -1,6 +1,6 @@
-import gym
+import gymnasium as gym
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 from CatanSimulator import CreateGame
 import pickle
 import GameStateViewer
@@ -23,9 +23,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from CatanSimulator import CreateGame
 from PPO import PPO
-from ModelState import getInputState
+from ModelState import getInputState, getSetupInputState
 from ActionMask import getActionMask, getSetupActionMask
 from CatanPlayer import Player
+from Agents.AgentRandom2 import AgentRandom2
 
 # Takes in list of production for each dice number and returns weighted sum
 def getProductionReward(productionDict: dict) -> int:
@@ -101,17 +102,20 @@ class CatanEnv(gym.Env):
 class CatanSetupEnv(gym.Env):
     def __init__(self):
         super(CatanSetupEnv, self).__init__()
-
-        self.action_space = spaces.Discrete(54)  
-        self.observation_space = spaces.Discrete(54) 
+        self.action_space = spaces.Discrete(54)
+        self.observation_space = spaces.Box(shape=(54,), low=0, high=13, dtype=np.int64) 
         self.game: Game = None
         self.indexActionDict = None
         self.players = []
         self.agent = None
         self.lastReward = 0
 
-    # Need to get to my players turn and return state and action mask
-    def reset(self, players, customBoard=None):
+    # Need to get to my players turn and return: observation, info
+    def reset(self, players = [
+    AgentRandom2("P0", 0),
+    AgentRandom2("P1", 1),
+    AgentRandom2("P2", 2),
+    AgentRandom2("P3", 3)], customBoard=None, seed=None):
         # Setup game
         inGame = CreateGame(players, customBoard)
         self.game = pickle.loads(pickle.dumps(inGame, -1))
@@ -129,15 +133,19 @@ class CatanSetupEnv(gym.Env):
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         actionMask, self.indexActionDict = getSetupActionMask(possibleActions)
-        return getInputState(self.game.gameState), actionMask
+        return getSetupInputState(self.game.gameState), {"ActionMask": actionMask}
 
 
-    # Takes in index of agents action and returns state, action_mask, reward, done
+    # Takes in index of agents action and returns: observation, reward, terminated, truncated, info(actionMask)
     def step(self, action):
+        truncated = False
         done = False
 
         # Apply action chosen by agent
-        actionObj = self.indexActionDict[action]
+        try:
+            actionObj = self.indexActionDict[action]
+        except KeyError:
+            actionObj = next(iter(self.indexActionDict.values()))
         actionObj.ApplyAction(self.game.gameState)
 
         # Get reward for action
@@ -147,7 +155,7 @@ class CatanSetupEnv(gym.Env):
         adjReward = reward -5
 
         if self.game.gameState.currState == "PLAY":
-            return None, None, adjReward, True
+            return None, adjReward, True, truncated, {"ActionMask": None}
         
         # if game is not over cycle through actions until its agents turn again
         currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
@@ -155,7 +163,7 @@ class CatanSetupEnv(gym.Env):
             agentAction = currPlayer.DoMove(self.game)
             agentAction.ApplyAction(self.game.gameState)
             if self.game.gameState.currState == "PLAY":
-                return None, None, adjReward, True
+                return None, adjReward, True, truncated, {"ActionMask": None}
             currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
         
         # Get necessary info to return
@@ -166,4 +174,11 @@ class CatanSetupEnv(gym.Env):
         actionMask, self.indexActionDict = getSetupActionMask(possibleActions)
 
         # observation, action_mask, done, reward
-        return getInputState(self.game.gameState), actionMask, adjReward, done
+        return getSetupInputState(self.game.gameState), adjReward, done, truncated, {"ActionMask": actionMask}
+    
+
+from stable_baselines3.common.env_checker import check_env
+
+env = CatanSetupEnv()
+# It will check your custom environment and output additional warnings if needed
+check_env(env)
