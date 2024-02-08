@@ -22,7 +22,7 @@ from ModelState import getInputState
 import numpy as np
 import matplotlib.pyplot as plt
 from CatanSimulator import CreateGame
-from PPO import PPO
+from SBPPO import PPO
 from ModelState import getInputState, getSetupInputState
 from ActionMask import getActionMask, getSetupActionMask
 from CatanPlayer import Player
@@ -100,7 +100,7 @@ class CatanEnv(gym.Env):
 
 
 class CatanSetupEnv(gym.Env):
-    def __init__(self):
+    def __init__(self, customBoard=None):
         super(CatanSetupEnv, self).__init__()
         self.action_space = spaces.Discrete(54)
         self.observation_space = spaces.Box(shape=(54,), low=0, high=13, dtype=np.int64) 
@@ -109,15 +109,17 @@ class CatanSetupEnv(gym.Env):
         self.players = []
         self.agent = None
         self.lastReward = 0
+        self.customBoard = customBoard
 
     # Need to get to my players turn and return: observation, info
     def reset(self, players = [
-    AgentRandom2("P0", 0),
-    AgentRandom2("P1", 1),
-    AgentRandom2("P2", 2),
-    AgentRandom2("P3", 3)], customBoard=None, seed=None):
+        AgentRandom2("P0", 0),
+        # AgentRandom2("P1", 1),
+        # AgentRandom2("P2", 2),
+        # AgentRandom2("P3", 3)
+        ], seed=None):
         # Setup game
-        inGame = CreateGame(players, customBoard)
+        inGame = CreateGame(players, self.customBoard)
         self.game = pickle.loads(pickle.dumps(inGame, -1))
         self.players = self.game.gameState.players
         self.agent = self.game.gameState.players[0]
@@ -152,7 +154,7 @@ class CatanSetupEnv(gym.Env):
         reward = getProductionReward(self.agent.diceProduction) - self.lastReward
         self.lastReward = reward
 
-        adjReward = reward -5
+        adjReward = reward - 7
 
         if self.game.gameState.currState == "PLAY":
             return None, adjReward, True, truncated, {"ActionMask": None}
@@ -175,10 +177,3 @@ class CatanSetupEnv(gym.Env):
 
         # observation, action_mask, done, reward
         return getSetupInputState(self.game.gameState), adjReward, done, truncated, {"ActionMask": actionMask}
-    
-
-from stable_baselines3.common.env_checker import check_env
-
-env = CatanSetupEnv()
-# It will check your custom environment and output additional warnings if needed
-check_env(env)

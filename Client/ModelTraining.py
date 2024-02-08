@@ -21,16 +21,16 @@ import matplotlib.pyplot as plt
 from CatanSimulator import CreateGame
 from VPG import VPGNetwork, AgentVPG
 from CatanEnv import CatanEnv, CatanSetupEnv
+from PPO import PPO
 
 
+#               GAME SETTINGS
+##############################################################
 
-NUM_SIMULATIONS = 1
+
+NUM_SIMULATIONS = 100
 STATE_SIZE = 2350
 ACTION_SIZE = 486
-
-
-network = VPGNetwork(STATE_SIZE, ACTION_SIZE, 256)
-
 
 players = [
     AgentRandom2("P0", 0),
@@ -44,20 +44,50 @@ custom_board = "1014|TestGame,7,6,20,6,6,2,3,5,34,53,4,1,3,1," \
                      "10,6,-1,-1,-1,-1,-1,7,0,6,-1,-1,9,4,2,7,-1,-1," \
                      "6,8,-1,1,5,-1,-1,5,1,2,3,-1,-1,3,4,8,-1,-1,-1,-1,-1,85"
 
+env = CatanSetupEnv() #CatanEnv(ACTION_SIZE, STATE_SIZE)
+
 ##############################################################
 
-env = CatanSetupEnv() #CatanEnv(ACTION_SIZE, STATE_SIZE)
+#           NETWORK SETTINGS
+
+network = PPO(54, 54, K_epochs=1, lr_actor=0.03, lr_critic=0.01)
+
+TRAIN_FREQ = 10
+
+
+##############################################################
+rewardList = []
+rewardList100 = []
 
 start_time = time.time()
 
-for i in range(NUM_SIMULATIONS):
+for episode in range(NUM_SIMULATIONS):
     done = False
-    state, actionMask = env.reset(players, custom_board)
+    state, info = env.reset(players, custom_board)
+    actionMask = info["ActionMask"]
 
     while done != True:
-        actionIndex = network.get_action(state, actionMask)
-        state, actionMask, reward, done = env.step(actionIndex)
+        actionIndex = network.select_action(state, actionMask)
+        state, reward, done, _, info = env.step(actionIndex)
+        actionMask = info["ActionMask"]
+        
+        rewardList.append(reward)
+
+        network.buffer.rewards.append(reward)
+        network.buffer.is_terminals.append(done)
+
+    if episode % TRAIN_FREQ == 0:
+        network.update()
+
+    if episode % 100 == 0:
+            rewardList100.append(np.round(np.sum(rewardList[-100:])/100, decimals = 3))
+            print("episode: {}, Reward: {}\n".format(episode, rewardList100[-1]))
 
 end_time = time.time()
 
 print(f"Time: {end_time-start_time}")
+
+plt.plot(rewardList100)
+plt.xlabel('Episode (100)')
+plt.ylabel('Avg VP')
+plt.show()

@@ -16,23 +16,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-
-################################## set device ##################################
-
-# print("============================================================================================")
-
-# set device to cpu or cuda
 device = torch.device('cpu')
 
-# if(torch.cuda.is_available()): 
-#     device = torch.device('cuda:0') 
-#     torch.cuda.empty_cache()
-#     print("Device set to : " + str(torch.cuda.get_device_name(device)))
-# else:
-#     print("Device set to : cpu")
-    
-# print("============================================================================================")
-################################## PPO Policy ##################################
 
 class RolloutBuffer:
     def __init__(self):
@@ -61,9 +46,9 @@ class ActorCritic(nn.Module):
         self.actor = nn.Sequential(
                         nn.Linear(state_dim, 128),
                         nn.Tanh(),
-                        nn.Linear(128, 128),
+                        nn.Linear(128, 256),
                         nn.Tanh(),
-                        nn.Linear(128, 128),
+                        nn.Linear(256, 128),
                         nn.Tanh(),
                         nn.Linear(128, action_dim),
                         nn.Softmax(dim=-1)
@@ -88,9 +73,9 @@ class ActorCritic(nn.Module):
 
         action_probs = self.actor(state)
         # zero the unavailable actions
-        # masked_action_probs = action_probs * action_mask
-        # norm_probs = masked_action_probs / torch.sum(masked_action_probs)
-        dist = Categorical(action_probs)
+        masked_action_probs = action_probs * action_mask
+        #norm_probs = masked_action_probs / torch.sum(masked_action_probs)
+        dist = Categorical(masked_action_probs)
 
         action = dist.sample()
         action_logprob = dist.log_prob(action)
@@ -112,7 +97,7 @@ class ActorCritic(nn.Module):
 
 
 class PPO:
-    def __init__(self, state_dim, action_dim, lr_actor, lr_critic, gamma, K_epochs, eps_clip, action_std_init=0.6):
+    def __init__(self, state_dim, action_dim, lr_actor=0.0003, lr_critic=0.001, gamma=0.99, K_epochs=40, eps_clip=0.2, action_std_init=0.6):
 
         self.gamma = gamma
         self.eps_clip = eps_clip
@@ -159,7 +144,7 @@ class PPO:
                 discounted_reward = 0
             discounted_reward = reward + (self.gamma * discounted_reward)
             rewards.insert(0, discounted_reward)
-            
+                    
         # Normalizing the rewards
         rewards = torch.tensor(rewards, dtype=torch.float32).to(device)
         # rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-7)
@@ -203,7 +188,7 @@ class PPO:
 
         # clear buffer
         self.buffer.clear()
-    
+
     
     def save(self, checkpoint_path):
         torch.save(self.policy_old.state_dict(), checkpoint_path)
