@@ -26,6 +26,7 @@ from ModelState import getInputState, getSetupInputState
 from ActionMask import getActionMask, getSetupActionMask
 from CatanPlayer import Player
 from Agents.AgentRandom2 import AgentRandom2
+from ModelState import lowerBounds, upperBounds
 
 # Takes in list of production for each dice number and returns weighted sum
 def getProductionReward(productionDict: dict) -> int:
@@ -35,79 +36,112 @@ def getProductionReward(productionDict: dict) -> int:
     return reward
 
 
+
 class CatanEnv(gym.Env):
-    def __init__(self, action_size: int, state_size: int):
+    def __init__(self, customBoard=None):
         super(CatanEnv, self).__init__()
 
-        self.action_space = spaces.Discrete(action_size)  
-        self.observation_space = spaces.Discrete(state_size) 
+        self.action_space = spaces.Discrete(486)
+        self.observation_space = spaces.Box(low=lowerBounds, high=upperBounds, dtype=np.int64) 
+
         self.game: Game = None
+        # Used to fetch Action object from action index chosen by models
         self.indexActionDict = None
         self.players = []
         self.agent = None
+        self.customBoard = customBoard
+        self.num_envs = 1
+        self.action_mask = None
+        self.seed = 1
 
-    # Need to get to my players turn and return state and action mask
-    def reset(self, players, customBoard=None):
-        # Setup game
-        inGame = CreateGame(players, customBoard)
+    def reset(self, seed=None):
+        """
+        Setup new game, cycle through actions till agents turn, return current state and set action mask
+        """
+        inGame = CreateGame([   AgentRandom2("P0", 0),
+                                AgentRandom2("P1", 1),
+                                AgentRandom2("P2", 2),
+                                AgentRandom2("P3", 3)], self.customBoard)
         self.game = pickle.loads(pickle.dumps(inGame, -1))
         self.players = self.game.gameState.players
         self.agent = self.game.gameState.players[0]
 
         # Cycle through until agents turn
-        currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
+        currPlayer = self.players[self.game.gameState.currPlayer]
         while currPlayer.seatNumber != 0:
             agentAction = currPlayer.DoMove(self.game)
             agentAction.ApplyAction(self.game.gameState)
-            currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
+            currPlayer = self.players[self.game.gameState.currPlayer]
 
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        actionMask, self.indexActionDict = getActionMask(possibleActions)
-        return getInputState(self.game.gameState), actionMask
+        self.action_mask, self.indexActionDict = getActionMask(possibleActions)
+        observation = getInputState(self.game.gameState)
+
+        return observation, {}
 
 
-    # Takes in index of agents action and returns state, action_mask, reward, done
     def step(self, action):
+        """
+        Accepts action index as argument, applies action, cycles through to players next turn, 
+        gets observation and action mask for turn
+        """
+        truncated = False
         done = False
 
-        # Apply action chosen by agent
+        # Apply action chosen
         actionObj = self.indexActionDict[action]
         actionObj.ApplyAction(self.game.gameState)
 
+        # get reward
+        # winner = self.game.gameState.winner
+        reward = self.agent.victoryPoints - 7
+        # if winner == 0:
+        #     reward = 3
+        # elif winner == 1 or winner == 2 or winner == 3:
+        #     reward = -1
+
         if self.game.gameState.currState == "OVER":
-            return None, None, 0, True
-        # if game is not over cycle through actions until its agents turn again
-        else:
-            currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
-            while currPlayer.seatNumber != 0:
-                agentAction = currPlayer.DoMove(self.game)
-                agentAction.ApplyAction(self.game.gameState)
-                if self.game.gameState.currState == "OVER":
-                    return None, None, 0, True
-                currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
+            return None, reward, True, truncated, {"ActionMask": None}
         
-        # Get necessary info to return
+        # if game is not over cycle through actions until its agents turn again
+        currPlayer = self.players[self.game.gameState.currPlayer]
+        while currPlayer.seatNumber != 0:
+            agentAction = currPlayer.DoMove(self.game)
+            agentAction.ApplyAction(self.game.gameState)
+            currPlayer = self.players[self.game.gameState.currPlayer]
+            if self.game.gameState.currState == "OVER":
+                return None, reward, True, truncated, {"ActionMask": None}
+        
+        # Now ready for agent to choose action, get observation and action mask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        actionMask, self.indexActionDict = getActionMask(possibleActions)
+        self.action_mask, self.indexActionDict = getActionMask(possibleActions)
+        observation = getInputState(self.game.gameState)
 
-        # observation, action_mask, done, reward
-        return getInputState(self.game.gameState), actionMask, 0, done
+        # observation, reward, terminated, truncated, info
+        return observation, 0, done, truncated, {}
+    
+    # Used by PPO algorithm
+    def action_masks(self):
+        return self.action_mask
 
 
 ######################################################################################################################################################
     
 
 
-class CatanSetupEnvMask(gym.Env):
+class CatanSetupEnv(gym.Env):
     def __init__(self, customBoard=None):
-        super(CatanSetupEnvMask, self).__init__()
+        super(CatanSetupEnv, self).__init__()
+
         self.action_space = spaces.Discrete(54)
         self.observation_space = spaces.Box(shape=(54,), low=0, high=13, dtype=np.int64) 
+
         self.game: Game = None
+        # Used to fetch Action object from action index chosen by models
         self.indexActionDict = None
         self.players = []
         self.agent = None
@@ -117,73 +151,76 @@ class CatanSetupEnvMask(gym.Env):
         self.action_mask = None
         self.seed = 1
 
-    # Need to get to my players turn and return: observation, info
-    def reset(self, players = [
-        AgentRandom2("P0", 0),
-        AgentRandom2("P1", 1),
-        AgentRandom2("P2", 2),
-        AgentRandom2("P3", 3)
-        ], seed=None):
-        # Setup game
-        inGame = CreateGame(players, self.customBoard)
+    def reset(self, seed=None):
+        """
+        Setup new game, cycle through actions till agents turn, return current state and set action mask
+        """
+        inGame = CreateGame([   AgentRandom2("P0", 0),
+                                AgentRandom2("P1", 1),
+                                AgentRandom2("P2", 2),
+                                AgentRandom2("P3", 3)], self.customBoard)
         self.game = pickle.loads(pickle.dumps(inGame, -1))
         self.players = self.game.gameState.players
         self.agent = self.game.gameState.players[0]
+
         self.lastReward = 0
 
         # Cycle through until agents turn
-        currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
+        currPlayer = self.players[self.game.gameState.currPlayer]
         while currPlayer.seatNumber != 0:
             agentAction = currPlayer.DoMove(self.game)
             agentAction.ApplyAction(self.game.gameState)
-            currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
+            currPlayer = self.players[self.game.gameState.currPlayer]
 
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         self.action_mask, self.indexActionDict = getSetupActionMask(possibleActions)
-        return getSetupInputState(self.game.gameState), {}
+        observation = getSetupInputState(self.game.gameState)
+
+        return observation, {}
 
 
-    # Takes in index of agents action and returns: observation, reward, terminated, truncated, info(actionMask)
     def step(self, action):
+        """
+        Accepts action index as argument, applies action, cycles through to players next turn, 
+        gets observation and action mask for turn
+        """
         truncated = False
         done = False
 
-        # Apply action chosen by agent
-        # try:
+        # Apply action chosen
         actionObj = self.indexActionDict[action]
-        # except KeyError:
-        #     actionObj = next(iter(self.indexActionDict.values()))
         actionObj.ApplyAction(self.game.gameState)
 
         # Get reward for action
         reward = getProductionReward(self.agent.diceProduction) - self.lastReward
         self.lastReward = reward
-
         adjReward = reward - 0
 
         if self.game.gameState.currState == "PLAY":
             return None, adjReward, True, truncated, {"ActionMask": None}
         
         # if game is not over cycle through actions until its agents turn again
-        currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
+        currPlayer = self.players[self.game.gameState.currPlayer]
         while currPlayer.seatNumber != 0 or self.game.gameState.currState == "START1B" or self.game.gameState.currState == "START2B":
             agentAction = currPlayer.DoMove(self.game)
             agentAction.ApplyAction(self.game.gameState)
+            currPlayer = self.players[self.game.gameState.currPlayer]
             if self.game.gameState.currState == "PLAY":
                 return None, adjReward, True, truncated, {"ActionMask": None}
-            currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
         
-        # Get necessary info to return
+        # Now ready for agent to choose action, get observation and action mask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         self.action_mask, self.indexActionDict = getSetupActionMask(possibleActions)
+        observation = getSetupInputState(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
-        return getSetupInputState(self.game.gameState), adjReward, done, truncated, {}
+        return observation, adjReward, done, truncated, {}
     
+    # Used by PPO algorithm
     def action_masks(self):
         return self.action_mask
 

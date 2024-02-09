@@ -158,7 +158,72 @@ def getEdgeRepresentation(edge: BoardEdge, gameState: GameState) -> list:
 
 
 
+myResourcesLower = [0] * 6
+myResourcesUpper = [10] * 6 
+developmentCardsLower = [0] * 5 
+developmentCardsUpper = [10] * 5
+myVictoryPointsLower = [0]
+myVictoryPointsUpper = [10]
+moreThan7ResourcesLower = [0]
+moreThan7ResourcesUpper = [1]
+tradeRatesLower = [2] * 5
+tradeRatesUpper = [4] * 5
+knightsLower = [0]
+knightsUpper = [10]
+roadCountLower = [0]
+roadCountUpper = [10]
+longestRoadPlayerLower = [0] * 5
+longestRoadPlayerUpper = [1] * 5
+largestArmyPlayerLower = [0] * 5
+largestArmyPlayerUpper = [1] * 5
+player1VP_lower = [0]
+player1VP_upper = [1]
+player2VP_lower = [0]
+player2VP_upper = [1]
+player3VP_lower = [0]
+player3VP_upper = [1]
+# 19 hexes
+# for each hex: dot - 0->13, resource(6) 0->1, adjNodeInfo
+# for each 6 adjNode(16): owner(5)0->1, constructType(4)0->1, portType(7)0->1
+hexInfoLowerList = 19 * ((7 + 6*16) * [0])
+hexInfoUpper = [13] + ((6 + 6*16) * [0])
+hexInfoUpperList = 19 * hexInfoUpper
+edgeInfoLowerList = 72 * [0, 0, 0, 0, 0]
+edgeInfoUpperList = 72 * [1, 1, 1, 1, 1]
 
+lowerBounds = np.array([
+    *myResourcesLower,
+    *developmentCardsLower,
+    *myVictoryPointsLower,
+    *moreThan7ResourcesLower,
+    *tradeRatesLower,
+    *knightsLower,
+    *roadCountLower,
+    *longestRoadPlayerLower,
+    *largestArmyPlayerLower,
+    *player1VP_lower,
+    *player2VP_lower,
+    *player3VP_lower,
+    *hexInfoLowerList,
+    *edgeInfoLowerList
+])
+
+upperBounds = np.array([
+    *myResourcesUpper,
+    *developmentCardsUpper,
+    *myVictoryPointsUpper,
+    *moreThan7ResourcesUpper,
+    *tradeRatesUpper,
+    *knightsUpper,
+    *roadCountUpper,
+    *longestRoadPlayerUpper,
+    *largestArmyPlayerUpper,
+    *player1VP_upper,
+    *player2VP_upper,
+    *player3VP_upper,
+    *hexInfoUpperList,
+    *edgeInfoUpperList
+])
 
 # Other possible inputs
     # possibleRoads = player.possibleRoads

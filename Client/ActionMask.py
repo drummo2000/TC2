@@ -143,3 +143,5 @@ def getSetupActionMask(possibleActions: list[Action]):
         mask[setupActionsDict[action.getString()]] = 1
         indexActionDict[setupActionsDict[action.getString()]] = action
     return np.array(mask), indexActionDict
+
+print(len(allActionsList))

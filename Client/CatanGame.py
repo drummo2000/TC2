@@ -524,7 +524,7 @@ class Game:
 
     def __init__(self, gameState: GameState):
 
-        self.gameState   = gameState
+        self.gameState: GameState   = gameState
         self.gameData    = GameData()
         self.recordData  = False
 
