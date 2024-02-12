@@ -1,7 +1,7 @@
 from JSettlersMessages import *
-from CatanBoard import *
+from Game.CatanBoard import *
 
-from CatanUtilsPy import listm
+from Game.CatanUtilsPy import listm
 
 import random
 

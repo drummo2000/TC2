@@ -1,17 +1,29 @@
-from CatanGame import GameState, constructableNodesList, constructableHexesList, constructableEdgesList
-from CatanPlayer import Player
-from CatanBoard import BoardNode, BoardHex, BoardEdge, g_portType, portTypeIndex, resourceIndex, constructionTypeIndex, numberDotsMapping
-from CatanAction import *
+from Game.CatanGame import GameState, constructableNodesList, constructableHexesList, constructableEdgesList
+from Game.CatanPlayer import Player
+from Game.CatanBoard import BoardNode, BoardHex, BoardEdge, g_portType, portTypeIndex, resourceIndex, constructionTypeIndex, numberDotsMapping
+from Game.CatanAction import *
 import numpy as np
 
 def getSetupInputState(gameState: GameState):
-    player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
 
     # Get Node info
     nodes = gameState.boardNodes
     nodeInfo = []
     for nodeIndex in constructableNodesList:
         nodeInfo.extend(getSetupNodeRepresentation(nodes[nodeIndex], gameState))
+    
+    return np.array(nodeInfo)
+
+setupRandomLowerBounds = np.array(54 * (22*[0]))
+var = ([1] * 16) + (5 * [5]) + [15]
+setupRandomUpperBounds = np.array(54 * var)
+def getSetupRandomInputState(gameState: GameState):
+
+    # Get Node info
+    nodes = gameState.boardNodes
+    nodeInfo = []
+    for nodeIndex in constructableNodesList:
+        nodeInfo.extend(getNodeRepresentation(nodes[nodeIndex], gameState))
     
     return np.array(nodeInfo)
 
@@ -93,7 +105,7 @@ def getSetupNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
     return [dotTotal]
 
 
-# For each node get: owner, constructionType, portType, dotList, production
+# For each node get: owner, constructionType, portType, dotList, production (22 total)
 def getNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
     owner = [0, 0, 0, 0, 0]
     constructionType = [0, 0, 0, 0]
@@ -183,10 +195,10 @@ player2VP_upper = [1]
 player3VP_lower = [0]
 player3VP_upper = [1]
 # 19 hexes
-# for each hex: dot - 0->13, resource(6) 0->1, adjNodeInfo
+# for each hex: dot - 0->15, resource(6) 0->1, adjNodeInfo
 # for each 6 adjNode(16): owner(5)0->1, constructType(4)0->1, portType(7)0->1
 hexInfoLowerList = 19 * ((7 + 6*16) * [0])
-hexInfoUpper = [13] + ((6 + 6*16) * [0])
+hexInfoUpper = [15] + ((6 + 6*16) * [0])
 hexInfoUpperList = 19 * hexInfoUpper
 edgeInfoLowerList = 72 * [0, 0, 0, 0, 0]
 edgeInfoUpperList = 72 * [1, 1, 1, 1, 1]

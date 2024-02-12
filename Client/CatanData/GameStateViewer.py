@@ -1,4 +1,4 @@
-from CatanGame import *
+from Game.CatanGame import *
 
 import pickle
 from PIL import Image, ImageChops, ImageDraw, ImageFont
@@ -328,8 +328,8 @@ def GetGameStateImage(gameState):
                 mainImg.paste(coloredSettlement, settlementImgPos, settlementImg)
 
             for city in player.cities:
-                cityImgPos = (citySettlementPos[city][0] - cityImg.size[0] / 2,
-                              citySettlementPos[city][1] - cityImg.size[1] / 2)
+                cityImgPos = (int(citySettlementPos[city][0] - cityImg.size[0] / 2),
+                              int(citySettlementPos[city][1] - cityImg.size[1] / 2))
                 mainImg.paste(coloredCity, cityImgPos, cityImg)
 
         draw = ImageDraw.Draw(mainImg)

@@ -1,5 +1,5 @@
-from CatanGame import constructableNodesList, constructableHexesList, constructableEdgesList
-from CatanAction import *
+from Game.CatanGame import constructableNodesList, constructableHexesList, constructableEdgesList
+from Game.CatanAction import *
 from itertools import combinations
 import numpy as np
 

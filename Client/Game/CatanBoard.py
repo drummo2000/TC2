@@ -1,4 +1,4 @@
-from CatanBoard2 import *
+from Game.CatanBoard2 import *
 from typing import Union
 
 g_boardHexes = \

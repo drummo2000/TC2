@@ -1,4 +1,4 @@
-import GameStateViewer
+import CatanData.GameStateViewer
 import copy
 import cProfile
 import pstats
@@ -6,7 +6,8 @@ import timeit
 import time
 import os.path
 import socket
-from CatanGame import *
+from Game.CatanPlayer import Player
+from Game.CatanGame import *
 from Agents.AgentRandom import *
 from Agents.AgentMCTS import AgentMCTS
 from Agents.AgentUCT import AgentUCT
@@ -15,8 +16,9 @@ from Agents.AgentAlphabeta import AgentAlphabeta
 from Agents.AgentRandom2 import AgentRandom2
 from joblib import Parallel, delayed
 import multiprocessing
-import CSVGenerator
-from CatanUtilsPy import listm
+from CatanData.CSVGenerator import SaveGameStatsCSV
+from CatanData.GameStateViewer import SaveGameStateImage
+from Game.CatanUtilsPy import listm
 import random
 import pickle
 
@@ -24,7 +26,7 @@ import pickle
 import sklearn
 #SGD = Stochastic Gradient Descent
 from sklearn.linear_model import SGDRegressor
-from GameDataExplorer import GetGameTrainingDataFrame
+from CatanData.GameDataExplorer import GetGameTrainingDataFrame
 
 from multiprocessing import Process
 import concurrent.futures
@@ -203,7 +205,7 @@ def RunGame(players, inGame = None, saveImgLog = False, showLog = False, showFul
         game.gameData.SaveRecord("GameData", "CatanData")
 
     if saveCSV:
-        CSVGenerator.SaveGameStatsCSV(game.gameState)
+        SaveGameStatsCSV(game.gameState)
 
     now = datetime.datetime.today()
 
@@ -222,7 +224,7 @@ def RunGame(players, inGame = None, saveImgLog = False, showLog = False, showFul
         with open('GameStates/{0}.pickle'.format(currGameStateName), 'wb') as handle:
             pickle.dump(game.gameState, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-        GameStateViewer.SaveGameStateImage(game.gameState, 'GameStates/{0}.png'.format(currGameStateName))
+        SaveGameStateImage(game.gameState, 'GameStates/{0}.png'.format(currGameStateName))
 
     if showLog:
 

@@ -1,10 +1,10 @@
-from CatanAction import *
+from Game.CatanAction import *
 import math
 import sys
-from CatanUtilsPy import CanAfford as cf
-from CatanUtilsPy import listm
+from Game.CatanUtilsPy import CanAfford as cf
+from Game.CatanUtilsPy import listm
 import pickle
-from GameDataExplorer import GetGameStateDataFrame
+from CatanData.GameDataExplorer import GetGameStateDataFrame
 
 class PlayerStats(object):
 

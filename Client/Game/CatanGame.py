@@ -1,8 +1,8 @@
 import os
-from CatanAction import *
+from Game.CatanAction import *
 import pickle
 import datetime
-from GameData import GameData
+from CatanData.GameData import GameData
 
 # Contains all info on current game and methods to update state
 class GameState(object):

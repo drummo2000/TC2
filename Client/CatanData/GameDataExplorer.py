@@ -1,4 +1,4 @@
-from CatanGame import *
+from Game.CatanGame import *
 import numpy as np
 import glob
 import pickle

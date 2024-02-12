@@ -1,6 +1,6 @@
-from CatanGame import GameState
-from CatanPlayer import Player
-from CatanAction import *
+from Game.CatanGame import GameState
+from Game.CatanPlayer import Player
+from Game.CatanAction import *
 from itertools import combinations
 import math
 import random

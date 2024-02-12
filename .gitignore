@@ -90,3 +90,7 @@ ENV/
 *.xml
 .idea/TC2.iml
 *.iml
+
+Client/tensorboard_logs/
+.DS_Store
+.vscode/
