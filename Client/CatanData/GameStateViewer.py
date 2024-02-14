@@ -1,4 +1,4 @@
-from Game.CatanGame import *
+from Game.CatanGame import g_developmentCards
 
 import pickle
 from PIL import Image, ImageChops, ImageDraw, ImageFont

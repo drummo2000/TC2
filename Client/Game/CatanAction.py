@@ -193,6 +193,11 @@ class BuildSettlementAction(BuildAction):
             gameState.players[self.playerNumber].GetStartingResources(gameState)
 
             gameState.currState = "START2B"
+
+            # Record resource production and trade rates after setup phase
+            for diceNumber, resourceList in gameState.players[self.playerNumber].diceProduction.items():
+                gameState.players[self.playerNumber].stats.setupResourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
+            gameState.players[self.playerNumber].stats.setupTradeRates = gameState.players[self.playerNumber].tradeRates
     
     def getString(self):
         return f"{self.type}{self.position}"
@@ -301,6 +306,7 @@ class BuyDevelopmentCardAction(Action):
         #logging.debug("APPLYING ACTION! \n TYPE = {0}".format(BuyDevelopmentCardAction.type))
 
         gameState.players[self.playerNumber].resources -= BuyDevelopmentCardAction.cost
+        gameState.players[self.playerNumber].stats.devCardsBought += 1
 
         if self.tradeOptimistic:
             discountCount = 0
@@ -330,6 +336,8 @@ class UseDevelopmentCardAction(Action):
         gameState.players[self.playerNumber].mayPlayDevCards[self.index] = False
 
         gameState.players[self.playerNumber].playedDevCard = True
+
+        gameState.players[self.playerNumber].stats.usedDevCards[self.index] += 1
 
 class UseKnightsCardAction(UseDevelopmentCardAction):
 
@@ -395,7 +403,10 @@ class UseMonopolyCardAction(UseDevelopmentCardAction):
 
             total += amount
 
+            gameState.players[index].stats.totalResourcesStolen += amount
+
         gameState.players[self.playerNumber].resources[self.resource] += total
+        gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resource] += total
     
     def getString(self):
         return f"{self.type}{self.resource}"
@@ -424,6 +435,9 @@ class UseYearOfPlentyCardAction(UseDevelopmentCardAction):
         gameState.players[self.playerNumber].resources[self.resources[0]] += 1
 
         gameState.players[self.playerNumber].resources[self.resources[1]] += 1
+
+        gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resources[0]] += 1
+        gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resources[1]] += 1
     
     def getString(self):
         return f"{self.type}{self.resources[0]}{self.resources[1]}{self.resources[2]}{self.resources[3]}{self.resources[4]}"
@@ -512,6 +526,7 @@ class EndTurnAction(Action):
         gameState.players[self.playerNumber].rolledTheDices = False
         gameState.players[self.playerNumber].placedRobber   = False
         gameState.currTurn += 1
+        gameState.players[self.playerNumber].stats.numTurns += 1
 
         playerPoints = gameState.players[self.playerNumber].GetVictoryPoints()
 
@@ -554,6 +569,8 @@ class DiscardResourcesAction(Action):
         #logging.debug("APPLYING ACTION! \n TYPE = {0}".format(DiscardResourcesAction.type))
 
         gameState.players[self.playerNumber].resources -= self.resources
+
+        gameState.players[self.playerNumber].stats.totalResourcesDiscarded += sum(self.resources)
 
         gameState.currPlayer += 1
 
@@ -605,6 +622,8 @@ class ChoosePlayerToStealFromAction(Action):
             gameState.players[self.playerNumber].resources[stolenResource] += 1
 
             gameState.players[self.targetPlayerNumber].resources[stolenResource] -= 1
+
+            gameState.players[self.targetPlayerNumber].stats.totalResourcesStolen += 1
 
         if gameState.dicesAreRolled:
             gameState.currState = "PLAY1"
@@ -738,6 +757,8 @@ class BankTradeOfferAction(Action):
 
         gameState.players[self.playerNumber].resources -= listm(give)
         gameState.players[self.playerNumber].resources += listm(get )
+
+        gameState.players[self.playerNumber].stats.resourcesFromBankTrade += listm(get)
     
     def getString(self):
         return f"{self.type}{self.giveResources[0]}{self.giveResources[1]}{self.giveResources[2]}{self.giveResources[3]}{self.giveResources[4]}_{self.getResources[0]}{self.getResources[1]}{self.getResources[2]}{self.getResources[3]}{self.getResources[4]}"

@@ -226,7 +226,7 @@ class CatanSetupEnv(gym.Env):
 class CatanSetupRandomEnv(gym.Env):
     """
     Model Chooses placement actions, then random actions for rest of the game
-    Reward: win
+    Reward: +3 win, -1 loss
     Action Space: 54
     State Space
     """

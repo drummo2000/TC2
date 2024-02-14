@@ -3,29 +3,141 @@ import math
 import sys
 from Game.CatanUtilsPy import CanAfford as cf
 from Game.CatanUtilsPy import listm
-import pickle
-from CatanData.GameDataExplorer import GetGameStateDataFrame
 
 class PlayerStats(object):
 
     def __init__(self):
 
-        self.numberOfTurns         = 0
-        self.roadsBuilt            = 0
+        # General
+        self.numTurns = 0 # Every time endTurn is called not each action
+        self.victoryPoints = 0
+        # Dev card Breakdown
+        self.devCardsBought = 0
+        self.usedDevCards = listm([0, 0, 0, 0, 0])
+        # Point Breakdown
         self.settlementsBuilt      = 0
         self.citiesBuilt           = 0
-        self.cardsBought           = 0
-        self.cardsUsed             = [0, 0, 0, 0, 0]
-        self.numberOfTurnsInPlace  = [0, 0, 0, 0] #first, second, third, last
-        self.numberOfTurnsWasted   = 0 #Wasted turns are those without possible actions (just endTurn)
-        self.totalResourceReceived = [0, 0, 0, 0, 0]
-        self.resourceProduction    = [0, 0, 0, 0, 0]
-        self.totalCardsDiscarded   = [0, 0, 0, 0, 0]
-        self.numberOfTurnsWithArmy = 0
-        self.numberOfTurnsWithRoad = 0
+        self.devCardVP             = 0
+        self.largestArmy           = 0
+        self.longestRoad           = 0
+        # Resource Breakdown
+        self.resourcesReceived = listm([0, 0, 0, 0, 0])
+        self.totalResourcesDiscarded = 0 # from rolling 7
+        self.totalResourcesStolen  = 0 # from monopoly/knight
+        self.resourcesFromDevCard = listm([0, 0, 0, 0, 0]) # from monopoly/year of plenty
+        self.resourcesFromBankTrade = listm([0, 0, 0, 0, 0])
+        self.finalResourceProduction = listm([0, 0, 0, 0, 0, 0])
+        self.finalTradeRates = listm([0, 0, 0, 0, 0])
+        # Setup Breakdown
+        self.setupResourceProduction = listm([0, 0, 0, 0, 0, 0])
+        self.setupTradeRates = listm([0, 0, 0, 0, 0])
+    
+    def __str__(self):
+        output = f"General\n" + \
+                 f" numTurns: {self.numTurns}\n" + \
+                 f" victoryPoints: {self.victoryPoints}\n" + \
+                 f" finalTradeRates: {self.finalTradeRates}\n" + \
+                 f"Dev Card Breakdown\n" + \
+                 f" devCardsBought: {self.devCardsBought}\n" + \
+                 f" usedDevCards: {self.usedDevCards}\n" + \
+                 f"Point Breakdown\n" + \
+                 f" settlementsBuilt: {self.settlementsBuilt}\n" + \
+                 f" citiesBuilt: {self.citiesBuilt}\n" + \
+                 f" devCardVP: {self.devCardVP}\n" + \
+                 f" largestArmy: {self.largestArmy}\n" + \
+                 f" longestRoad: {self.longestRoad}\n" + \
+                 f"Resource Breakdown\n" + \
+                 f" resourcesReceived: {self.resourcesReceived}\n" + \
+                 f" totalResourcesDiscarded: {self.totalResourcesDiscarded}\n" + \
+                 f" totalResourcesStolen: {self.totalResourcesStolen}\n" + \
+                 f" resourcesFromDevCard: {self.resourcesFromDevCard}\n" + \
+                 f" resourcesFromBankTrade: {self.resourcesFromBankTrade}\n" + \
+                 f" finalResourceProduction: {self.finalResourceProduction[:-1]}\n" + \
+                 f"Setup Breakdown\n" + \
+                 f" setupResourceProduction: {self.setupResourceProduction[:-1]}\n" + \
+                 f" setupTradeRates: {self.setupTradeRates}\n"
+        return output
+
+class PlayerStatsTracker(PlayerStats):
+    def __init__(self):
+        super(PlayerStatsTracker, self).__init__()
+        self.numGames = 0
+    
+    def __add__(self, other):
+        if isinstance(other, PlayerStats):
+            self.numGames += 1
+            # General
+            self.numTurns += other.numTurns
+            self.victoryPoints += other.victoryPoints
+            # Dev card Breakdown
+            self.devCardsBought += other.devCardsBought
+            self.usedDevCards += other.usedDevCards
+            # Point Breakdown
+            self.settlementsBuilt      += other.settlementsBuilt
+            self.citiesBuilt           += other.citiesBuilt
+            self.devCardVP             += other.devCardVP
+            self.largestArmy           += other.largestArmy
+            self.longestRoad           += other.longestRoad
+            # Resource Breakdown
+            self.resourcesReceived += other.resourcesReceived
+            self.totalResourcesDiscarded += other.totalResourcesDiscarded
+            self.totalResourcesStolen += other.totalResourcesStolen
+            self.resourcesFromDevCard += other.resourcesFromDevCard
+            self.resourcesFromBankTrade += other.resourcesFromBankTrade
+            self.finalResourceProduction += other.finalResourceProduction
+            self.finalTradeRates += other.finalTradeRates
+            # Setup Breakdown
+            self.setupResourceProduction += other.setupResourceProduction
+            self.setupTradeRates += other.setupTradeRates
+            return self
+        else:
+            ValueError("Can only add PlayerStats objects")
+
+    def getAverages(self):
+        # General
+        self.numTurns = self.numTurns / self.numGames
+        self.victoryPoints = self.victoryPoints / self.numGames
+        # Dev card Breakdown
+        self.devCardsBought = self.devCardsBought / self.numGames
+        self.usedDevCards = self.usedDevCards / self.numGames 
+        # Point Breakdown
+        self.settlementsBuilt      = self.settlementsBuilt / self.numGames
+        self.citiesBuilt           = self.citiesBuilt / self.numGames
+        self.devCardVP             = self.devCardVP / self.numGames
+        self.largestArmy           = self.largestArmy / self.numGames
+        self.longestRoad           = self.longestRoad / self.numGames
+        # Resource Breakdown
+        self.resourcesReceived = self.resourcesReceived / self.numGames
+        self.totalResourcesDiscarded = self.totalResourcesDiscarded / self.numGames
+        self.totalResourcesStolen  = self.totalResourcesStolen / self.numGames
+        self.resourcesFromDevCard = self.resourcesFromDevCard / self.numGames
+        self.resourcesFromBankTrade = self.resourcesFromBankTrade / self.numGames
+        self.finalResourceProduction = self.finalResourceProduction / self.numGames
+        self.finalTradeRates = self.finalTradeRates / self.numGames
+        # Setup Breakdown
+        self.setupResourceProduction = self.setupResourceProduction / self.numGames
+        self.setupTradeRates = self.setupTradeRates / self.numGames
+        
+
 
 # Base player class to extend when building a new agent
 class Player(object):
+
+    def generatePlayerStats(self):
+        """
+        Set PlayerStats attributes after game
+        """
+        self.stats.victoryPoints = self.victoryPoints
+        self.stats.settlementsBuilt = len(self.settlements)
+        self.stats.citiesBuilt = len(self.cities)
+        self.stats.devCardVP = self.developmentCards[VICTORY_POINT_CARD_INDEX]
+        self.stats.largestArmy = int(self.biggestArmy)
+        self.stats.longestRoad = int(self.biggestRoad)
+        self.stats.finalTradeRates = self.tradeRates
+
+        for diceNumber, resourceList in self.diceProduction.items():
+            self.stats.finalResourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
+
 
     Model = None
 
@@ -83,6 +195,8 @@ class Player(object):
 
         self.roadCount = 0
         self.agentName = "RANDOM"
+
+        self.stats = PlayerStats()
 
     # @staticmethod
     # def LoadModel():
@@ -148,6 +262,7 @@ class Player(object):
                             #     self.name, gameState.boardHexes[adjacentHexes[h]].production))
 
                             self.resources[g_resources.index(gameState.boardHexes[adjacentHexes[h]].production)] += 1
+        
 
     def UpdatePlayerResources(self, gameState, diceNumber = None):
 
@@ -158,6 +273,7 @@ class Player(object):
             if sum(diceProduction) > 0:
                 num_start = len(self.resources)
                 self.resources += diceProduction
+                self.stats.resourcesReceived += diceProduction
                 num_end = len(self.resources)
                 if num_start != num_end:
                     print("\n\n\n UpdatePlayerResources changes length \n\n\n", self.seatNumber, self.resources, diceProduction)

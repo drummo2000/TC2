@@ -94,3 +94,4 @@ ENV/
 Client/tensorboard_logs/
 .DS_Store
 .vscode/
+Client/.DS_Store

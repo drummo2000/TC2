@@ -1,4 +1,3 @@
-import CatanData.GameStateViewer
 import copy
 import cProfile
 import pstats
