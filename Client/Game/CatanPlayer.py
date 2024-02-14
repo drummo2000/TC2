@@ -23,7 +23,7 @@ class PlayerStats(object):
         # Resource Breakdown
         self.resourcesReceived = listm([0, 0, 0, 0, 0])
         self.totalResourcesDiscarded = 0 # from rolling 7
-        self.totalResourcesStolen  = 0 # from monopoly/knight
+        self.totalResourcesStolen  = 0 # from monopoly/knight (stolen from)
         self.resourcesFromDevCard = listm([0, 0, 0, 0, 0]) # from monopoly/year of plenty
         self.resourcesFromBankTrade = listm([0, 0, 0, 0, 0])
         self.finalResourceProduction = listm([0, 0, 0, 0, 0, 0])
@@ -34,28 +34,31 @@ class PlayerStats(object):
     
     def __str__(self):
         output = f"General\n" + \
-                 f" numTurns: {self.numTurns}\n" + \
-                 f" victoryPoints: {self.victoryPoints}\n" + \
-                 f" finalTradeRates: {self.finalTradeRates}\n" + \
+                 f"    numTurns: {self.numTurns}\n" + \
+                 f"    victoryPoints: {self.victoryPoints}\n" + \
+                 f"    finalTradeRates: {self.finalTradeRates}\n" + \
                  f"Dev Card Breakdown\n" + \
-                 f" devCardsBought: {self.devCardsBought}\n" + \
-                 f" usedDevCards: {self.usedDevCards}\n" + \
+                 f"    devCardsBought: {self.devCardsBought}\n" + \
+                 f"    usedDevCards: {self.usedDevCards}\n" + \
                  f"Point Breakdown\n" + \
-                 f" settlementsBuilt: {self.settlementsBuilt}\n" + \
-                 f" citiesBuilt: {self.citiesBuilt}\n" + \
-                 f" devCardVP: {self.devCardVP}\n" + \
-                 f" largestArmy: {self.largestArmy}\n" + \
-                 f" longestRoad: {self.longestRoad}\n" + \
+                 f"    settlementsBuilt: {self.settlementsBuilt}\n" + \
+                 f"    citiesBuilt: {self.citiesBuilt}\n" + \
+                 f"    devCardVP: {self.devCardVP}\n" + \
+                 f"    largestArmy: {self.largestArmy}\n" + \
+                 f"    longestRoad: {self.longestRoad}\n" + \
                  f"Resource Breakdown\n" + \
-                 f" resourcesReceived: {self.resourcesReceived}\n" + \
-                 f" totalResourcesDiscarded: {self.totalResourcesDiscarded}\n" + \
-                 f" totalResourcesStolen: {self.totalResourcesStolen}\n" + \
-                 f" resourcesFromDevCard: {self.resourcesFromDevCard}\n" + \
-                 f" resourcesFromBankTrade: {self.resourcesFromBankTrade}\n" + \
-                 f" finalResourceProduction: {self.finalResourceProduction[:-1]}\n" + \
+                 f"    resourcesReceived: {self.resourcesReceived}\n" + \
+                 f"    totalResourcesReceivedPerTurn: {round(sum(self.resourcesReceived)/self.numTurns, 3)}\n" + \
+                 f"    totalResourcesDiscarded: {self.totalResourcesDiscarded}\n" + \
+                 f"    totalResourcesStolen: {self.totalResourcesStolen}\n" + \
+                 f"    resourcesFromDevCard: {self.resourcesFromDevCard}\n" + \
+                 f"    totalResourcesFromDevCard: {round(sum(self.resourcesFromDevCard), 3)}\n" + \
+                 f"    resourcesFromBankTrade: {self.resourcesFromBankTrade}\n" + \
+                 f"    totalResourcesFromBankTrade: {round(sum(self.resourcesFromBankTrade), 3)}\n" + \
+                 f"    finalResourceProduction: {self.finalResourceProduction[:-1]}\n" + \
                  f"Setup Breakdown\n" + \
-                 f" setupResourceProduction: {self.setupResourceProduction[:-1]}\n" + \
-                 f" setupTradeRates: {self.setupTradeRates}\n"
+                 f"    setupResourceProduction: {self.setupResourceProduction[:-1]}\n" + \
+                 f"    setupTradeRates: {self.setupTradeRates}\n"
         return output
 
 class PlayerStatsTracker(PlayerStats):
