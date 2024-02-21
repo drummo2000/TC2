@@ -161,7 +161,6 @@ defaultGame = CreateGame(defaultPlayers)
 def RunSingleGame(game):
 
     game = pickle.loads(pickle.dumps(game, -1))
-    # print(f"pickle.loads: {(t2-t1)*1000}")
 
     while True:
 
@@ -173,24 +172,19 @@ def RunSingleGame(game):
         # Then apply the actions chosen by agent
         if isinstance(agentAction, list):
             for action in agentAction:
-                if game.recordData:
-                    #pickle.load(pickle.dump(game.gameState, pickle.HIGHEST_PROTOCOL)
-                    game.gameData.AddRecord(action, game.gameState)
                 action.ApplyAction(game.gameState)
         else:
-            if game.recordData:
-                game.gameData.AddRecord(agentAction, game.gameState)
             agentAction.ApplyAction(game.gameState)
 
         if game.gameState.currState == "OVER":
-            game.gameData.AddRecord(agentAction, game.gameState)
             return game
 
 
 def RunGame(players, inGame = None, saveImgLog = False, showLog = False, showFullLog = False, returnLog=False, saveCSV=False):
 
     if players is None:
-        players = copy.deepcopy(defaultPlayers)
+        # players = copy.deepcopy(defaultPlayers)
+        raise Exception("PLAYERS IS NONE")
 
     if inGame is None:
         inGame = CreateGame(players)
@@ -536,18 +530,18 @@ def RunModelTesting(numberOfTests, loadModel, customBoard = None):
                          "TIME ELAPSED = {2}".format(score, float(i + 1) / numberOfTests * 100,
                                                      time.strftime("%H:%M:%S", time.gmtime(elapsed_time))))
 
-def runMultipleGames(numGames)-> list:
+def runMultipleGames(numGames, players)-> list:
     results = [0, 0, 0, 0]
     for i in range(0, numGames):
         winner = RunGame(players=players)
         results[winner] += 1
     return results
 
-def runParallelGames(totalGames, numProcesses) -> list:
+def runParallelGames(totalGames, numProcesses, players) -> list:
     finalresults = [0, 0, 0, 0]
     with concurrent.futures.ProcessPoolExecutor() as executor:
         # Submit each game simulation to the executor
-        futures = [executor.submit(runMultipleGames, int(totalGames/numProcesses)) for i in range(numProcesses)]
+        futures = [executor.submit(runMultipleGames, int(totalGames/numProcesses), players) for i in range(numProcesses)]
 
         # Process the results as they become available
         for future in concurrent.futures.as_completed(futures):
@@ -556,24 +550,25 @@ def runParallelGames(totalGames, numProcesses) -> list:
     return finalresults
 
 players = [
-    # AgentUCT(name="P0", seatNumber=0, choiceTime=0.1, simulationCount=20, useModel=False),
+    AgentRandom2("P0", 0),
     # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
     # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
-    # AgentMCTS(name="P3", seatNumber=3, choiceTime=0.1, useModel=False)]
-    AgentRandom2("P0", 0),
     AgentRandom2("P1", 1),
     AgentRandom2("P2", 2),
-    AgentRandom2("P3", 3)
+    AgentMCTS(name="P3", seatNumber=3, simulationCount=100)
+    # AgentRandom2("P2", 2),
+    # AgentRandom2("P3", 3)
 ]
 
 if __name__ == '__main__':
 
-    numGames = 10000
+    numGames = 1
     numProcesses = 6
 
     start_time = time.time()
     
-    results = runParallelGames(numGames, numProcesses)
+    # results = runParallelGames(numGames, numProcesses, players)
+    results = runMultipleGames(numGames, players)
 
     end_time = time.time()
     print(f"\n\nResults: {results}")

@@ -412,17 +412,16 @@ class AgentRandom(Player):
         for i in range(0, len(player.resources) - 1):
 
             if player.resources[i] == minResourceAmount:
-                candidateResource.append(i + 1)
+                candidateResource.append(i)
 
         if len(candidateResource) <= 0:
 
-            possible = [1,2,3,4,5]
+            # NOTE: Resource index's are 0-4, don't get why this is 1-5
+            # possible = [1,2,3,4,5]
+            # randomPick = possible[int(random.random() * 5)]
+            # logging.critical("Monopoly pick FAILED!!!! Picking at random: {0}".format(randomPick))
 
-            randomPick = possible[int(random.random() * 5)]
-
-            logging.critical("Monopoly pick FAILED!!!! Picking at random: {0}".format(randomPick))
-
-            chosenResource = randomPick
+            chosenResource = int(random.random() * 5)
 
         else:
             chosenResource = candidateResource[int(random.random() * len(candidateResource))]

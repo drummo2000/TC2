@@ -27,6 +27,24 @@ def getSetupRandomInputState(gameState: GameState):
     
     return np.array(nodeInfo)
 
+setupRandomWithRoadsLowerBounds = np.array((54 * (22*[0])) + (72 * (5*[0])))
+var = ([1] * 16) + (5 * [5]) + [15]
+setupRandomWithRoadsUpperBounds = np.array((54 * var) + (72 * (5*[1])))
+def getSetupRandomWithRoadsInputState(gameState: GameState):
+
+    # Get Node info
+    nodes = gameState.boardNodes
+    nodeInfo = []
+    for nodeIndex in constructableNodesList:
+        nodeInfo.extend(getNodeRepresentation(nodes[nodeIndex], gameState))
+
+    edgeInfo = []
+    for edgeIndex in constructableEdgesList:
+        edgeInfo.extend(getEdgeRepresentation(gameState.boardEdges[edgeIndex], gameState))
+    
+    output = [*nodeInfo, *edgeInfo]
+    return np.array(output)
+
 
 # returns 2350 length 1D array
 def getInputState(gameState: GameState):

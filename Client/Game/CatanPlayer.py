@@ -3,6 +3,7 @@ import math
 import sys
 from Game.CatanUtilsPy import CanAfford as cf
 from Game.CatanUtilsPy import listm
+from Game.CatanBoard import g_resources
 
 class PlayerStats(object):
 
@@ -11,6 +12,7 @@ class PlayerStats(object):
         # General
         self.numTurns = 0 # Every time endTurn is called not each action
         self.victoryPoints = 0
+        self.numRoadsBuilt = 0
         # Dev card Breakdown
         self.devCardsBought = 0
         self.usedDevCards = listm([0, 0, 0, 0, 0])
@@ -37,6 +39,7 @@ class PlayerStats(object):
                  f"    numTurns: {self.numTurns}\n" + \
                  f"    victoryPoints: {self.victoryPoints}\n" + \
                  f"    finalTradeRates: {self.finalTradeRates}\n" + \
+                 f"    numRoadsBuilt: {self.numRoadsBuilt}\n" + \
                  f"Dev Card Breakdown\n" + \
                  f"    devCardsBought: {self.devCardsBought}\n" + \
                  f"    usedDevCards: {self.usedDevCards}\n" + \
@@ -58,8 +61,38 @@ class PlayerStats(object):
                  f"    finalResourceProduction: {self.finalResourceProduction[:-1]}\n" + \
                  f"Setup Breakdown\n" + \
                  f"    setupResourceProduction: {self.setupResourceProduction[:-1]}\n" + \
-                 f"    setupTradeRates: {self.setupTradeRates}\n"
+                 f"    totalSetupResourceProduction: {round(sum(self.setupResourceProduction[:-1]))}\n" + \
+                 f"    setupTradeRates: {self.setupTradeRates}\n" + \
+                 f"RESOURCES: {g_resources}\n"
         return output
+    
+    def getList(self):
+        # 22
+        return [
+                self.numTurns,
+                self.victoryPoints,
+                self.finalTradeRates,
+                self.numRoadsBuilt,
+                self.devCardsBought,
+                self.usedDevCards,
+                self.settlementsBuilt,
+                self.citiesBuilt,
+                self.devCardVP,
+                self.largestArmy,
+                self.longestRoad,
+                self.resourcesReceived,
+                round(sum(self.resourcesReceived)/self.numTurns, 3),
+                self.totalResourcesDiscarded,
+                self.totalResourcesStolen,
+                self.resourcesFromDevCard,
+                round(sum(self.resourcesFromDevCard), 3),
+                self.resourcesFromBankTrade,
+                round(sum(self.resourcesFromBankTrade), 3),
+                self.finalResourceProduction[:-1],
+                self.setupResourceProduction[:-1],
+                round(sum(self.setupResourceProduction[:-1])),
+                self.setupTradeRates
+        ]
 
 class PlayerStatsTracker(PlayerStats):
     def __init__(self):
@@ -72,6 +105,7 @@ class PlayerStatsTracker(PlayerStats):
             # General
             self.numTurns += other.numTurns
             self.victoryPoints += other.victoryPoints
+            self.numRoadsBuilt += other.numRoadsBuilt
             # Dev card Breakdown
             self.devCardsBought += other.devCardsBought
             self.usedDevCards += other.usedDevCards
@@ -100,6 +134,7 @@ class PlayerStatsTracker(PlayerStats):
         # General
         self.numTurns = self.numTurns / self.numGames
         self.victoryPoints = self.victoryPoints / self.numGames
+        self.numRoadsBuilt = self.numRoadsBuilt / self.numGames
         # Dev card Breakdown
         self.devCardsBought = self.devCardsBought / self.numGames
         self.usedDevCards = self.usedDevCards / self.numGames 
@@ -137,6 +172,7 @@ class Player(object):
         self.stats.largestArmy = int(self.biggestArmy)
         self.stats.longestRoad = int(self.biggestRoad)
         self.stats.finalTradeRates = self.tradeRates
+        self.stats.numRoadsBuilt = len(self.roads)
 
         for diceNumber, resourceList in self.diceProduction.items():
             self.stats.finalResourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]

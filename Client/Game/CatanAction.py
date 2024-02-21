@@ -374,6 +374,8 @@ class UseMonopolyCardAction(UseDevelopmentCardAction):
     type = 'UseMonopolyCard'
 
     def __init__(self, playerNumber, resource):
+        if resource > 4:
+            raise ValueError("RESOURCE INDEX FOR MONOPOLY SHOULD BE BETWEEN 0-4")
 
         super(UseMonopolyCardAction, self).__init__(playerNumber, MONOPOLY_CARD_INDEX)
 
@@ -406,6 +408,7 @@ class UseMonopolyCardAction(UseDevelopmentCardAction):
             gameState.players[index].stats.totalResourcesStolen += amount
 
         gameState.players[self.playerNumber].resources[self.resource] += total
+
         gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resource] += total
     
     def getString(self):

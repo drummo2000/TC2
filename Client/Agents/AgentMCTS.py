@@ -634,7 +634,7 @@ class AgentMCTS(AgentRandom):
         actionPossibilities = []
 
         for i in range(0, len(player.resources) - 1):
-            actionPossibilities.append(UseMonopolyCardAction(player.seatNumber, i+1))
+            actionPossibilities.append(UseMonopolyCardAction(player.seatNumber, i))
 
         return actionPossibilities
 
