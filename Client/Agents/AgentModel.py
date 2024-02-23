@@ -6,7 +6,48 @@ import random
 from sb3_contrib.ppo_mask import MaskablePPO
 
 
-class AgentModel(AgentRandom2):
+class AgentSelfPlayOpp(AgentRandom2):
+    """
+    Used for Self play env oppononents where the model will be updated frequently
+    """
+
+    def __init__(self, name, seatNumber, model: MaskablePPO, getActionMaskFunc, getInputStateFunc, playerTrading: bool=False):
+
+        super(AgentSelfPlayOpp, self).__init__(name, seatNumber)
+        self.agentName              = name
+        self.playerTrading          = playerTrading
+        self.model                  = model
+        self.getActionMaskFunc  = getActionMaskFunc
+        self.getInputStateFunc      = getInputStateFunc
+
+    def DoMove(self, game):
+        possibleActions = self.GetPossibleActions(game.gameState)
+        if len(possibleActions) == 1:
+            return possibleActions[0]
+
+        return self.getModelAction(game, possibleActions)
+
+    def getModelAction(self, game, possibleActions):
+        """
+        Uses model and env to get action
+        """
+        action_masks, indexActionDict = self.getActionMaskFunc(possibleActions)
+        state = self.getInputStateFunc(game.gameState)
+        action, _states = self.model.predict(state, action_masks=action_masks)
+        actionObj = indexActionDict[action.item()]
+        return actionObj
+
+
+
+
+
+####################################################################################################
+
+
+
+
+
+class AgentMultiModel(AgentRandom2):
     """
     Agent which uses trained model to decide moves.
     Must pass the environment model was trained on for it to work.
@@ -15,7 +56,7 @@ class AgentModel(AgentRandom2):
 
     def __init__(self, name, seatNumber, model: MaskablePPO=None, env=None, setupModel: MaskablePPO=None, setupEnv=None, playerTrading: bool=False):
 
-        super(AgentModel, self).__init__(name, seatNumber)
+        super(AgentMultiModel, self).__init__(name, seatNumber)
         self.agentName              = name
         self.playerTrading          = playerTrading
         self.model                  = model
@@ -35,18 +76,18 @@ class AgentModel(AgentRandom2):
         # Setup phase
         if not game.gameState.setupDone:
             if game.gameState.currState in self.setupPhases:
-                return self.getSetupActionObj(game, possibleActions)
+                return self.getModelSetupAction(game, possibleActions)
             else:
                 return self.getRandomAction(game, possibleActions)
 
         # Setup over
         if self.model:
-            return self.getActionObj(game, possibleActions)
+            return self.getModelAction(game, possibleActions)
         else:
             return self.getRandomAction(game, possibleActions)
 
 
-    def getActionObj(self, game, possibleActions):
+    def getModelAction(self, game, possibleActions):
         """
         Uses model and env to get action
         """
@@ -57,7 +98,7 @@ class AgentModel(AgentRandom2):
         return actionObj
 
 
-    def getSetupActionObj(self, game, possibleActions):
+    def getModelSetupAction(self, game, possibleActions):
         """
         Uses setupModel and setupEnv to get action
         """

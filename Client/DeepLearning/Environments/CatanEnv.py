@@ -70,20 +70,17 @@ class CatanEnv(gym.Env):
         truncated = False
         done = False
 
+        prevVP = self.agent.victoryPoints
+
         # Apply action chosen
         actionObj = self.indexActionDict[action]
         actionObj.ApplyAction(self.game.gameState)
 
         # get reward
-        # winner = self.game.gameState.winner
-        reward = self.agent.victoryPoints - 7
-        # if winner == 0:
-        #     reward = 3
-        # elif winner == 1 or winner == 2 or winner == 3:
-        #     reward = -1
+        reward = self.agent.victoryPoints - prevVP
 
         if self.game.gameState.currState == "OVER":
-            return None, reward, True, truncated, {"ActionMask": None}
+            return None, reward, True, truncated, {}
         
         # if game is not over cycle through actions until its agents turn again
         currPlayer = self.players[self.game.gameState.currPlayer]
@@ -92,7 +89,7 @@ class CatanEnv(gym.Env):
             agentAction.ApplyAction(self.game.gameState)
             currPlayer = self.players[self.game.gameState.currPlayer]
             if self.game.gameState.currState == "OVER":
-                return None, reward, True, truncated, {"ActionMask": None}
+                return None, reward, True, truncated, {}
         
         # Now ready for agent to choose action, get observation and action mask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
@@ -103,7 +100,7 @@ class CatanEnv(gym.Env):
         observation = getInputState(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
-        return observation, 0, done, truncated, {}
+        return observation, reward, done, truncated, {}
     
     # Used by PPO algorithm
     def action_masks(self):

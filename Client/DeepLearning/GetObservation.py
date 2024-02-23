@@ -45,6 +45,21 @@ def getSetupRandomWithRoadsInputState(gameState: GameState):
     output = [*nodeInfo, *edgeInfo]
     return np.array(output)
 
+# not including recieving trading phase
+# [startSet, startRoad, Play, play1, PlacingRobber, Waitingfordiscards, waitingForChoice, placingfreeroad]
+phaseOneHotMapping = {
+    "START1A":              [1, 0, 0, 0, 0, 0, 0, 0],
+    "START1B":              [0, 1, 0, 0, 0, 0, 0, 0],
+    "START2A":              [1, 0, 0, 0, 0, 0, 0, 0],
+    "START2B":              [0, 1, 0, 0, 0, 0, 0, 0],
+    "PLAY":                 [0, 0, 1, 0, 0, 0, 0, 0],
+    "PLAY1":                [0, 0, 0, 1, 0, 0, 0, 0],
+    "PLACING_ROBBER":       [0, 0, 0, 0, 1, 0, 0, 0],
+    "WAITING_FOR_DISCARDS": [0, 0, 0, 0, 0, 1, 0, 0],
+    "WAITING_FOR_CHOICE":   [0, 0, 0, 0, 0, 0, 1, 0],
+    "PLACING_FREE_ROAD1":   [0, 0, 0, 0, 0, 0, 0, 1],
+    "PLACING_FREE_ROAD2":   [0, 0, 0, 0, 0, 0, 0, 1],
+}
 
 # returns 2350 length 1D array
 def getInputState(gameState: GameState):
@@ -89,7 +104,10 @@ def getInputState(gameState: GameState):
     for edgeIndex in constructableEdgesList:
         edgeInfo.extend(getEdgeRepresentation(gameState.boardEdges[edgeIndex], gameState))
 
-    output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, *longestRoadPlayer, *largestArmyPlayer, player1VP, player2VP, player3VP, *hexInfo, *edgeInfo]
+    # Get Game phase
+    phase = phaseOneHotMapping[gameState.currState]
+
+    output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, *longestRoadPlayer, *largestArmyPlayer, player1VP, player2VP, player3VP, *hexInfo, *edgeInfo, *phase]
 
     return np.array(output)
 
@@ -220,6 +238,8 @@ hexInfoUpper = [15] + ((6 + 6*16) * [0])
 hexInfoUpperList = 19 * hexInfoUpper
 edgeInfoLowerList = 72 * [0, 0, 0, 0, 0]
 edgeInfoUpperList = 72 * [1, 1, 1, 1, 1]
+phaseLower = [0] * 8
+phaseUpper = [1] * 8
 
 lowerBounds = np.array([
     *myResourcesLower,
@@ -235,7 +255,8 @@ lowerBounds = np.array([
     *player2VP_lower,
     *player3VP_lower,
     *hexInfoLowerList,
-    *edgeInfoLowerList
+    *edgeInfoLowerList,
+    *phaseLower
 ])
 
 upperBounds = np.array([
@@ -252,7 +273,8 @@ upperBounds = np.array([
     *player2VP_upper,
     *player3VP_upper,
     *hexInfoUpperList,
-    *edgeInfoUpperList
+    *edgeInfoUpperList,
+    *phaseUpper
 ])
 
 # Other possible inputs

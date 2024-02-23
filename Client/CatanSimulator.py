@@ -134,7 +134,7 @@ def CreateGame(players, recordData = False, customBoard = None)->Game:
     for player in players:
         game.AddPlayer(player, player.seatNumber)
 
-    game.gameState.players = game.gameState.players[:len(players)]
+    # game.gameState.players = game.gameState.players[:len(players)]
 
     startingPlayer = random.randint(0, len(players)-1)
 
