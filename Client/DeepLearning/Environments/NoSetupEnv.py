@@ -9,9 +9,9 @@ from Game.CatanGame import *
 from Game.CatanPlayer import Player
 from Agents.AgentRandom2 import AgentRandom2
 from CatanData.GameStateViewer import SaveGameStateImage
-from DeepLearning.GetObservation import getInputState, getSetupInputState, getSetupRandomInputState, lowerBounds, upperBounds, setupRandomLowerBounds, setupRandomUpperBounds
+from DeepLearning.GetObservation import getObservation, getSetupObservation, getSetupRandomObservation, lowerBounds, upperBounds, setupRandomLowerBounds, setupRandomUpperBounds
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
-from sb3_contrib.ppo_mask import MaskablePPO
+from DeepLearning.PPO import MaskablePPO
 from sb3_contrib.common.maskable.utils import get_action_masks
 from DeepLearning.Environments.CatanEnv import CatanEnv
 
@@ -21,6 +21,7 @@ class NoSetupEnv(CatanEnv):
     Action: full 486 (no player trades)
     State: full 2350
     Reward: +1 for win, -3 for loss
+    Opponents: Random Agents
     """
     
     def __init__(self, setupModel: MaskablePPO=None, customBoard=None):
@@ -30,8 +31,8 @@ class NoSetupEnv(CatanEnv):
         self.observation_space = spaces.Box(low=lowerBounds, high=upperBounds, dtype=np.int64) 
 
         # functions for getting actionMask/observation
-        self.getActionMaskFunc = getActionMask
-        self.getInputStateFunc = getInputState
+        self.getActionMask = getActionMask
+        self.getObservation = getObservation
 
         self.setupModel = setupModel
 
@@ -60,7 +61,7 @@ class NoSetupEnv(CatanEnv):
             else:
                 if self.game.gameState.currState == 'PLAY':
                     break
-                observation = getSetupRandomInputState(self.game.gameState)
+                observation = getSetupRandomObservation(self.game.gameState)
                 tempActionMask, tempIndexActionDict = getSetupActionMask(self.agent.GetPossibleActions(self.game.gameState))
                 action, _states = self.setupModel.predict(observation, action_masks=tempActionMask)
                 actionObj = tempIndexActionDict[action.item()]
@@ -68,8 +69,8 @@ class NoSetupEnv(CatanEnv):
 
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         return observation, {}
 
@@ -109,8 +110,8 @@ class NoSetupEnv(CatanEnv):
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
         return observation, 0, done, truncated, {}
@@ -189,8 +190,8 @@ class NoSetupDenseRewardEnv(NoSetupEnv):
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
         return observation, denseReward, done, truncated, {}

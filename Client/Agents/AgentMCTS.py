@@ -3,7 +3,7 @@ from datetime import datetime
 from datetime import timedelta
 import multiprocessing as mp
 import threading
-import pickle
+import dill as pickle
 
 # * OPTION (for performance)*#    implement nodes as a tuple (worse to read/understand)
 # MCTS TREE NODE STRUCTURE:

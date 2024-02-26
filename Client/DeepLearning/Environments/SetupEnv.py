@@ -6,7 +6,7 @@ from CatanSimulator import CreateGame
 from Game.CatanGame import *
 from Agents.AgentRandom2 import AgentRandom2
 from CatanData.GameStateViewer import SaveGameStateImage
-from DeepLearning.GetObservation import getSetupRandomInputState, getSetupRandomWithRoadsInputState, setupRandomLowerBounds, setupRandomUpperBounds, setupRandomWithRoadsLowerBounds, setupRandomWithRoadsUpperBounds
+from DeepLearning.GetObservation import getSetupRandomObservation, getSetupRandomWithRoadsObservation, setupRandomLowerBounds, setupRandomUpperBounds, setupRandomWithRoadsLowerBounds, setupRandomWithRoadsUpperBounds
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask, getSetupWithRoadsActionMask
 from DeepLearning.Environments.CatanEnv import CatanEnv
 
@@ -35,8 +35,8 @@ class SetupOnlyEnv(CatanEnv):
         self.observation_space = spaces.Box(low=setupRandomLowerBounds, high=setupRandomUpperBounds, dtype=np.int64)
 
         # functions for getting actionMask/observation
-        self.getActionMaskFunc = getSetupActionMask
-        self.getInputStateFunc = getSetupRandomInputState
+        self.getActionMask = getSetupActionMask
+        self.getObservation = getSetupRandomObservation
 
         self.lastReward = 0
 
@@ -63,8 +63,8 @@ class SetupOnlyEnv(CatanEnv):
 
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         return observation, {}
 
@@ -103,8 +103,8 @@ class SetupOnlyEnv(CatanEnv):
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
         return observation, adjReward, done, truncated, {}
@@ -128,24 +128,31 @@ class SetupRandomEnv(CatanEnv):
 
     phases = ['START1A', 'START2A'] # which phases the model trained on this env should be used for
 
-    def __init__(self, customBoard=None):
+    def __init__(self, customBoard=None, opponents=None):
         super(SetupRandomEnv, self).__init__()
 
         self.action_space = spaces.Discrete(54)
         self.observation_space = spaces.Box(low=setupRandomLowerBounds, high=setupRandomUpperBounds, dtype=np.int64)
 
         # functions for getting actionMask/observation
-        self.getActionMaskFunc = getSetupActionMask
-        self.getInputStateFunc = getSetupRandomInputState
+        self.getActionMask = getSetupActionMask
+        self.getObservation = getSetupRandomObservation
+
+        self.opponents = None
+
+
 
     def reset(self, seed=None):
         """
         Setup new game, cycle through actions till agents turn, return current state and set action mask
         """
-        inGame = CreateGame([   AgentRandom2("P0", 0),
-                                AgentRandom2("P1", 1),
-                                AgentRandom2("P2", 2),
-                                AgentRandom2("P3", 3)], self.customBoard)
+        if self.opponents:
+            inGame = CreateGame(*self.opponents, self.customBoard)
+        else:
+            inGame = CreateGame([   AgentRandom2("P0", 0),
+                                    AgentRandom2("P1", 1),
+                                    AgentRandom2("P2", 2),
+                                    AgentRandom2("P3", 3)], self.customBoard)
         self.game = pickle.loads(pickle.dumps(inGame, -1))
         self.players = self.game.gameState.players
         self.agent = self.game.gameState.players[0]
@@ -159,8 +166,8 @@ class SetupRandomEnv(CatanEnv):
 
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         return observation, {}
 
@@ -195,8 +202,8 @@ class SetupRandomEnv(CatanEnv):
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
         return observation, 0, done, truncated, {}
@@ -235,15 +242,15 @@ class SetupRandomWithRoadsEnv(SetupRandomEnv):
 
     phases = ['START1A', 'START1B', 'START2A', 'START2B']
 
-    def __init__(self, customBoard=None):
-        super(SetupRandomWithRoadsEnv, self).__init__()
+    def __init__(self, customBoard=None, opponents=None):
+        super(SetupRandomWithRoadsEnv, self).__init__(opponents=opponents)
 
         self.action_space = spaces.Discrete(54+72)
         self.observation_space = spaces.Box(low=setupRandomWithRoadsLowerBounds, high=setupRandomWithRoadsUpperBounds, dtype=np.int64)
 
-        # functions for getting actionMask/observation
-        self.getActionMaskFunc = getSetupWithRoadsActionMask
-        self.getInputStateFunc = getSetupRandomWithRoadsInputState
+        # tions for getting actionMask/observation
+        self.getActionMask = getSetupWithRoadsActionMask
+        self.getObservation = getSetupRandomWithRoadsObservation
     
     def step(self, action):
         """
@@ -275,8 +282,8 @@ class SetupRandomWithRoadsEnv(SetupRandomEnv):
         if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        self.action_mask, self.indexActionDict = self.getActionMaskFunc(possibleActions)
-        observation = self.getInputStateFunc(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
         return observation, 0, done, truncated, {}

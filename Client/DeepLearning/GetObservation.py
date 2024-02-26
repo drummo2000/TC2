@@ -4,7 +4,10 @@ from Game.CatanBoard import BoardNode, BoardHex, BoardEdge, g_portType, portType
 from Game.CatanAction import *
 import numpy as np
 
-def getSetupInputState(gameState: GameState):
+def getSetupObservation(gameState: GameState):
+    """
+    returns dotTotal for each node (54)
+    """
 
     # Get Node info
     nodes = gameState.boardNodes
@@ -17,7 +20,10 @@ def getSetupInputState(gameState: GameState):
 setupRandomLowerBounds = np.array(54 * (22*[0]))
 var = ([1] * 16) + (5 * [5]) + [15]
 setupRandomUpperBounds = np.array(54 * var)
-def getSetupRandomInputState(gameState: GameState):
+def getSetupRandomObservation(gameState: GameState):
+    """
+    reutrns full Node representation for each node (54*22)
+    """
 
     # Get Node info
     nodes = gameState.boardNodes
@@ -30,7 +36,10 @@ def getSetupRandomInputState(gameState: GameState):
 setupRandomWithRoadsLowerBounds = np.array((54 * (22*[0])) + (72 * (5*[0])))
 var = ([1] * 16) + (5 * [5]) + [15]
 setupRandomWithRoadsUpperBounds = np.array((54 * var) + (72 * (5*[1])))
-def getSetupRandomWithRoadsInputState(gameState: GameState):
+def getSetupRandomWithRoadsObservation(gameState: GameState):
+    """
+    Returns all node and edge info
+    """
 
     # Get Node info
     nodes = gameState.boardNodes
@@ -61,8 +70,12 @@ phaseOneHotMapping = {
     "PLACING_FREE_ROAD2":   [0, 0, 0, 0, 0, 0, 0, 1],
 }
 
-# returns 2350 length 1D array
-def getInputState(gameState: GameState):
+# returns 2350 length 1D array (now 2358)
+def getObservation(gameState: GameState):
+    """
+    Returns all game info for a model (2358)
+    """
+
     player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
     # TODO: if its in same order everytime just fetch
     player1 = next(filter(lambda p: p.name=="P1", gameState.players), None)
@@ -111,8 +124,66 @@ def getInputState(gameState: GameState):
 
     return np.array(output)
 
-# Get players victory points not including dev card vp's
+# returns 2350 length 1D array (now 2358)
+def getObservationNoPhase(gameState: GameState):
+    """
+    Returns all game info for a model, excluding the game phase (2350)
+    """
+
+    player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
+    # TODO: if its in same order everytime just fetch
+    player1 = next(filter(lambda p: p.name=="P1", gameState.players), None)
+    player2 = next(filter(lambda p: p.name=="P2", gameState.players), None)
+    player3 = next(filter(lambda p: p.name=="P3", gameState.players), None)
+
+    ## My info ##
+    myResources = player.resources
+    developmentCards = player.developmentCards
+    myVictoryPoints = player.victoryPoints
+    moreThan7Resources = int(len(myResources) > 7)
+    tradeRates = player.tradeRates
+    knights = player.knights
+    roadCount = player.roadCount
+
+    ## Other players info ##
+    longestRoadPlayer = [0, 0, 0, 0, 0]
+    longestRoadPlayer[gameState.longestRoadPlayer] = 1
+    largestArmyPlayer = [0, 0, 0, 0, 0]
+    largestArmyPlayer[gameState.largestArmyPlayer] = 1
+    player1VP = getVisibleVictoryPoints(player1)
+    player2VP = getVisibleVictoryPoints(player2)
+    player3VP = getVisibleVictoryPoints(player3)
+
+    # Get Node info
+    # nodes = gameState.boardNodes
+    # nodeInfo = []
+    # for nodeIndex in constructableNodesList:
+    #     nodeInfo.extend(getNodeRepresentation(nodes[nodeIndex], gameState))
+
+    # Get hex info
+    hexes = gameState.boardHexes
+    hexInfo = []
+    for hexIndex in constructableHexesList:
+        hexInfo.extend(getHexRepresentation(hexes[hexIndex], gameState))
+
+    # Get edge info
+    edgeInfo = []
+    for edgeIndex in constructableEdgesList:
+        edgeInfo.extend(getEdgeRepresentation(gameState.boardEdges[edgeIndex], gameState))
+
+    # Get Game phase
+    phase = phaseOneHotMapping[gameState.currState]
+
+    output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, *longestRoadPlayer, *largestArmyPlayer, player1VP, player2VP, player3VP, *hexInfo, *edgeInfo]
+
+    return np.array(output)
+
+
+
 def getVisibleVictoryPoints(player: Player) -> int:
+    """
+    Get players victory points not including dev card vp's
+    """
 
     constructionPoints = len(player.settlements) + len(player.cities) * 2
 
@@ -124,8 +195,12 @@ def getVisibleVictoryPoints(player: Player) -> int:
 
     return constructionPoints + achievementPoints
 
-# For each node get: owner, constructionType, portType, dotList, production
+
+
 def getSetupNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
+    """
+    For each node get: owner, constructionType, portType, dotList, production
+    """
 
     # Get production of a given node
     dotList = [0, 0, 0, 0, 0]
@@ -141,8 +216,11 @@ def getSetupNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
     return [dotTotal]
 
 
-# For each node get: owner, constructionType, portType, dotList, production (22 total)
+
 def getNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
+    """
+    For each node get: owner, constructionType, portType, dotList, production (22 total)
+    """
     owner = [0, 0, 0, 0, 0]
     constructionType = [0, 0, 0, 0]
     portType = [0, 0, 0, 0, 0, 0, 0]
@@ -169,8 +247,12 @@ def getNodeRepresentation(node: BoardNode, gameState: GameState) -> list:
     #       cat    cat               cat       num          num
     return [*owner, *constructionType, *portType, *dotList, dotTotal]
 
-# For each hex get number, resource, for each surrounding node get: owner, construction type,
+
+
 def getHexRepresentation(hex: BoardHex, gameState: GameState) -> list:
+    """
+    For each hex get number, resource, for each surrounding node get: owner, construction type,
+    """
     dot = numberDotsMapping[hex.number]
     resource = [0, 0, 0, 0, 0, 0]
     resource[resourceIndex[hex.production]] = 1
@@ -194,8 +276,12 @@ def getHexRepresentation(hex: BoardHex, gameState: GameState) -> list:
     #       num,   cat,      (cat, cat)
     return [dot, *resource, *adjNodesInfo]
 
-# For each edge get owner
+
+
 def getEdgeRepresentation(edge: BoardEdge, gameState: GameState) -> list:
+    """
+    For each edge get owner
+    """
     owner = [0, 0, 0, 0, 0]
     if edge.construction == None:
         owner[-1] = 1

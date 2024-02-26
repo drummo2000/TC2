@@ -9,9 +9,9 @@ from Game.CatanGame import *
 from Game.CatanPlayer import Player
 from Agents.AgentRandom2 import AgentRandom2
 from CatanData.GameStateViewer import SaveGameStateImage
-from DeepLearning.GetObservation import getInputState, getSetupInputState, getSetupRandomInputState, lowerBounds, upperBounds, setupRandomLowerBounds, setupRandomUpperBounds
+from DeepLearning.GetObservation import getObservation, getSetupObservation, getSetupRandomObservation, lowerBounds, upperBounds, setupRandomLowerBounds, setupRandomUpperBounds
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
-from sb3_contrib.ppo_mask import MaskablePPO
+from DeepLearning.PPO import MaskablePPO
 from sb3_contrib.common.maskable.utils import get_action_masks
 
 
@@ -57,7 +57,7 @@ class CatanEnv(gym.Env):
         # Return initial info needed: State, ActionMask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         self.action_mask, self.indexActionDict = getActionMask(possibleActions)
-        observation = getInputState(self.game.gameState)
+        observation = getObservation(self.game.gameState)
 
         return observation, {}
 
@@ -97,7 +97,7 @@ class CatanEnv(gym.Env):
             possibleActions[0].ApplyAction(self.game.gameState)
             possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         self.action_mask, self.indexActionDict = getActionMask(possibleActions)
-        observation = getInputState(self.game.gameState)
+        observation = getObservation(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
         return observation, reward, done, truncated, {}
