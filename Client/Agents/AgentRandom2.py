@@ -10,8 +10,9 @@ class AgentRandom2(Player):
     def __init__(self, name, seatNumber, playerTrading: bool=False):
 
         super(AgentRandom2, self).__init__(name, seatNumber)
-        self.agentName              = name
         self.playerTrading          = playerTrading
+
+        self.trading                = None
     
     def GetAllPossibleActions_RegularTurns(self, gameState: GameState, player: Player):
 
@@ -142,7 +143,8 @@ class AgentRandom2(Player):
     def DoMove(self, game):
 
         if game.gameState.currPlayer != self.seatNumber and game.gameState.currState != "WAITING_FOR_DISCARDS":
-            raise Exception("\n\nReturning None Action - INVESTIGATE\n\n")
+            #raise Exception("\n\nReturning None Action - INVESTIGATE\n\n")
+            return None
 
         possibleActions = self.GetPossibleActions(game.gameState)
 

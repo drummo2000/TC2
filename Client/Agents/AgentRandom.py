@@ -18,6 +18,7 @@ class AgentRandom(Player):
         self.useModel               = useModel
         # if self.useModel:
         #     Player.LoadModel()
+        self.trading                = 'Simple'
 
     # Returns list of possible actions in given state
     def GetPossibleActions(self, gameState, player = None):

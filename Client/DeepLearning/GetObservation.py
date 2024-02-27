@@ -76,11 +76,11 @@ def getObservation(gameState: GameState):
     Returns all game info for a model (2358)
     """
 
-    player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
+    player:Player = gameState.players[0]
     # TODO: if its in same order everytime just fetch
-    player1 = next(filter(lambda p: p.name=="P1", gameState.players), None)
-    player2 = next(filter(lambda p: p.name=="P2", gameState.players), None)
-    player3 = next(filter(lambda p: p.name=="P3", gameState.players), None)
+    player1 = gameState.players[1]
+    player2 = gameState.players[2]
+    player3 = gameState.players[3]
 
     ## My info ##
     myResources = player.resources
@@ -130,11 +130,11 @@ def getObservationNoPhase(gameState: GameState):
     Returns all game info for a model, excluding the game phase (2350)
     """
 
-    player:Player = next(filter(lambda p: p.name=="P0", gameState.players), None)
+    player:Player = gameState.players[0]
     # TODO: if its in same order everytime just fetch
-    player1 = next(filter(lambda p: p.name=="P1", gameState.players), None)
-    player2 = next(filter(lambda p: p.name=="P2", gameState.players), None)
-    player3 = next(filter(lambda p: p.name=="P3", gameState.players), None)
+    player1 = gameState.players[1]
+    player2 = gameState.players[2]
+    player3 = gameState.players[3]
 
     ## My info ##
     myResources = player.resources

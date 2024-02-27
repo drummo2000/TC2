@@ -2,13 +2,13 @@ import sys
 import socket
 import logging
 from JSettlersMessages import *
-from CatanPlayer import *
-from CatanGame import *
-from CatanAction import *
+from Game.CatanPlayer import *
+from Game.CatanGame import *
+from Game.CatanAction import *
 from Agents.AgentRandom import *
 from Agents.AgentAlphabeta import *
 import os
-import CSVGenerator
+from CatanData import CSVGenerator
 
 m_clientPath = os.getcwd()
 
@@ -16,7 +16,7 @@ class Client:
 
     def __init__(self, gameName, player, autoStart, showServerMessages, debugSimulator = False):
 
-        self.socket         = None
+        self.socket:socket.socket         = None
         self.game           = None
 
         self.joinedAGame    = False
@@ -98,10 +98,12 @@ class Client:
 
     def CreateMessage(self, raw_msg):
 
-        highByte = chr(len(raw_msg) / 256)
+        highByte = chr(len(raw_msg) // 256)
         lowByte = chr(len(raw_msg) % 256)
 
-        return highByte + lowByte + raw_msg
+        msg = highByte + lowByte + raw_msg
+
+        return msg.encode('iso-8859-1')
 
     def ParseMessage(self, message):
         """ Create a message from recieved data """
@@ -126,7 +128,7 @@ class Client:
 
         def recvwait(size):
             sofar = 0
-            r = ""
+            r = b""
             while True:
                 r += self.socket.recv(size - len(r))
                 if len(r) >= size:
@@ -138,6 +140,7 @@ class Client:
             lowByte = ord(recvwait(1))
             transLength = highByte * 256 + lowByte
             msg = recvwait(transLength)
+            msg = msg.decode('iso-8859-1')
 
             logging.debug("Received this from JSettlers: {0}".format(msg))
 
@@ -192,12 +195,10 @@ class Client:
                     return winner
 
         elif name == "ChannelsMessage":
-
-            logging.info("There are {0} channels available: {1}".format(len(instance.channels), instance.channels))
+            logging.info("There are {0} channels available: {1}".format("TEST", instance.channels))
 
         elif name == "GamesMessage":
-
-            logging.info("There are {0} games available: {1}".format(len(instance.games), instance.games))
+            logging.info("There are {0} games available: {1}".format(len(list(instance.games)), instance.games))
 
             if not self.joinedAGame:
                 logging.info("Starting a new game...")

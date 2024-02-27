@@ -597,7 +597,7 @@ class PutPieceMessage(Message):
 
     @staticmethod
     def parse(text):
-        from CatanBoard import g_constructionTypes
+        from Game.CatanBoard import g_constructionTypes
         data = text.split(",")
         construction = g_constructionTypes[int(data[2])]
         return PutPieceMessage(data[0], int(data[1])

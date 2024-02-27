@@ -4,14 +4,15 @@ import signal
 import time
 import argparse
 
-from Client import *
-from AgentRandom import *
+from Agents.AgentRandom import *
 from Agents.AgentMCTS import AgentMCTS
-from AgentUCT  import AgentUCT
-from AgentRAVE import AgentRAVE
-from AgentUCTParanoid import AgentUCTParanoid
-from AgentUCTTuned import AgentUCTTuned
-import CSVGenerator
+from Agents.AgentUCT import AgentUCT
+from Agents.AgentUCTTuned import AgentUCTTuned
+from Agents.AgentRandom2 import AgentRandom2
+from Agents.AgentModel import AgentMultiModel
+from DeepLearning.PPO import MaskablePPO
+
+import CatanData.CSVGenerator
 from Client import Client
 
 def check_positive(value):
@@ -30,7 +31,7 @@ class TC2Main(object):
         self.robot3Process = None
         self.clientProcess = None
         self.player        = None
-        self.ourClient     = None
+        self.ourClient:Client     = None
         self.simCount      = 1000
         self.serverType    = serverType
 
@@ -152,28 +153,31 @@ class TC2Main(object):
 
         args = parser.parse_args()
 
-        self.simCount = args.simulationCount
+        self.simCount = 1000#args.simulationCount
 
-        if args.agentType == 'rand':
-            self.player = AgentRandom(args.nickname, 0)
+        # if args.agentType == 'rand':
+        # self.player = AgentRandom(args.nickname, 0)
+        # self.player = AgentRandom2(args.nickname, 0)
+        self.player = AgentMultiModel(args.nickname, 0, setupModel=MaskablePPO.load("DeepLearning/Models/SetupOnly_DotTotal_100k.zip"), fullSetup=False, model=MaskablePPO.load("DeepLearning/Models/SelfPlay_7vp_13M.zip"))
 
-        if args.agentType == 'mcts':
-            # 10.000 sims without multiThread - 2 min and 30 sec
-            # 10.000 sims with    multiThread - 50 sec
-            self.player = AgentMCTS(args.nickname, 0, simulationCount=self.simCount, multiThreading=False)
+        # if args.agentType == 'mcts':
+        #     # 10.000 sims without multiThread - 2 min and 30 sec
+        #     # 10.000 sims with    multiThread - 50 sec
+        #     self.player = AgentMCTS(args.nickname, 0, simulationCount=self.simCount, multiThreading=False)
 
-        if args.agentType == 'uct':
-            self.player = AgentUCT(args.nickname, 0, simulationCount=self.simCount, explorationValue=0.25, multiThreading=True,
-                                   preSelectMode=None, simPreSelectMode=None, trading=None, virtualWins=False, useModel=True)
+        # if args.agentType == 'uct':
+        #     self.player = AgentUCT(args.nickname, 0, simulationCount=self.simCount, explorationValue=0.25, multiThreading=True,
+        #                             preSelectMode=None, simPreSelectMode=None, trading='Simple', virtualWins=False, useModel=False)
 
-        if args.agentType == 'rave':
-            self.player = AgentRAVE(args.nickname, 0, simulationCount=self.simCount, multiThreading=False)
+        # if args.agentType == 'rave':
+        #     self.player = AgentRAVE(args.nickname, 0, simulationCount=self.simCount, multiThreading=False)
 
-        if args.agentType == 'paranoid':
-            self.player = AgentUCTParanoid(args.nickname, 0, simulationCount=self.simCount, multiThreading=True, numberOfThreads=10)
+        # if args.agentType == 'paranoid':
+        #     self.player = AgentUCTParanoid(args.nickname, 0, simulationCount=self.simCount, multiThreading=True, numberOfThreads=10)
 
-        if args.agentType == 'uctTuned':
-            self.player = AgentUCTTuned(args.nickname, 0, simulationCount=self.simCount, multiThreading=True, numberOfThreads=10)
+        # if args.agentType == 'uctTuned':
+            # self.player = AgentUCTTuned(args.nickname, 0, simulationCount=self.simCount, multiThreading=True, numberOfThreads=10, trading='Optimistic')
+
 
         # Change the current directory...
         mycwd = os.getcwd()
@@ -185,10 +189,13 @@ class TC2Main(object):
         os.chdir('JSettlers-1.0.6')
 
         # Double negation in the switches here are a bit confusing TBH...
+        serverType = '_perfectInfo'
         if args.startServer and canInitServer:
 
-            self.serverProcess = subprocess.Popen("java -jar JSettlersServer{0}.jar 8880 10 dbUser dbPass".format(self.serverType),
+            self.serverProcess = subprocess.Popen(f"java -jar JSettlersServer{serverType}.jar 8880 10 dbUser dbPass",
                                              shell=True, stdout=subprocess.PIPE)
+
+            time.sleep(3)
 
         if args.robots and callProcess:
             self.robot1Process = subprocess.Popen(
@@ -205,7 +212,8 @@ class TC2Main(object):
 
         if args.client and callProcess:
 
-            self.clientProcess = subprocess.Popen("java -jar JSettlers.jar localhost 8880")
+            self.clientProcess = subprocess.Popen("java -jar JSettlers.jar localhost 8880",
+                shell=True, stdout=subprocess.PIPE)
 
         # Go back to the Client directory...
         os.chdir(mycwd)
@@ -234,6 +242,6 @@ class TC2Main(object):
 
         main.InitGame()
         # Give some time so the server can start and the robots get in....
-        time.sleep(2)
+        time.sleep(3)
 
         main.RunClient()

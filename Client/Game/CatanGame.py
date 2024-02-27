@@ -1,6 +1,6 @@
 import os
 from Game.CatanAction import *
-import pickle
+import dill as pickle
 import datetime
 from CatanData.GameData import GameData
 

@@ -67,7 +67,14 @@ class AgentMultiModel(BaseAgentModel):
         self.fullSetup = fullSetup
 
     def DoMove(self, game):
+
+        # Needed for JSettlers
+        if game.gameState.currPlayer != self.seatNumber and game.gameState.currState != "WAITING_FOR_DISCARDS":
+            #raise Exception("\n\nReturning None Action - INVESTIGATE\n\n")
+            return None
+
         possibleActions = self.GetPossibleActions(game.gameState)
+        print(f"\nPossibleActions: {possibleActions}")
         if len(possibleActions) == 1:
             return possibleActions[0]
         
@@ -82,6 +89,7 @@ class AgentMultiModel(BaseAgentModel):
         if self.model == None:
             return self.getRandomAction(game, possibleActions)
         else:
+            print(f"\nGetting Model Action")
             return self.getModelAction(game, possibleActions)
     
     def getSetupModelAction(self, game, possibleActions):
