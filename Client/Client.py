@@ -1,4 +1,3 @@
-import sys
 import socket
 import logging
 from JSettlersMessages import *
@@ -6,9 +5,9 @@ from Game.CatanPlayer import *
 from Game.CatanGame import *
 from Game.CatanAction import *
 from Agents.AgentRandom import *
-from Agents.AgentAlphabeta import *
 import os
 from CatanData import CSVGenerator
+import time
 
 m_clientPath = os.getcwd()
 
@@ -102,12 +101,15 @@ class Client:
         lowByte = chr(len(raw_msg) % 256)
 
         msg = highByte + lowByte + raw_msg
-
-        return msg.encode('iso-8859-1')
+        msg  = msg.encode('iso-8859-1')
+        # msg = msg.encode('utf-8')
+        return msg
 
     def ParseMessage(self, message):
         """ Create a message from recieved data """
         id, txt = message[:4], message[5:]
+
+        # print(f"\n\nTESTPARSEMESSAGE id: {message[:4]}, txt: {message[5:]}\n\n")
 
         if not id in self.messagetbl:
             logging.warning("Can not parse '{0}'".format(message))
@@ -140,7 +142,9 @@ class Client:
             lowByte = ord(recvwait(1))
             transLength = highByte * 256 + lowByte
             msg = recvwait(transLength)
+
             msg = msg.decode('iso-8859-1')
+            # msg = msg.decode('utf-8')
 
             logging.debug("Received this from JSettlers: {0}".format(msg))
 
@@ -195,10 +199,10 @@ class Client:
                     return winner
 
         elif name == "ChannelsMessage":
-            logging.info("There are {0} channels available: {1}".format("TEST", instance.channels))
+            logging.info("There are {0} channels available: {1}".format(len(list(instance.channels)), list(instance.channels)))
 
         elif name == "GamesMessage":
-            logging.info("There are {0} games available: {1}".format(len(list(instance.games)), instance.games))
+            logging.info("There are {0} games available: {1}".format(len(list(instance.games)), list(instance.games)))
 
             if not self.joinedAGame:
                 logging.info("Starting a new game...")
@@ -274,7 +278,7 @@ class Client:
             logging.info("Received largest army player: {0}".format(self.game.gameState.largestArmyPlayer))
 
         elif name == "PlayerElementMessage":
-
+            
             self.game.gameState.players[instance.playerNumber].\
                 UpdateResourcesFromServer(instance.action, instance.element, instance.value)
 

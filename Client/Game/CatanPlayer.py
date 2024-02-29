@@ -33,6 +33,7 @@ class PlayerStats(object):
         # Setup Breakdown
         self.setupResourceProduction = listm([0, 0, 0, 0, 0, 0])
         self.setupTradeRates = listm([0, 0, 0, 0, 0])
+        self.setupResourceDiversity = 0
     
     def __str__(self):
         output = f"General\n" + \
@@ -63,6 +64,7 @@ class PlayerStats(object):
                  f"    setupResourceProduction: {self.setupResourceProduction[:-1]}\n" + \
                  f"    totalSetupResourceProduction: {round(sum(self.setupResourceProduction[:-1]))}\n" + \
                  f"    setupTradeRates: {self.setupTradeRates}\n" + \
+                 f"    setupResourceDiversity: {self.setupResourceDiversity}\n" + \
                  f"RESOURCES: {g_resources}\n"
         return output
     
@@ -91,7 +93,8 @@ class PlayerStats(object):
                 self.finalResourceProduction[:-1],
                 self.setupResourceProduction[:-1],
                 round(sum(self.setupResourceProduction[:-1])),
-                self.setupTradeRates
+                self.setupTradeRates,
+                self.setupResourceDiversity
         ]
 
 class PlayerStatsTracker(PlayerStats):
@@ -126,6 +129,7 @@ class PlayerStatsTracker(PlayerStats):
             # Setup Breakdown
             self.setupResourceProduction += other.setupResourceProduction
             self.setupTradeRates += other.setupTradeRates
+            self.setupResourceDiversity += other.setupResourceDiversity
             return self
         else:
             ValueError("Can only add PlayerStats objects")
@@ -155,6 +159,7 @@ class PlayerStatsTracker(PlayerStats):
         # Setup Breakdown
         self.setupResourceProduction = self.setupResourceProduction / self.numGames
         self.setupTradeRates = self.setupTradeRates / self.numGames
+        self.setupResourceDiversity = self.setupResourceDiversity / self.numGames
         
 
 
@@ -176,6 +181,8 @@ class Player(object):
 
         for diceNumber, resourceList in self.diceProduction.items():
             self.stats.finalResourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
+
+        self.stats.setupResourceDiversity = len([x for x in self.stats.setupResourceProduction if x != 0])
 
 
     Model = None

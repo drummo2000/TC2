@@ -95,3 +95,7 @@ Client/tensorboard_logs/
 .DS_Store
 .vscode/
 Client/.DS_Store
+
+JSettlers-2.6.10
+Client/DeepLearning/SelfPlayModels/
+Client/TC2MainV2.py

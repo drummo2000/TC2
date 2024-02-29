@@ -5,7 +5,8 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 import logging
-
+import time
+from Game.CatanBoard import VICTORY_POINT_CARD_INDEX
 
 def tintImage(image, tintColor):
 
@@ -221,7 +222,7 @@ def GetGameStateImage(gameState):
     if gameState is not None:
 
         board = Image.open("BoardArt/frame.png")
-        mainImg = Image.new('RGBA', board.size)
+        mainImg = Image.new('RGBA', (900, 407))#board.size)
         mainImg.paste(board)
 
         hexArt = Image.open("BoardArt/hex.png")
@@ -269,7 +270,7 @@ def GetGameStateImage(gameState):
             if boardHex.number is not None and boardHex.number > 0:
 
                 draw = ImageDraw.Draw(mainImg)
-                font = ImageFont.truetype("./arial.ttf", 25)
+                font = ImageFont.truetype("CatanData/arial.ttf", 25)
 
                 x = hexPositions[boardHexIndex][0]
                 y = hexPositions[boardHexIndex][1] - 15
@@ -333,12 +334,14 @@ def GetGameStateImage(gameState):
                 mainImg.paste(coloredCity, cityImgPos, cityImg)
 
         draw = ImageDraw.Draw(mainImg)
-        font = ImageFont.truetype("./arial.ttf", 30)
-        draw.text((2, 0), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        draw.text((0, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        draw.text((1, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        draw.text((1, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        draw.text((2, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), playerColor[gameState.longestRoadPlayer], font=font)
+        font = ImageFont.truetype("CatanData/arial.ttf", 20)
+        # draw.text((2, 0), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
+        # draw.text((0, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
+        # draw.text((1, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
+        # draw.text((1, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
+        draw.text((500, 0), f"Longest Road: {gameState.longestRoadPlayer}", playerColor[gameState.longestRoadPlayer], font=font)
+        draw.text((500, 30), f"Largest Army: {gameState.largestArmyPlayer}", playerColor[gameState.largestArmyPlayer], font=font)
+        draw.text((500, 60), f"DevCardVps: {gameState.players[0].developmentCards[VICTORY_POINT_CARD_INDEX]}", playerColor[0], font=font)
 
         mainImg.convert('RGB')
 
@@ -355,6 +358,10 @@ def SaveGameStateImage(gameState, imgFileName):
 
     if gameStateImg is not None:
         gameStateImg.save(imgFileName)
+
+def DisplayImage(gameState):
+    gameStateImg: Image.Image = GetGameStateImage(gameState)
+    gameStateImg.show()
 
 if __name__ == '__main__':
 

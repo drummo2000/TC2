@@ -1,8 +1,9 @@
 
-# 25
+# 26
 headers = [
     "AgentName",
     "WinRate",
+    "MarginError",
     "numTurns",
     "victoryPoints",
     "finalTradeRates",
@@ -25,5 +26,6 @@ headers = [
     "finalResourceProduction",
     "setupResourceProduction",
     "totalSetupResourceProduction",
-    "setupTradeRates"
+    "setupTradeRates",
+    "setupResourceDiversity"
 ]

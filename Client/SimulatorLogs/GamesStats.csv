@@ -1,0 +1,6 @@
+Winner ,Points         ,Turns ,Agent Points ,Roads ,Settlements ,Cities ,Knights ,Largest Road ,Largest Army
+robot2 ,5 | 9 | 7 | 10 ,   73 ,           5 ,    6 ,          1 ,     2 ,      2 ,           0 ,           0
+robot1 ,6 | 10 | 6 | 6 ,   70 ,           6 ,    7 ,          4 ,     0 ,      1 ,           0 ,           0
+robot2,2 | 8 | 6 | 10,72, 2, 2, 2, 0, 0, 0, 0
+robot3,5 | 6 | 9 | 8,96, 5,12, 1, 1, 0, 1, 0
+robot2,2 | 5 | 5 | 10,64, 2,10, 2, 0, 0, 0, 0
