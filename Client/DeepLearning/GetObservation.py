@@ -305,7 +305,7 @@ tradeRatesUpper = [4] * 5
 knightsLower = [0]
 knightsUpper = [10]
 roadCountLower = [0]
-roadCountUpper = [10]
+roadCountUpper = [15]
 longestRoadPlayerLower = [0] * 5
 longestRoadPlayerUpper = [1] * 5
 largestArmyPlayerLower = [0] * 5
@@ -364,13 +364,180 @@ upperBounds = np.array([
 ])
 
 # Other possible inputs
-    # possibleRoads = player.possibleRoads
-    # possibleSettlements = player.possibleSettlements
+    # possibleRoads = player.possibleRoads (num possible roads)
+    # possibleSettlements = player.possibleSettlements (num possible settlement nodes)
 
 
+##################################################################################################################################################################################################################################################
 
-# 100: 7.65s
-# 100: getNodeRepresentation, 4.8 = 2.8
-# 100: getHexRepresentation, 6.3 = 1.3
-# 100: getEdgeRepresntation, 7.1 = 0.5
-# 100: the rest - 5.2 = 2.5
+
+hexRobberInfoLower = [-1] * 19
+hexRobberInfoUpper = [60] * 19
+
+singleNodeInfoLower = [0] * 20
+# [*owner, *constructionType, *portType, *dotList, dotTotal, canBuildSettlement]
+singleNodeInfoUpper = ([1] * 13) + ([15]*5) + [15] + [1]
+nodeInfoLowerSimplified = singleNodeInfoLower * 54
+nodeInfoUpperSimplified = singleNodeInfoUpper * 54
+
+edgeInfoLowerSimplified = [0, 0, 0, 0] * 72
+edgeInfoUpperSimplified = [1, 1, 1, 1] * 72
+
+
+lowerBoundsSimplified = np.array([
+    *myResourcesLower,
+    *developmentCardsLower,
+    *myVictoryPointsLower,
+    *moreThan7ResourcesLower,
+    *tradeRatesLower,
+    *knightsLower,
+    *roadCountLower,
+    0, #CanAffordSettlement
+    0, #CanAffordCity
+    0, #CanAffordRoad
+    0, #*longestRoadPlayerLower,
+    0, #*largestArmyPlayerLower,
+    *nodeInfoLowerSimplified,
+    *hexRobberInfoLower,
+    *edgeInfoLowerSimplified,
+    *phaseLower
+])
+
+upperBoundsSimplified = np.array([
+    *myResourcesUpper,
+    *developmentCardsUpper,
+    *myVictoryPointsUpper,
+    *moreThan7ResourcesUpper,
+    *tradeRatesUpper,
+    *knightsUpper,
+    *roadCountUpper,
+    1, #CanAffordSettlement
+    1, #CanAffordCity
+    1, #CanAffordRoad
+    1, # *longestRoadPlayerUpper,
+    1, # *largestArmyPlayerUpper,
+    *nodeInfoUpperSimplified,
+    *hexRobberInfoUpper,
+    *edgeInfoUpperSimplified,
+    *phaseUpper
+])
+
+def getObservationSimplified(gameState: GameState):
+    """
+    Simplified obervation with more useful features - 1492
+    """
+    player:Player = gameState.players[0]
+
+    ## My info ##
+    myResources = player.resources # 6
+    developmentCards = player.developmentCards # 5
+    myVictoryPoints = player.victoryPoints # 1
+    moreThan7Resources = int(len(myResources) > 7) # 1
+    tradeRates = player.tradeRates # 5
+    # Number of used knights
+    knights = player.knights # 1
+    roadCount = player.roadCount # 1
+    # Enough resourcs to build settlement/city/road
+    canAffordSettlement = int(player.CanAfford(BuildSettlementAction.cost)) # 1
+    canAffordCity = int(player.CanAfford(BuildCityAction.cost)) # 1
+    canAffordRoad = int(player.CanAfford(BuildRoadAction.cost)) # 1
+
+    ## Other players info ##
+    longestRoadPlayer = 1 if gameState.longestRoadPlayer == 0 else 0 # 1
+    largestArmyPlayer = 1 if gameState.largestArmyPlayer == 0 else 0 # 1
+
+    ## Board info ##
+
+    # Get hex robber info
+    hexes = gameState.boardHexes
+    hexInfo = [] # 19
+    for hexIndex in constructableHexesList:
+        hexInfo.append(getHexRobberRating(hexes[hexIndex], gameState))
+    
+    # Get node info
+    nodes = gameState.boardNodes
+    nodeInfo = [] # 54 * 20 = 1080
+    for nodeIndex in constructableNodesList:
+        nodeInfo.extend(getNodeRepresentationSimilified(nodes[nodeIndex], gameState))
+
+    # Get edge info
+    edgeInfo = [] # 72 * 4 = 288
+    for edgeIndex in constructableEdgesList:
+        edgeInfo.extend(getEdgeRepresentationSimplified(gameState.boardEdges[edgeIndex], gameState))
+
+    # Get Game phase
+    phase = phaseOneHotMapping[gameState.currState] # 8
+
+    output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, canAffordSettlement, canAffordCity, canAffordRoad, longestRoadPlayer, largestArmyPlayer, *nodeInfo, *hexInfo, *edgeInfo, *phase]
+
+    return np.array(output)
+
+def getHexRobberRating(hex: BoardHex, gameState: GameState) -> int:
+    """
+    Number representing whether to play robber: shouldn't place on own buildings - 1 for each hex = 19
+    """
+    numSettlements = 0
+    numCities = 0
+    nodeIndexes = hex.GetAdjacentNodes()
+    for nodeIndex in nodeIndexes:
+        node = gameState.boardNodes[nodeIndex]
+        if node.construction == None:
+            continue
+        # Bad rating don't place here
+        if node.construction.owner == 0:
+            return -1
+        if node.construction.type == 'SETTLEMENT':
+            numSettlements += 1
+        elif node.construction.type == 'CITY':
+            numCities += 1     
+    rating = (numSettlements * numberDotsMapping[hex.number]) + 2*(numCities * numberDotsMapping[hex.number])
+    return rating
+
+def getNodeRepresentationSimilified(node: BoardNode, gameState: GameState) -> list:
+    """
+    For each node get: owner, constructionType, portType, dotList, production (20 total) - 20*54 = 1080
+    """
+    owner = [0, 0, 0]
+    # nodes cannot have roads - settlement, city, None
+    constructionType = [0, 0, 0]
+    portType = [0, 0, 0, 0, 0, 0, 0]
+
+    if node.construction != None:
+        owner = [1, 0, 0] if node.construction.owner == 0 else [0, 1, 0]
+        constructionType[constructionTypeIndex[node.construction.type]-1] = 1
+    else:
+        owner[-1] = 1
+        constructionType[-1] = 1
+
+    portType[portTypeIndex[node.portType]] = 1
+
+    # Get production of a given node
+    dotList = [0, 0, 0, 0, 0]
+    adjTileNumbers = node.GetAdjacentHexes()
+    adjTiles = [gameState.boardHexes[tileNumber] for tileNumber in adjTileNumbers if tileNumber != None]
+    for tile in adjTiles:
+        if tile.production == None:
+            continue
+        dotList[resourceIndex[tile.production]] += numberDotsMapping[tile.number]
+    dotTotal = sum(dotList)
+
+    setupPhase = not gameState.setupDone
+    canBuildSettlement = int(gameState.CanBuildSettlement(gameState.players[0], node, setUpPhase=setupPhase))
+
+    #       cat    cat               cat       num          num
+    return [*owner, *constructionType, *portType, *dotList, dotTotal, canBuildSettlement]
+
+def getEdgeRepresentationSimplified(edge: BoardEdge, gameState: GameState) -> list:
+    """
+    For each edge get owner - 4 * 72 = 288
+    """
+    owner = [0, 0, 0]
+    if edge.construction == None:
+        owner[-1] = 1
+    else:
+        owner = [1, 0, 0] if (edge.construction.owner == 0) else [0, 1, 0]
+
+    setupPhase = not gameState.setupDone
+    canBuildRoad = int(gameState.CanBuildRoad(gameState.players[0], edge, edge.index, setUpPhase=setupPhase))
+
+    return [*owner, canBuildRoad]

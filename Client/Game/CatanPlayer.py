@@ -6,6 +6,9 @@ from Game.CatanUtilsPy import listm
 from Game.CatanBoard import g_resources
 
 class PlayerStats(object):
+    """
+    Stats for a single game
+    """
 
     def __init__(self):
 
@@ -34,6 +37,11 @@ class PlayerStats(object):
         self.setupResourceProduction = listm([0, 0, 0, 0, 0, 0])
         self.setupTradeRates = listm([0, 0, 0, 0, 0])
         self.setupResourceDiversity = 0
+        # Tasks Breakdown
+        self.turnsForFirstSettlement = 0
+        self.noSettlementsBuilt = 1
+        self.turnsForFirstCity = 0
+        self.noCityBuilt = 1
     
     def __str__(self):
         output = f"General\n" + \
@@ -65,6 +73,8 @@ class PlayerStats(object):
                  f"    totalSetupResourceProduction: {round(sum(self.setupResourceProduction[:-1]))}\n" + \
                  f"    setupTradeRates: {self.setupTradeRates}\n" + \
                  f"    setupResourceDiversity: {self.setupResourceDiversity}\n" + \
+                 f"Tasks Breakdown\n" + \
+                 f"    turnsForFirstSettlement: {self.turnsForFirstSettlement}\n" + \
                  f"RESOURCES: {g_resources}\n"
         return output
     
@@ -94,10 +104,17 @@ class PlayerStats(object):
                 self.setupResourceProduction[:-1],
                 round(sum(self.setupResourceProduction[:-1])),
                 self.setupTradeRates,
-                self.setupResourceDiversity
+                self.setupResourceDiversity,
+                self.turnsForFirstSettlement,
+                self.noSettlementsBuilt,
+                self.turnsForFirstCity,
+                self.noCityBuilt
         ]
 
 class PlayerStatsTracker(PlayerStats):
+    """
+    Used for tracking stats across multi game simulations
+    """
     def __init__(self):
         super(PlayerStatsTracker, self).__init__()
         self.numGames = 0
@@ -130,7 +147,20 @@ class PlayerStatsTracker(PlayerStats):
             self.setupResourceProduction += other.setupResourceProduction
             self.setupTradeRates += other.setupTradeRates
             self.setupResourceDiversity += other.setupResourceDiversity
+            # Tasks Breakdown
+            self.noSettlementsBuilt += other.noSettlementsBuilt
+            # Only count turns if settlemnt was built
+            if other.noSettlementsBuilt == 0:
+                self.turnsForFirstSettlement += other.turnsForFirstSettlement
+
+            self.noCityBuilt += other.noCityBuilt
+            # Only count turns if city was built
+            if other.noCityBuilt == 0:
+                self.turnsForFirstCity += other.turnsForFirstCity
+
+
             return self
+                
         else:
             ValueError("Can only add PlayerStats objects")
 
@@ -160,6 +190,18 @@ class PlayerStatsTracker(PlayerStats):
         self.setupResourceProduction = self.setupResourceProduction / self.numGames
         self.setupTradeRates = self.setupTradeRates / self.numGames
         self.setupResourceDiversity = self.setupResourceDiversity / self.numGames
+        # Tasks Breakdown
+        self.noSettlementsBuilt = self.noSettlementsBuilt - 1
+        if (self.numGames == self.noSettlementsBuilt):
+            self.turnsForFirstSettlement = -1
+        else:
+            self.turnsForFirstSettlement = self.turnsForFirstSettlement / (self.numGames - self.noSettlementsBuilt)
+        
+        self.noCityBuilt = self.noCityBuilt - 1
+        if (self.numGames == self.noCityBuilt):
+            self.turnsForFirstCity = -1
+        else:
+            self.turnsForFirstCity = self.turnsForFirstCity / (self.numGames - self.noCityBuilt)
         
 
 
@@ -529,6 +571,10 @@ class Player(object):
                 self.firstSettlementBuild  = True
             elif gameState.currState == "START2A":
                 self.secondSettlementBuild = True
+            else:
+                if self.stats.noSettlementsBuilt == 1:
+                    self.stats.turnsForFirstSettlement = self.stats.numTurns 
+                self.stats.noSettlementsBuilt = 0
 
             newConstruction = Construction(g_constructionTypes[1],
                                            self.seatNumber, len(self.settlements), position)
@@ -553,6 +599,10 @@ class Player(object):
                 self.UpdateTradeRates(gameState)
 
         elif pieceType == 'CITY':
+
+            if self.stats.noCityBuilt == 1:
+                    self.stats.turnsForFirstCity = self.stats.numTurns 
+            self.stats.noCityBuilt = 0
 
             newConstruction = Construction(g_constructionTypes[2],
                                            self.seatNumber, len(self.cities), position)

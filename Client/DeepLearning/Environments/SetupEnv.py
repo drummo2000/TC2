@@ -28,15 +28,15 @@ class SetupOnlyEnv(CatanEnv):
     """
     phases = ['START1A', 'START2A']
 
-    def __init__(self, customBoard=None):
+    def __init__(self, lowerBounds, upperBounds, getActionMask, getObservation, customBoard=None):
         super(SetupOnlyEnv, self).__init__()
 
-        self.action_space = spaces.Discrete(54)
-        self.observation_space = spaces.Box(low=setupRandomLowerBounds, high=setupRandomUpperBounds, dtype=np.int64)
+        self.action_space = spaces.Discrete(486)
+        self.observation_space = spaces.Box(low=lowerBounds, high=upperBounds, dtype=np.int64)
 
         # functions for getting actionMask/observation
-        self.getActionMask = getSetupActionMask
-        self.getObservation = getSetupRandomObservation
+        self.getActionMask = getActionMask
+        self.getObservation = getObservation
 
         self.lastReward = 0
 

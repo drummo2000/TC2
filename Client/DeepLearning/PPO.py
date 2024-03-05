@@ -105,7 +105,8 @@ class MaskablePPO(OnPolicyAlgorithm):
         _init_setup_model: bool = True,
         getActionMask: Callable = None,
         getObservation: Callable = None,
-        info: Dict = None
+        info: Dict = None,
+        saveName = ""
     ):
         super().__init__(
             policy,
@@ -147,6 +148,7 @@ class MaskablePPO(OnPolicyAlgorithm):
         self.getObservation = getObservation
 
         self.info = info
+        self.saveName = saveName
 
     def _setup_model(self) -> None:
         self._setup_lr_schedule()
@@ -537,6 +539,7 @@ class MaskablePPO(OnPolicyAlgorithm):
         # Collect avg reward for past 10 iterations(20_000 timesteps(100 games))
         rewardList = deque(maxlen=10)
         vpThreshold = 7
+        bestAvgReward = 0
 
         while self.num_timesteps < total_timesteps:
             continue_training = self.collect_rollouts(self.env, callback, self.rollout_buffer, self.n_steps, use_masking)
@@ -549,8 +552,11 @@ class MaskablePPO(OnPolicyAlgorithm):
 
             rewardList.append(safe_mean([ep_info["r"] for ep_info in self.ep_info_buffer]))
 
-            if sum(rewardList)/10 >= vpThreshold-2:
-                self.selfPlayUpdate(iteration)
+            if sum(rewardList)/10 > bestAvgReward:
+            #     self.selfPlayUpdate(iteration)
+            #     rewardList = deque(maxlen=10)
+                self.save(f'DeepLearning/models/{self.saveName}_{self.num_timesteps}')
+                bestAvgReward = sum(rewardList)/10
                 rewardList = deque(maxlen=10)
 
             # Display training infos
@@ -572,9 +578,9 @@ class MaskablePPO(OnPolicyAlgorithm):
 
         return self
 
-    def selfPlayUpdate(self, iteration):
-        # print("(Debug) Threshold reached, saving model and setting env variable.")
-        modelName = f'model_iteration_{iteration}'
-        self.save(f'DeepLearning/SelfPlayModels/{modelName}')
-        os.environ["UPDATE_MODELS"] = "True"
-        os.environ["MODEL_NAME"] = modelName
+    # def selfPlayUpdate(self, iteration):
+    #     # print("(Debug) Threshold reached, saving model and setting env variable.")
+    #     modelName = f'model_iteration_{iteration}'
+    #     self.save(f'DeepLearning/SelfPlayModels/{modelName}')
+    #     os.environ["UPDATE_MODELS"] = "True"
+    #     os.environ["MODEL_NAME"] = modelName

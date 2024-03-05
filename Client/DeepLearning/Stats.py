@@ -27,5 +27,9 @@ headers = [
     "setupResourceProduction",
     "totalSetupResourceProduction",
     "setupTradeRates",
-    "setupResourceDiversity"
+    "setupResourceDiversity",
+    "turnsForFirstSettlement",
+    "noSettlementsBuilt",
+    "turnsForFirstCity",
+    "noCitysBuilt"
 ]
