@@ -192,22 +192,22 @@ hexPositions = {
 }
 
 terrainColor = {
-    'HILLS'    : (255, 168,  63),
-    'MOUNTAINS': (203, 204, 185),
-    'PASTURE'  : (186, 242, 138),
-    'FIELDS'   : (253, 255, 170),
-    'FOREST'   : (36 , 145,  29),
+    'HILLS'    : (255, 128,  0),
+    'MOUNTAINS': (96, 96, 96),
+    'PASTURE'  : (102, 204, 0),
+    'FIELDS'   : (253, 255, 0),
+    'FOREST'   : (0 , 102,  0),
     'SEA'      : (99 , 197, 249),
     'DESERT'   : (247, 210, 101),
 }
 
 portColor = {
-    '3for1'        : (244, 75, 196),
-    'BrickHarbor'  : (255, 168,  63),
-    'OreHarbor'    : (203, 204, 185),
-    'WoolHarbor'   : (186, 242, 138),
-    'GrainHarbor'  : (253, 255, 170),
-    'LumberHarbor' : (36 , 145,  29)
+    '3for1'        : (0, 0, 0),
+    'BrickHarbor'  : (255, 128,  0),
+    'OreHarbor'    : (96, 96, 96),
+    'WoolHarbor'   : (102, 204, 0),
+    'GrainHarbor'  : (253, 255, 0),
+    'LumberHarbor' : (0 , 102,  0)
 }
 
 playerColor = [
@@ -217,7 +217,7 @@ playerColor = [
     (131, 255,  22)  # yellowish
 ]
 
-def GetGameStateImage(gameState):
+def GetGameStateImage(gameState, actionString=None):
 
     if gameState is not None:
 
@@ -341,7 +341,12 @@ def GetGameStateImage(gameState):
         # draw.text((1, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
         draw.text((500, 0), f"Longest Road: {gameState.longestRoadPlayer}", playerColor[gameState.longestRoadPlayer], font=font)
         draw.text((500, 30), f"Largest Army: {gameState.largestArmyPlayer}", playerColor[gameState.largestArmyPlayer], font=font)
-        draw.text((500, 60), f"DevCardVps: {gameState.players[0].developmentCards[VICTORY_POINT_CARD_INDEX]}", playerColor[0], font=font)
+        draw.text((500, 60), f"DevCardVps: {gameState.players[0].developmentCards[VICTORY_POINT_CARD_INDEX]}", (0, 0, 0), font=font)
+        draw.text((500, 90), f"Resource: {gameState.players[0].resources}", (0, 0, 0), font=font)
+        draw.text((500, 120), f"VictoryPoints: {gameState.players[0].victoryPoints}", (0, 0, 0), font=font)
+        draw.text((500, 150), f"SetupProduction: {gameState.players[0].stats.setupResourceProduction[:5]}", (0, 0, 0), font=font)
+        if actionString:
+            draw.text((500, 180), f"Action: {actionString}", (0, 0, 0), font=font)
 
         mainImg.convert('RGB')
 
@@ -359,9 +364,18 @@ def SaveGameStateImage(gameState, imgFileName):
     if gameStateImg is not None:
         gameStateImg.save(imgFileName)
 
-def DisplayImage(gameState):
-    gameStateImg: Image.Image = GetGameStateImage(gameState)
+import tkinter as tk
+from PIL import ImageTk
+
+def DisplayImage(gameState, actionString=None):
+    # root = tk.Tk()
+    gameStateImg: Image.Image = GetGameStateImage(gameState, actionString)
     gameStateImg.show()
+
+    # tkimage = ImageTk.PhotoImage(gameStateImg)
+    # tk.Label(root, image=tkimage).pack()
+    # root.bind('<space>', lambda event: root.destroy())
+    # root.mainloop()
 
 if __name__ == '__main__':
 

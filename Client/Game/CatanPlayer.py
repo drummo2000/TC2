@@ -79,11 +79,12 @@ class PlayerStats(object):
         return output
     
     def getList(self):
+        if self.numTurns == 0:
+            self.numTurns = -1
         # 22
         return [
                 self.numTurns,
                 self.victoryPoints,
-                self.finalTradeRates,
                 self.numRoadsBuilt,
                 self.devCardsBought,
                 self.usedDevCards,
@@ -101,6 +102,7 @@ class PlayerStats(object):
                 self.resourcesFromBankTrade,
                 round(sum(self.resourcesFromBankTrade), 3),
                 self.finalResourceProduction[:-1],
+                self.finalTradeRates,
                 self.setupResourceProduction[:-1],
                 round(sum(self.setupResourceProduction[:-1])),
                 self.setupTradeRates,
@@ -165,13 +167,16 @@ class PlayerStatsTracker(PlayerStats):
             ValueError("Can only add PlayerStats objects")
 
     def getAverages(self):
+        if self.numGames == 0:
+            self.numGames = -1
         # General
         self.numTurns = self.numTurns / self.numGames
         self.victoryPoints = self.victoryPoints / self.numGames
         self.numRoadsBuilt = self.numRoadsBuilt / self.numGames
         # Dev card Breakdown
         self.devCardsBought = self.devCardsBought / self.numGames
-        self.usedDevCards = self.usedDevCards / self.numGames 
+        self.usedDevCards = self.usedDevCards / self.numGames
+        self.usedDevCards = [round(num, 3) for num in self.usedDevCards]
         # Point Breakdown
         self.settlementsBuilt      = self.settlementsBuilt / self.numGames
         self.citiesBuilt           = self.citiesBuilt / self.numGames
@@ -180,15 +185,21 @@ class PlayerStatsTracker(PlayerStats):
         self.longestRoad           = self.longestRoad / self.numGames
         # Resource Breakdown
         self.resourcesReceived = self.resourcesReceived / self.numGames
+        self.resourcesReceived = [round(num, 3) for num in self.resourcesReceived]
         self.totalResourcesDiscarded = self.totalResourcesDiscarded / self.numGames
         self.totalResourcesStolen  = self.totalResourcesStolen / self.numGames
         self.resourcesFromDevCard = self.resourcesFromDevCard / self.numGames
+        self.resourcesFromDevCard = [round(num, 3) for num in self.resourcesFromDevCard]
         self.resourcesFromBankTrade = self.resourcesFromBankTrade / self.numGames
+        self.resourcesFromBankTrade = [round(num, 3) for num in self.resourcesFromBankTrade]
         self.finalResourceProduction = self.finalResourceProduction / self.numGames
+        self.finalResourceProduction = [round(num, 3) for num in self.finalResourceProduction]
         self.finalTradeRates = self.finalTradeRates / self.numGames
         # Setup Breakdown
         self.setupResourceProduction = self.setupResourceProduction / self.numGames
+        self.setupResourceProduction = [round(num, 3) for num in self.setupResourceProduction]
         self.setupTradeRates = self.setupTradeRates / self.numGames
+        self.setupTradeRates = [round(num, 3) for num in self.setupTradeRates]
         self.setupResourceDiversity = self.setupResourceDiversity / self.numGames
         # Tasks Breakdown
         self.noSettlementsBuilt = self.noSettlementsBuilt - 1

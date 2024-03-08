@@ -107,7 +107,8 @@ class BuildRoadAction(BuildAction):
 
         super(BuildRoadAction, self).ApplyAction(gameState)
 
-        if gameState.checkLongestRoad:
+        # If the player has atleast 5 roads update
+        if len(gameState.players[self.playerNumber].roads) >= 5:#gameState.checkLongestRoad:
             gameState.UpdateLongestRoad()
 
         if gameState.currState == "START1B":

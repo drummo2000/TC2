@@ -300,8 +300,9 @@ class MaskablePPO(OnPolicyAlgorithm):
         action_masks = None
         rollout_buffer.reset()
 
-        if use_masking and not is_masking_supported(env):
-            raise ValueError("Environment does not support action masking. Consider using ActionMasker wrapper")
+        # All environments we pass support action masking
+        # if use_masking and not is_masking_supported(env):
+        #     raise ValueError("Environment does not support action masking. Consider using ActionMasker wrapper")
 
         callback.on_rollout_start()
 
@@ -538,7 +539,6 @@ class MaskablePPO(OnPolicyAlgorithm):
 
         # Collect avg reward for past 10 iterations(20_000 timesteps(100 games))
         rewardList = deque(maxlen=10)
-        vpThreshold = 7
         bestAvgReward = 0
 
         while self.num_timesteps < total_timesteps:
@@ -552,12 +552,19 @@ class MaskablePPO(OnPolicyAlgorithm):
 
             rewardList.append(safe_mean([ep_info["r"] for ep_info in self.ep_info_buffer]))
 
-            if sum(rewardList)/10 > bestAvgReward:
+            # Turn on vp rewards when production reaches 20
+            # vpReward = os.environ.get("VP_REWARDS")
+            # if vpReward == "False":
+            #     if sum(rewardList)/10 > 18:
+            #         os.environ["VP_REWARDS"] = "True"
+
+            # SAVE MODELß
+            if sum(rewardList)/10 > bestAvgReward+1:
             #     self.selfPlayUpdate(iteration)
             #     rewardList = deque(maxlen=10)
-                self.save(f'DeepLearning/models/{self.saveName}_{self.num_timesteps}')
+                self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
                 bestAvgReward = sum(rewardList)/10
-                rewardList = deque(maxlen=10)
+                # rewardList = deque(maxlen=10)
 
             # Display training infos
             if log_interval is not None and iteration % log_interval == 0:
