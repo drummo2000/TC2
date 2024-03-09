@@ -342,7 +342,7 @@ def GetGameStateImage(gameState, actionString=None):
         draw.text((500, 0), f"Longest Road: {gameState.longestRoadPlayer}", playerColor[gameState.longestRoadPlayer], font=font)
         draw.text((500, 30), f"Largest Army: {gameState.largestArmyPlayer}", playerColor[gameState.largestArmyPlayer], font=font)
         draw.text((500, 60), f"DevCardVps: {gameState.players[0].developmentCards[VICTORY_POINT_CARD_INDEX]}", (0, 0, 0), font=font)
-        draw.text((500, 90), f"Resource: {gameState.players[0].resources}", (0, 0, 0), font=font)
+        draw.text((500, 90), f"Resource: {gameState.players[0].resources[:5]}", (0, 0, 0), font=font)
         draw.text((500, 120), f"VictoryPoints: {gameState.players[0].victoryPoints}", (0, 0, 0), font=font)
         draw.text((500, 150), f"SetupProduction: {gameState.players[0].stats.setupResourceProduction[:5]}", (0, 0, 0), font=font)
         if actionString:

@@ -131,17 +131,19 @@ class ChangingRewardEnv(CatanEnv):
 
         # Reward settings
         self.winReward = False
-        self.winRewardAmount = 30
+        self.winRewardAmount = 50
         self.loseRewardAmount = 0
         self.vpActionReward = False # Actions that directly give vp
         self.vpActionRewardMultiplier = 4
             # Setup Rewards
-        self.setupProductionReward = True
-        self.setupProductionRewardMultiplier = 0.3
+        self.setupReward = True
+        self.setupRewardMultiplier = 0
     
     def reset(self, seed=None):
         if os.environ.get("VP_REWARDS") == "True":
             self.vpActionReward = True
+        if os.environ.get("WIN_REWARDS") == "True":
+            self.winReward = True
         return super(ChangingRewardEnv, self).reset()
 
 
@@ -176,22 +178,31 @@ class ChangingRewardEnv(CatanEnv):
             elif actionObj.type == 'BuildCity':
                 reward += 1 * self.vpActionRewardMultiplier
         
-        if self.setupProductionReward:
+        if self.setupReward:
             if actionObj.type == 'BuildSettlement' and prevState == 'START2A':
                 resourceProduction = listm([0, 0, 0, 0, 0, 0])
                 for diceNumber, resourceList in self.game.gameState.players[0].diceProduction.items():
                     resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
-                reward += sum(resourceProduction) * self.setupProductionRewardMultiplier
+                reward += sum(resourceProduction) * self.setupRewardMultiplier
                 # Diversity
                 diversity = sum(x != 0 for x in resourceProduction)
                 if diversity == 5:
-                    reward += 25
+                    reward += 20
                 elif diversity == 4:
-                    reward += 18
+                    reward += 10
+                elif diversity == 3:
+                    reward += -10
+                elif diversity == 2:
+                    reward += -20
+
+                # Check if it gets a single 2 port
+                # correctPorts = sum(self.agent.tradeRates) == 18
+                # if correctPorts:
+                #     reward += 10
             
 
         # Check if game Over
-        if self.game.gameState.currState == "OVER":
+        if self.game.gameState.currState == "PLAY":
             if self.winReward:
                 wonGame = self.game.gameState.winner == 0
                 if wonGame:
@@ -206,7 +217,7 @@ class ChangingRewardEnv(CatanEnv):
             agentAction = currPlayer.DoMove(self.game)
             agentAction.ApplyAction(self.game.gameState)
             currPlayer = self.players[self.game.gameState.currPlayer]
-            if self.game.gameState.currState == "OVER":
+            if self.game.gameState.currState == "PLAY":
                 if self.winReward:
                     wonGame = self.game.gameState.winner == 0
                     if wonGame:

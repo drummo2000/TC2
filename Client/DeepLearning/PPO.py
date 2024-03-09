@@ -553,13 +553,13 @@ class MaskablePPO(OnPolicyAlgorithm):
             rewardList.append(safe_mean([ep_info["r"] for ep_info in self.ep_info_buffer]))
 
             # Turn on vp rewards when production reaches 20
-            # vpReward = os.environ.get("VP_REWARDS")
-            # if vpReward == "False":
-            #     if sum(rewardList)/10 > 18:
-            #         os.environ["VP_REWARDS"] = "True"
+            # winReward = os.environ.get("WIN_REWARDS")
+            # if winReward == "False":
+            #     if sum(rewardList)/10 > 17:
+            #         os.environ["WIN_REWARDS"] = "True"
 
-            # SAVE MODELß
-            if sum(rewardList)/10 > bestAvgReward+1:
+            # SAVE MODEL
+            if sum(rewardList)/10 > bestAvgReward + bestAvgReward/10:
             #     self.selfPlayUpdate(iteration)
             #     rewardList = deque(maxlen=10)
                 self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
