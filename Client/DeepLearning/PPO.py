@@ -539,7 +539,7 @@ class MaskablePPO(OnPolicyAlgorithm):
 
         # Collect avg reward for past 10 iterations(20_000 timesteps(100 games))
         rewardList = deque(maxlen=10)
-        bestAvgReward = 0
+        bestAvgReward = -50
 
         while self.num_timesteps < total_timesteps:
             continue_training = self.collect_rollouts(self.env, callback, self.rollout_buffer, self.n_steps, use_masking)
@@ -559,7 +559,7 @@ class MaskablePPO(OnPolicyAlgorithm):
             #         os.environ["WIN_REWARDS"] = "True"
 
             # SAVE MODEL
-            if sum(rewardList)/10 > bestAvgReward + bestAvgReward/10:
+            if sum(rewardList)/10 > bestAvgReward + bestAvgReward/20:
             #     self.selfPlayUpdate(iteration)
             #     rewardList = deque(maxlen=10)
                 self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')

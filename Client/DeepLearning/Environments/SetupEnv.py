@@ -8,7 +8,7 @@ from Agents.AgentRandom2 import AgentRandom2
 from CatanData.GameStateViewer import SaveGameStateImage
 from DeepLearning.GetObservation import getSetupRandomObservation, getSetupRandomWithRoadsObservation, setupRandomLowerBounds, setupRandomUpperBounds, setupRandomWithRoadsLowerBounds, setupRandomWithRoadsUpperBounds
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask, getSetupWithRoadsActionMask
-from DeepLearning.Environments.CatanEnv import CatanEnv
+from DeepLearning.Environments.CatanEnv import CatanBaseEnv
 
 # Takes in list of production for each dice number and returns weighted sum
 def getProductionReward(productionDict: dict) -> int:
@@ -19,7 +19,7 @@ def getProductionReward(productionDict: dict) -> int:
 
 
 
-class SetupOnlyEnv(CatanEnv):
+class SetupOnlyEnv(CatanBaseEnv):
     """
     Game ends after setup phase
     Observation: all node info for each node (~1000?)
@@ -118,7 +118,7 @@ class SetupOnlyEnv(CatanEnv):
 
 
 
-class SetupRandomEnv(CatanEnv):
+class SetupRandomEnv(CatanBaseEnv):
     """
     Model Chooses placement actions, then random actions for rest of the game
     Reward: +3 win, -1 loss

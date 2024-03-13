@@ -13,9 +13,9 @@ from DeepLearning.GetObservation import getObservation, getSetupObservation, get
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
 from DeepLearning.PPO import MaskablePPO
 from sb3_contrib.common.maskable.utils import get_action_masks
-from DeepLearning.Environments.CatanEnv import CatanEnv
+from DeepLearning.Environments.CatanEnv import CatanBaseEnv
 
-class NoSetupEnv(CatanEnv):
+class NoSetupEnv(CatanBaseEnv):
     """
     Separate trained model chooses setup actions, training on rest of game
     Action: full 486 (no player trades)

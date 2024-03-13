@@ -13,11 +13,11 @@ from DeepLearning.GetObservation import getObservation, getSetupObservation, get
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
 from DeepLearning.PPO import MaskablePPO
 from sb3_contrib.common.maskable.utils import get_action_masks
-from DeepLearning.Environments.CatanEnv import CatanEnv
+from DeepLearning.Environments.CatanEnv import CatanBaseEnv
 from Agents.AgentModel import AgentMultiModel, AgentModel
 
 
-class SelfPlayEnv(CatanEnv):
+class SelfPlayEnv(CatanBaseEnv):
     """
     Self Play Environment which replaces opponents network every when threshold hit (timesteps/winrate/reward)
     """
@@ -121,7 +121,7 @@ class SelfPlayEnv(CatanEnv):
 
 
 
-class SelfPlaySetupDotTotalEnv(CatanEnv):
+class SelfPlaySetupDotTotalEnv(CatanBaseEnv):
     """
     Self Play Environment which replaces opponents network every when threshold hit (timesteps/winrate/reward)
     All models use SetupOnlyDotTotal100k model for setupPhase

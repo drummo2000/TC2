@@ -217,7 +217,7 @@ playerColor = [
     (131, 255,  22)  # yellowish
 ]
 
-def GetGameStateImage(gameState, actionString=None):
+def GetGameStateImage(gameState, action=None):
 
     if gameState is not None:
 
@@ -345,8 +345,13 @@ def GetGameStateImage(gameState, actionString=None):
         draw.text((500, 90), f"Resource: {gameState.players[0].resources[:5]}", (0, 0, 0), font=font)
         draw.text((500, 120), f"VictoryPoints: {gameState.players[0].victoryPoints}", (0, 0, 0), font=font)
         draw.text((500, 150), f"SetupProduction: {gameState.players[0].stats.setupResourceProduction[:5]}", (0, 0, 0), font=font)
-        if actionString:
-            draw.text((500, 180), f"Action: {actionString}", (0, 0, 0), font=font)
+        if action:
+            draw.text((500, 180), f"Action: {action.type}", (0, 0, 0), font=font)
+            if action.type == 'RollDices':
+                draw.text((500, 210), f"Action: {action.result}", (0, 0, 0), font=font)
+        robberHex = gameState.boardHexes[gameState.robberPos]
+        draw.text((500, 240), f"RobberPos: {robberHex.number}-{robberHex.production}", (0, 0, 0), font=font)
+
 
         mainImg.convert('RGB')
 

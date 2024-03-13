@@ -134,7 +134,7 @@ def CreateGame(players, recordData = False, customBoard = None)->Game:
     for player in players:
         game.AddPlayer(player, player.seatNumber)
 
-    # game.gameState.players = game.gameState.players[:len(players)]
+    game.gameState.players = game.gameState.players[:len(players)]
 
     startingPlayer = random.randint(0, len(players)-1)
 
@@ -550,7 +550,7 @@ def runParallelGames(totalGames, numProcesses, players) -> list:
     return finalresults
 
 players = [
-    AgentMCTS("P0", 0, simulationCount=100),
+    AgentUCT("P0", 0, simulationCount=100),
     # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
     # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
     AgentRandom2("P1", 1),

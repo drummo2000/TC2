@@ -99,3 +99,9 @@ Client/.DS_Store
 JSettlers-2.6.10
 Client/DeepLearning/SelfPlayModels/
 Client/TC2MainV2.py
+
+Client/StateActions/
+Client/StateActions2/
+
+Client/ReplicateUCT/state_action_setup.csv
+Client/ReplicateUCT/state_actions.csv

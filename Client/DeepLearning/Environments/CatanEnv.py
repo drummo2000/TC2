@@ -13,12 +13,12 @@ from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
 from DeepLearning.PPO import MaskablePPO
 
 
-class CatanEnv(gym.Env):
+class CatanBaseEnv(gym.Env):
     """
     Full Catan game with full action and state space (no player trades)
     """
-    def __init__(self, customBoard=None):
-        super(CatanEnv, self).__init__()
+    def __init__(self, customBoard=None, players=None):
+        super(CatanBaseEnv, self).__init__()
 
         self.action_space = spaces.Discrete(486)
         self.observation_space = spaces.Box(low=lowerBoundsSimplified, high=upperBoundsSimplified, dtype=np.int64) 
@@ -36,14 +36,21 @@ class CatanEnv(gym.Env):
         self.getActionMask = getActionMask
         self.getObservation = getObservationSimplified
 
+        if players == None:
+            self.players = [AgentRandom2("P0", 0),
+                            AgentRandom2("P1", 1),
+                            AgentRandom2("P2", 2),
+                            AgentRandom2("P3", 3)]
+        else:
+            self.players = players
+
     def reset(self, seed=None):
         """
         Setup new game, cycle through actions till agents turn, return current state and set action mask
         """
-        inGame = CreateGame([   AgentRandom2("P0", 0),
-                                AgentRandom2("P1", 1),
-                                AgentRandom2("P2", 2),
-                                AgentRandom2("P3", 3)], self.customBoard)
+        for player in self.players:
+            player:Player = player.__init__(player.name, player.seatNumber) 
+        inGame = CreateGame(self.players, self.customBoard)
         self.game = pickle.loads(pickle.dumps(inGame, -1))
         self.players = self.game.gameState.players
         self.agent = self.game.gameState.players[0]
@@ -121,30 +128,48 @@ class CatanEnv(gym.Env):
 
 
 
-class ChangingRewardEnv(CatanEnv):
+class CatanEnv(CatanBaseEnv):
     """
     Full Catan game with full action and state space (no player trades)
     Change the rewards when certain reward reached
     """
-    def __init__(self, customBoard=None):
-        super(ChangingRewardEnv, self).__init__()
+    def __init__(self, customBoard=None, players=None):
+        super(CatanEnv, self).__init__(customBoard=customBoard, players=players)
 
         # Reward settings
         self.winReward = False
-        self.winRewardAmount = 50
-        self.loseRewardAmount = 0
-        self.vpActionReward = False # Actions that directly give vp
-        self.vpActionRewardMultiplier = 4
+        self.winRewardAmount = 10
+        self.loseRewardAmount = -10
+        self.vpActionReward = True # Actions that directly give vp
+        self.vpActionRewardMultiplier = 1
             # Setup Rewards
         self.setupReward = True
-        self.setupRewardMultiplier = 0
+        self.setupRewardMultiplier = 1
+            # Speed Rewards
+        self.winSpeedReward = True
+        self.maxNumTurnsToWin = 100
+        self.firstSettlementReward = False
+
     
     def reset(self, seed=None):
-        if os.environ.get("VP_REWARDS") == "True":
-            self.vpActionReward = True
-        if os.environ.get("WIN_REWARDS") == "True":
-            self.winReward = True
-        return super(ChangingRewardEnv, self).reset()
+        # if os.environ.get("VP_REWARDS") == "True":
+        #     self.vpActionReward = True
+        # if os.environ.get("WIN_REWARDS") == "True":
+        #     self.winReward = True
+        self.numTurns = 0
+        self.turnsFirstSettlement = 0
+        return super(CatanEnv, self).reset()
+
+    def endCondition(self) -> bool:
+        # Default
+        # if self.game.gameState.currState == "OVER":
+        #     return True
+        # else:
+        #     return False
+        if self.numTurns >= 100 or self.game.gameState.currState == "OVER":
+            return True
+        else:
+            return False
 
 
     def step(self, action):
@@ -165,6 +190,13 @@ class ChangingRewardEnv(CatanEnv):
         actionObj = self.indexActionDict[action]
         actionObj.ApplyAction(self.game.gameState)
 
+        if actionObj.type == "EndTurn":
+            self.numTurns += 1
+        elif actionObj.type == "BuildSettlement" and prevState[:5] != "START":
+            # Mark moves for first settlement
+            if len(self.agent.settlements) + len(self.agent.cities) == 3:
+                self.turnsFirstSettlement = self.numTurns
+
         # Add Rewards
         if self.vpActionReward:
             if biggestArmyBefore == False and self.agent.biggestArmy == True:
@@ -183,57 +215,63 @@ class ChangingRewardEnv(CatanEnv):
                 resourceProduction = listm([0, 0, 0, 0, 0, 0])
                 for diceNumber, resourceList in self.game.gameState.players[0].diceProduction.items():
                     resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
-                reward += sum(resourceProduction) * self.setupRewardMultiplier
+                reward += sum(resourceProduction) * 0.5#self.setupRewardMultiplier
                 # Diversity
                 diversity = sum(x != 0 for x in resourceProduction)
                 if diversity == 5:
-                    reward += 20
-                elif diversity == 4:
                     reward += 10
+                elif diversity == 4:
+                    reward += 5
                 elif diversity == 3:
-                    reward += -10
+                    reward -= 5
                 elif diversity == 2:
-                    reward += -20
-
-                # Check if it gets a single 2 port
-                # correctPorts = sum(self.agent.tradeRates) == 18
-                # if correctPorts:
-                #     reward += 10
-            
+                    reward -= 10
+                elif diversity == 1:
+                    reward -= 20
 
         # Check if game Over
-        if self.game.gameState.currState == "PLAY":
-            if self.winReward:
-                wonGame = self.game.gameState.winner == 0
-                if wonGame:
-                    reward += self.winRewardAmount
-                else:
-                    reward += self.loseRewardAmount
-            return None, reward, True, truncated, {}
+        if self.endCondition():
+            return self.endGame(reward)
         
         # if game is not over cycle through actions until its agents turn again
         currPlayer = self.players[self.game.gameState.currPlayer]
-        while currPlayer.seatNumber != 0:
+        while True:
+            # Only use model when right turn and more than 1 possible action
+            if currPlayer.seatNumber == 0:
+                possibleActions = self.agent.GetPossibleActions(self.game.gameState)
+                if len(possibleActions) > 1:
+                    break
+                elif possibleActions[0].type == "EndTurn":
+                    self.numTurns += 1
+
             agentAction = currPlayer.DoMove(self.game)
             agentAction.ApplyAction(self.game.gameState)
             currPlayer = self.players[self.game.gameState.currPlayer]
-            if self.game.gameState.currState == "PLAY":
-                if self.winReward:
-                    wonGame = self.game.gameState.winner == 0
-                    if wonGame:
-                        reward += self.winRewardAmount
-                    else:
-                        reward += self.loseRewardAmount
-                return None, reward, True, truncated, {}
+
+            # Check if game Over
+            if self.endCondition():
+                return self.endGame(reward)
         
         # Now ready for agent to choose action, get observation and action mask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)
-        if len(possibleActions) == 1 and possibleActions[0].type == "ChangeGameState":
-            possibleActions[0].ApplyAction(self.game.gameState)
-            possibleActions = self.agent.GetPossibleActions(self.game.gameState)
         self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
         observation = self.getObservation(self.game.gameState)
 
         # observation, reward, terminated, truncated, info
         return observation, reward, done, truncated, {}
+
+    def endGame(self, reward):
+        wonGame = self.game.gameState.winner == 0
+        if self.winReward:
+            if wonGame:
+                reward += self.winRewardAmount
+            else:
+                reward += self.loseRewardAmount
+        if self.firstSettlementReward:
+            reward += 50 - self.turnsFirstSettlement
+        
+        reward += 100 - self.numTurns
+        
+
+        return None, reward, True, False, {}
         

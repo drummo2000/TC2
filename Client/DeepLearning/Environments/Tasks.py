@@ -11,10 +11,10 @@ from CatanData.GameStateViewer import SaveGameStateImage
 from DeepLearning.GetObservation import getObservation, getSetupObservation, getSetupRandomObservation, lowerBounds, upperBounds, lowerBoundsSimplified, upperBoundsSimplified, getObservationSimplified
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
 from DeepLearning.PPO import MaskablePPO
-from DeepLearning.Environments.CatanEnv import CatanEnv
+from DeepLearning.Environments.CatanEnv import CatanBaseEnv
 
 
-class FirstSettlementEnv(CatanEnv):
+class FirstSettlementEnv(CatanBaseEnv):
     """
     Game finishes when agent places first settlement (after setup), reward is least amount of moves to build it.
     """
@@ -105,7 +105,7 @@ class FirstSettlementEnv(CatanEnv):
 
 
 
-class FirstCityEnv(CatanEnv):
+class FirstCityEnv(CatanBaseEnv):
     """
     Game finishes when agent places first city, reward is least amount of moves to build it.
     """
@@ -194,7 +194,7 @@ class FirstCityEnv(CatanEnv):
 
 
 
-class SetupOnlyFirstCityEnv(CatanEnv):
+class SetupOnlyFirstCityEnv(CatanBaseEnv):
     """
     Model Chooses placement actions and is trained on them, then pretrained model passed plays for rest of actions
     Reward: 50 - num turns to build first settlement
