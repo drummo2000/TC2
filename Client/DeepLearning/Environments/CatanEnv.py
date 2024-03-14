@@ -11,6 +11,8 @@ from CatanData.GameStateViewer import SaveGameStateImage
 from DeepLearning.GetObservation import getObservation, getSetupObservation, getSetupRandomObservation, lowerBounds, upperBounds, lowerBoundsSimplified, upperBoundsSimplified, getObservationSimplified
 from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
 from DeepLearning.PPO import MaskablePPO
+from CatanData.GameStateViewer import SaveGameStateImage, DisplayImage
+import time
 
 
 class CatanBaseEnv(gym.Env):
@@ -140,15 +142,21 @@ class CatanEnv(CatanBaseEnv):
         self.winReward = False
         self.winRewardAmount = 10
         self.loseRewardAmount = -10
-        self.vpActionReward = True # Actions that directly give vp
-        self.vpActionRewardMultiplier = 1
+        self.vpActionReward = False # Actions that directly give vp
+        self.vpActionRewardMultiplier = 3
             # Setup Rewards
         self.setupReward = True
-        self.setupRewardMultiplier = 1
+        self.setupRewardMultiplier = 0.5
             # Speed Rewards
-        self.winSpeedReward = True
+        self.winSpeedReward = False
         self.maxNumTurnsToWin = 100
         self.firstSettlementReward = False
+            # Trading Rewards
+        self.bankTradeReward = True
+        self.bankTradeRewardMultiplier = 1
+            # Dense Rewards - Building roads/Buying dev cards/steeling resource
+        self.denseRewards = True
+        self.denseRewardMultiplier = 1
 
     
     def reset(self, seed=None):
@@ -166,7 +174,7 @@ class CatanEnv(CatanBaseEnv):
         #     return True
         # else:
         #     return False
-        if self.numTurns >= 100 or self.game.gameState.currState == "OVER":
+        if self.game.gameState.currState == "OVER":
             return True
         else:
             return False
@@ -186,6 +194,12 @@ class CatanEnv(CatanBaseEnv):
         vpDevCardBefore = self.agent.developmentCards[VICTORY_POINT_CARD_INDEX]
         prevState = self.game.gameState.currState
 
+        if self.bankTradeReward and prevState[:5] != "START":
+            canBuildSettlementBefore = self.game.gameState.GetPossibleSettlements(self.agent) and self.agent.HavePiece(g_pieces.index('SETTLEMENTS')) and self.agent.CanAfford(BuildSettlementAction.cost)
+            canBuildCityBefore = self.agent.settlements and self.agent.CanAfford(BuildCityAction.cost)
+            canBuyDevCardBefore = self.agent.CanAfford(BuyDevelopmentCardAction.cost)
+            canBuildRoadBefore = self.game.gameState.GetPossibleRoads(self.agent) and self.agent.HavePiece(g_pieces.index('ROADS')) and self.agent.CanAfford(BuildRoadAction.cost)
+
         # Apply action chosen
         actionObj = self.indexActionDict[action]
         actionObj.ApplyAction(self.game.gameState)
@@ -196,6 +210,33 @@ class CatanEnv(CatanBaseEnv):
             # Mark moves for first settlement
             if len(self.agent.settlements) + len(self.agent.cities) == 3:
                 self.turnsFirstSettlement = self.numTurns
+
+        if self.bankTradeReward:
+            if actionObj.type == "BankTradeOffer":
+                # print(f"Trade: {actionObj.getString()}\nResources: {self.agent.resources[:5]}\n\n")
+                # DisplayImage(self.game.gameState)
+                canBuildSettlementAfter = self.agent.CanAfford(BuildSettlementAction.cost)
+                canBuildRoadAfter = self.agent.CanAfford(BuildRoadAction.cost)
+                canBuildCityAfter = self.agent.CanAfford(BuildCityAction.cost)
+                canBuyDevCardAfter = self.agent.CanAfford(BuyDevelopmentCardAction.cost)
+                # Trades which allow us to build
+                if canBuildSettlementBefore == False and canBuildSettlementAfter == True:
+                    reward += 4 * self.bankTradeRewardMultiplier
+                if canBuildCityBefore == False and canBuildCityAfter == True:
+                    reward += 4 * self.bankTradeRewardMultiplier
+                if canBuildRoadBefore == False and canBuildRoadAfter == True :
+                    reward += 1 * self.bankTradeRewardMultiplier
+                if canBuyDevCardBefore == False and canBuyDevCardAfter == True:
+                    reward += 2 * self.bankTradeRewardMultiplier
+                # Trades which get rid of resources for possible Builds
+                if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
+                    reward -= 4 * self.bankTradeRewardMultiplier
+                if canBuildCityBefore == True and canBuildCityAfter == False:
+                    reward -= 4 * self.bankTradeRewardMultiplier
+                    # If we could buy dev card before and now can't get anything
+                if canBuyDevCardBefore == True and canBuyDevCardAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuildRoadAfter == False:
+                    reward -= 2 * self.bankTradeRewardMultiplier
+
 
         # Add Rewards
         if self.vpActionReward:
@@ -209,25 +250,34 @@ class CatanEnv(CatanBaseEnv):
                 reward += 1 * self.vpActionRewardMultiplier
             elif actionObj.type == 'BuildCity':
                 reward += 1 * self.vpActionRewardMultiplier
+
+        if self.denseRewards:
+            if actionObj.type == 'BuyDevelopmentCard':
+                reward += 3 * self.denseRewardMultiplier
+            elif actionObj.type == 'BuildRoad' and prevState[:5] != "START":
+                reward += 1 * self.denseRewardMultiplier
+            elif actionObj.type == 'PlaceRobber' and self.game.gameState.currState == "WAITING_FOR_CHOICE":
+                reward += 0.5 * self.denseRewardMultiplier
+            if actionObj.type == 'BuildSettlement' and prevState[:5] != "START":
+                reward += 6 * self.vpActionRewardMultiplier
+            elif actionObj.type == 'BuildCity':
+                reward += 6 * self.vpActionRewardMultiplier
+
+
         
         if self.setupReward:
             if actionObj.type == 'BuildSettlement' and prevState == 'START2A':
                 resourceProduction = listm([0, 0, 0, 0, 0, 0])
                 for diceNumber, resourceList in self.game.gameState.players[0].diceProduction.items():
                     resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
-                reward += sum(resourceProduction) * 0.5#self.setupRewardMultiplier
+                reward += sum(resourceProduction) * self.setupRewardMultiplier
                 # Diversity
                 diversity = sum(x != 0 for x in resourceProduction)
                 if diversity == 5:
-                    reward += 10
+                    reward += 20 * self.setupRewardMultiplier
                 elif diversity == 4:
-                    reward += 5
-                elif diversity == 3:
-                    reward -= 5
-                elif diversity == 2:
-                    reward -= 10
-                elif diversity == 1:
-                    reward -= 20
+                    reward += 10 * self.setupRewardMultiplier
+
 
         # Check if game Over
         if self.endCondition():
@@ -269,9 +319,6 @@ class CatanEnv(CatanBaseEnv):
                 reward += self.loseRewardAmount
         if self.firstSettlementReward:
             reward += 50 - self.turnsFirstSettlement
-        
-        reward += 100 - self.numTurns
-        
 
         return None, reward, True, False, {}
         

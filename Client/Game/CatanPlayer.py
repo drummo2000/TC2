@@ -202,13 +202,13 @@ class PlayerStatsTracker(PlayerStats):
         self.setupTradeRates = [round(num, 3) for num in self.setupTradeRates]
         self.setupResourceDiversity = self.setupResourceDiversity / self.numGames
         # Tasks Breakdown
-        self.noSettlementsBuilt = self.noSettlementsBuilt - 1
+        self.noSettlementsBuilt = (self.noSettlementsBuilt - 1) / self.numGames
         if (self.numGames == self.noSettlementsBuilt):
             self.turnsForFirstSettlement = -1
         else:
             self.turnsForFirstSettlement = self.turnsForFirstSettlement / (self.numGames - self.noSettlementsBuilt)
         
-        self.noCityBuilt = self.noCityBuilt - 1
+        self.noCityBuilt = (self.noCityBuilt - 1) / self.numGames
         if (self.numGames == self.noCityBuilt):
             self.turnsForFirstCity = -1
         else:

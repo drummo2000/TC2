@@ -156,5 +156,3 @@ def getSetupWithRoadsActionMask(possibleActions: list[Action]):
         mask[setupWithRoadsActionsDict[action.getString()]] = 1
         indexActionDict[setupWithRoadsActionsDict[action.getString()]] = action
     return np.array(mask), indexActionDict
-
-print(len(allActionsList))
