@@ -86,16 +86,16 @@ phaseOneHotMappingFull = {
 }
 
 # returns 2350 length 1D array (now 2358)
-def getObservation(gameState: GameState):
+def getObservation(gameState: GameState, playerPosition=0):
     """
     Returns all game info for a model (2358)
     """
 
-    player:Player = gameState.players[0]
+    player:Player = gameState.players[playerPosition]
     if len(gameState.players) > 1:
-        player1 = gameState.players[1]
-        player2 = gameState.players[2]
-        player3 = gameState.players[3]
+        player1 = gameState.players[(playerPosition+1)%4]
+        player2 = gameState.players[(playerPosition+2)%4]
+        player3 = gameState.players[(playerPosition+3)%4]
 
     ## My info ##
     myResources = player.resources
@@ -443,11 +443,11 @@ upperBoundsSimplified = np.array([
     *phaseUpper
 ])
 
-def getObservationSimplified(gameState: GameState):
+def getObservationSimplified(gameState: GameState, playerNumber=0):
     """
     Simplified obervation with more useful features - 1492
     """
-    player:Player = gameState.players[0]
+    player:Player = gameState.players[playerNumber]
 
     ## My info ##
     myResources = player.resources # 6
@@ -464,8 +464,8 @@ def getObservationSimplified(gameState: GameState):
     canAffordRoad = int(player.CanAfford(BuildRoadAction.cost)) # 1
 
     ## Other players info ##
-    longestRoadPlayer = 1 if gameState.longestRoadPlayer == 0 else 0 # 1
-    largestArmyPlayer = 1 if gameState.largestArmyPlayer == 0 else 0 # 1
+    longestRoadPlayer = 1 if gameState.longestRoadPlayer == playerNumber else 0 # 1
+    largestArmyPlayer = 1 if gameState.largestArmyPlayer == playerNumber else 0 # 1
 
     ## Board info ##
 
@@ -473,18 +473,18 @@ def getObservationSimplified(gameState: GameState):
     hexes = gameState.boardHexes
     hexInfo = [] # 19
     for hexIndex in constructableHexesList:
-        hexInfo.append(getHexRobberRating(hexes[hexIndex], gameState))
+        hexInfo.append(getHexRobberRating(hexes[hexIndex], gameState, playerNumber=playerNumber))
     
     # Get node info
     nodes = gameState.boardNodes
     nodeInfo = [] # 54 * 20 = 1080
     for nodeIndex in constructableNodesList:
-        nodeInfo.extend(getNodeRepresentationSimilified(nodes[nodeIndex], gameState))
+        nodeInfo.extend(getNodeRepresentationSimilified(nodes[nodeIndex], gameState, playerNumber=playerNumber))
 
     # Get edge info
     edgeInfo = [] # 72 * 4 = 288
     for edgeIndex in constructableEdgesList:
-        edgeInfo.extend(getEdgeRepresentationSimplified(gameState.boardEdges[edgeIndex], gameState))
+        edgeInfo.extend(getEdgeRepresentationSimplified(gameState.boardEdges[edgeIndex], gameState, playerNumber=playerNumber))
 
     # Get Game phase
     phase = phaseOneHotMapping[gameState.currState] # 8
@@ -492,7 +492,7 @@ def getObservationSimplified(gameState: GameState):
     output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, canAffordSettlement, canAffordCity, canAffordRoad, longestRoadPlayer, largestArmyPlayer, *nodeInfo, *hexInfo, *edgeInfo, *phase]
     return np.array(output)
 
-def getHexRobberRating(hex: BoardHex, gameState: GameState) -> int:
+def getHexRobberRating(hex: BoardHex, gameState: GameState, playerNumber=0) -> int:
     """
     Number representing whether to play robber: shouldn't place on own buildings - 1 for each hex = 19
     """
@@ -504,7 +504,7 @@ def getHexRobberRating(hex: BoardHex, gameState: GameState) -> int:
         if node.construction == None:
             continue
         # Bad rating don't place here
-        if node.construction.owner == 0:
+        if node.construction.owner == playerNumber:
             return -1
         if node.construction.type == 'SETTLEMENT':
             numSettlements += 1
@@ -513,7 +513,7 @@ def getHexRobberRating(hex: BoardHex, gameState: GameState) -> int:
     rating = (numSettlements * numberDotsMapping[hex.number]) + 2*(numCities * numberDotsMapping[hex.number])
     return rating
 
-def getNodeRepresentationSimilified(node: BoardNode, gameState: GameState) -> list:
+def getNodeRepresentationSimilified(node: BoardNode, gameState: GameState, playerNumber=0) -> list:
     """
     For each node get: owner, constructionType, portType, dotList, production (20 total) - 20*54 = 1080
     """
@@ -523,7 +523,7 @@ def getNodeRepresentationSimilified(node: BoardNode, gameState: GameState) -> li
     portType = [0, 0, 0, 0, 0, 0, 0]
 
     if node.construction != None:
-        owner = [1, 0, 0] if node.construction.owner == 0 else [0, 1, 0]
+        owner = [1, 0, 0] if node.construction.owner == playerNumber else [0, 1, 0]
         constructionType[constructionTypeIndex[node.construction.type]-1] = 1
     else:
         owner[-1] = 1
@@ -543,12 +543,12 @@ def getNodeRepresentationSimilified(node: BoardNode, gameState: GameState) -> li
     # resourceList = [1 if x != 0 else 0 for x in dotList]
 
     setupPhase = not gameState.setupDone
-    canBuildSettlement = int(gameState.CanBuildSettlement(gameState.players[0], node, setUpPhase=setupPhase))
+    canBuildSettlement = int(gameState.CanBuildSettlement(gameState.players[playerNumber], node, setUpPhase=setupPhase))
 
     #       cat    cat               cat       num          num
     return [*owner, *constructionType, *portType, *dotList, dotTotal, canBuildSettlement] #, *resourceList]
 
-def getEdgeRepresentationSimplified(edge: BoardEdge, gameState: GameState) -> list:
+def getEdgeRepresentationSimplified(edge: BoardEdge, gameState: GameState, playerNumber=0) -> list:
     """
     For each edge get owner - 4 * 72 = 288
     """
@@ -556,10 +556,10 @@ def getEdgeRepresentationSimplified(edge: BoardEdge, gameState: GameState) -> li
     if edge.construction == None:
         owner[-1] = 1
     else:
-        owner = [1, 0, 0] if (edge.construction.owner == 0) else [0, 1, 0]
+        owner = [1, 0, 0] if (edge.construction.owner == playerNumber) else [0, 1, 0]
 
     setupPhase = not gameState.setupDone
-    canBuildRoad = int(gameState.CanBuildRoad(gameState.players[0], edge, edge.index, setUpPhase=setupPhase))
+    canBuildRoad = int(gameState.CanBuildRoad(gameState.players[playerNumber], edge, edge.index, setUpPhase=setupPhase))
 
     return [*owner, canBuildRoad]
 

@@ -351,6 +351,7 @@ def GetGameStateImage(gameState, action=None):
                 draw.text((500, 210), f"Action: {action.result}", (0, 0, 0), font=font)
         robberHex = gameState.boardHexes[gameState.robberPos]
         draw.text((500, 240), f"RobberPos: {robberHex.number}-{robberHex.production}", (0, 0, 0), font=font)
+        draw.text((500, 270), f"DevCards: {gameState.players[0].developmentCards}", (0, 0, 0), font=font)
 
 
         mainImg.convert('RGB')

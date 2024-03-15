@@ -139,23 +139,22 @@ class CatanEnv(CatanBaseEnv):
         super(CatanEnv, self).__init__(customBoard=customBoard, players=players)
 
         # Reward settings
-        self.winReward = False
-        self.winRewardAmount = 10
-        self.loseRewardAmount = -10
-        self.vpActionReward = False # Actions that directly give vp
-        self.vpActionRewardMultiplier = 3
+        self.winReward = True
+        self.winRewardAmount = 0
+        self.loseRewardAmount = -50
+        self.vpActionReward = True # Actions that directly give vp
+        self.vpActionRewardMultiplier = 4
             # Setup Rewards
         self.setupReward = True
         self.setupRewardMultiplier = 0.5
             # Speed Rewards
         self.winSpeedReward = False
         self.maxNumTurnsToWin = 100
-        self.firstSettlementReward = False
             # Trading Rewards
         self.bankTradeReward = True
         self.bankTradeRewardMultiplier = 1
             # Dense Rewards - Building roads/Buying dev cards/steeling resource
-        self.denseRewards = True
+        self.denseRewards = False
         self.denseRewardMultiplier = 1
 
     
@@ -195,7 +194,8 @@ class CatanEnv(CatanBaseEnv):
         prevState = self.game.gameState.currState
 
         if self.bankTradeReward and prevState[:5] != "START":
-            canBuildSettlementBefore = self.game.gameState.GetPossibleSettlements(self.agent) and self.agent.HavePiece(g_pieces.index('SETTLEMENTS')) and self.agent.CanAfford(BuildSettlementAction.cost)
+            possibleSettlementsBefore = self.game.gameState.GetPossibleSettlements(self.agent)
+            canBuildSettlementBefore = possibleSettlementsBefore and self.agent.HavePiece(g_pieces.index('SETTLEMENTS')) and self.agent.CanAfford(BuildSettlementAction.cost)
             canBuildCityBefore = self.agent.settlements and self.agent.CanAfford(BuildCityAction.cost)
             canBuyDevCardBefore = self.agent.CanAfford(BuyDevelopmentCardAction.cost)
             canBuildRoadBefore = self.game.gameState.GetPossibleRoads(self.agent) and self.agent.HavePiece(g_pieces.index('ROADS')) and self.agent.CanAfford(BuildRoadAction.cost)
@@ -204,12 +204,10 @@ class CatanEnv(CatanBaseEnv):
         actionObj = self.indexActionDict[action]
         actionObj.ApplyAction(self.game.gameState)
 
+        # print(actionObj.type)
+
         if actionObj.type == "EndTurn":
             self.numTurns += 1
-        elif actionObj.type == "BuildSettlement" and prevState[:5] != "START":
-            # Mark moves for first settlement
-            if len(self.agent.settlements) + len(self.agent.cities) == 3:
-                self.turnsFirstSettlement = self.numTurns
 
         if self.bankTradeReward:
             if actionObj.type == "BankTradeOffer":
@@ -236,9 +234,14 @@ class CatanEnv(CatanBaseEnv):
                     # If we could buy dev card before and now can't get anything
                 if canBuyDevCardBefore == True and canBuyDevCardAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuildRoadAfter == False:
                     reward -= 2 * self.bankTradeRewardMultiplier
+                    # If could build road before and now can't get anything
+                if canBuildRoadBefore == True and canBuildRoadAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuyDevCardAfter == False:
+                    reward -= 1 * self.bankTradeRewardMultiplier
+                    # Small negative if we trade for no reason (Risk here that we stop long term planning of builds)
+                if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
+                    reward -= 0.25 * self.bankTradeRewardMultiplier
 
 
-        # Add Rewards
         if self.vpActionReward:
             if biggestArmyBefore == False and self.agent.biggestArmy == True:
                 reward += 2 * self.vpActionRewardMultiplier
@@ -253,15 +256,28 @@ class CatanEnv(CatanBaseEnv):
 
         if self.denseRewards:
             if actionObj.type == 'BuyDevelopmentCard':
-                reward += 3 * self.denseRewardMultiplier
+                reward += 5 * self.denseRewardMultiplier
             elif actionObj.type == 'BuildRoad' and prevState[:5] != "START":
-                reward += 1 * self.denseRewardMultiplier
+                reward += 2 * self.denseRewardMultiplier
+                # If before we have built 1st settlement we build another Road - punish
+                if (len(self.agent.settlements) + len(self.agent.cities) <= 2) and possibleSettlementsBefore:
+                    reward -= 4 * self.denseRewardMultiplier
+                # If we increase number of possible settlements - reward
+                elif (len(self.agent.settlements) + len(self.agent.cities) <= 2):
+                    reward += 1
             elif actionObj.type == 'PlaceRobber' and self.game.gameState.currState == "WAITING_FOR_CHOICE":
                 reward += 0.5 * self.denseRewardMultiplier
             if actionObj.type == 'BuildSettlement' and prevState[:5] != "START":
-                reward += 6 * self.vpActionRewardMultiplier
+                reward += 15 * self.denseRewardMultiplier
             elif actionObj.type == 'BuildCity':
-                reward += 6 * self.vpActionRewardMultiplier
+                reward += 15 * self.denseRewardMultiplier
+            # Using dev card
+            elif actionObj.type[:3] == 'Use':
+                reward += 1
+            if biggestArmyBefore == False and self.agent.biggestArmy == True:
+                reward += 15 * self.denseRewardMultiplier
+            if biggestRoadBefore == False and self.agent.biggestRoad == True:  
+                reward += 15 * self.denseRewardMultiplier
 
 
         
@@ -317,8 +333,6 @@ class CatanEnv(CatanBaseEnv):
                 reward += self.winRewardAmount
             else:
                 reward += self.loseRewardAmount
-        if self.firstSettlementReward:
-            reward += 50 - self.turnsFirstSettlement
 
         return None, reward, True, False, {}
         
