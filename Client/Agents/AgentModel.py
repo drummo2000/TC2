@@ -21,7 +21,7 @@ class BaseAgentModel(AgentRandom2):
         Uses model and env to get action
         """
         action_masks, indexActionDict = self.model.getActionMask(possibleActions)
-        state = self.model.getObservation(game.gameState)
+        state = self.model.getObservation(game.gameState, self.seatNumber)
         action, _states = self.model.predict(state, action_masks=action_masks)
         actionObj = indexActionDict[action.item()]
         return actionObj
@@ -95,7 +95,7 @@ class AgentMultiModel(BaseAgentModel):
         Uses setupModel and setupEnv to get action
         """
         action_masks, indexActionDict = self.setupModel.getActionMask(possibleActions)
-        state = self.setupModel.getObservation(game.gameState)
+        state = self.setupModel.getObservation(game.gameState, self.seatNumber)
         action, _states = self.setupModel.predict(state, action_masks=action_masks)
         actionObj = indexActionDict[action.item()]
         return actionObj

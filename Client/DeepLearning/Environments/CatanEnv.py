@@ -13,6 +13,8 @@ from DeepLearning.GetActionMask import getActionMask, getSetupActionMask
 from DeepLearning.PPO import MaskablePPO
 from CatanData.GameStateViewer import SaveGameStateImage, DisplayImage
 import time
+from collections import deque
+from DeepLearning.globals import GAME_RESULTS
 
 
 class CatanBaseEnv(gym.Env):
@@ -320,11 +322,109 @@ class CatanEnv(CatanBaseEnv):
 
     def endGame(self, reward):
         wonGame = self.game.gameState.winner == 0
-        if self.winReward:
-            if wonGame:
+        if wonGame:
+            GAME_RESULTS.append(1)
+            if self.winReward:
                 reward += self.winRewardAmount
-            else:
+        else:
+            GAME_RESULTS.append(0)
+            if self.winReward:
                 reward += self.loseRewardAmount
 
         return None, reward, True, False, {}
         
+
+class SelfPlayUniform(CatanEnv):
+    """
+    When threshold reached updated all opponents to current model. 
+    """
+    def __init__(self):
+        super(SelfPlayUniform, self).__init__()
+
+        # Load starting opponent model
+        self.opponentModel = MaskablePPO.load('DeepLearning/Models/BaselineSelfPlay/BaselineSelfPlay.zip')
+    
+    def reset(self, seed=None):
+
+        self.numTurns = 0
+        self.turnsFirstSettlement = 0
+
+        # Update opponents models if needed
+        if os.environ["UPDATE_MODELS"] == "True":
+            # Get name of model to update to
+            modelName = os.environ["MODEL_NAME"]
+            self.opponentModel.set_parameters(f"DeepLearning/Models/SelfPlaySame/{modelName}.zip")
+            os.environ["UPDATE_MODELS"] = "False"
+
+        self.game = CreateGame([AgentRandom2("P0", 0),
+                                AgentModel("P1", 1, self.opponentModel),
+                                AgentModel("P2", 2, self.opponentModel),
+                                AgentModel("P3", 3, self.opponentModel)])
+        # self.game = pickle.loads(pickle.dumps(inGame, -1))
+        self.players = self.game.gameState.players
+        self.agent = self.game.gameState.players[0]
+
+        # Cycle through until agents turn
+        currPlayer = self.players[self.game.gameState.currPlayer]
+        while currPlayer.seatNumber != 0:
+            agentAction = currPlayer.DoMove(self.game)
+            agentAction.ApplyAction(self.game.gameState)
+            currPlayer = self.players[self.game.gameState.currPlayer]
+
+        # Return initial info needed: State, ActionMask
+        possibleActions = self.agent.GetPossibleActions(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
+
+        return observation, {}
+
+
+class SelfPlayDistribution(CatanEnv):
+    """
+    When threshold reached update oppenents to [most recent, random pick, random pick, random pick]
+    """
+    def __init__(self):
+        super(SelfPlayDistribution, self).__init__()
+
+        # Load starting opponent model
+        self.opponentModel1 = MaskablePPO.load('DeepLearning/Models/BaselineSelfPlay/BaselineSelfPlay.zip')
+        self.opponentModel2 = MaskablePPO.load('DeepLearning/Models/BaselineSelfPlay/BaselineSelfPlay.zip')
+        self.opponentModel3 = MaskablePPO.load('DeepLearning/Models/BaselineSelfPlay/BaselineSelfPlay.zip')
+    
+    def reset(self, seed=None):
+
+        self.numTurns = 0
+        self.turnsFirstSettlement = 0
+
+        # Update opponents models if needed
+        if os.environ["UPDATE_MODELS"] == "True":
+            modelName1 = os.environ["MODEL_1_NAME"]
+            modelName2 = os.environ["MODEL_2_NAME"]
+            modelName3 = os.environ["MODEL_3_NAME"]
+            self.opponentModel1.set_parameters(f"DeepLearning/Models/SelfPlayDistribution/{modelName1}")
+            self.opponentModel1.set_parameters(f"DeepLearning/Models/SelfPlayDistribution/{modelName2}")
+            self.opponentModel1.set_parameters(f"DeepLearning/Models/SelfPlayDistribution/{modelName3}")
+            os.environ["UPDATE_MODELS"] = "False"
+
+        self.game = CreateGame([AgentRandom2("P0", 0),
+                                AgentModel("P1", 1, self.opponentModel1),
+                                AgentModel("P2", 2, self.opponentModel2),
+                                AgentModel("P3", 3, self.opponentModel3)])
+        # self.game = pickle.loads(pickle.dumps(inGame, -1))
+        self.players = self.game.gameState.players
+        self.agent = self.game.gameState.players[0]
+
+        # Cycle through until agents turn
+        currPlayer = self.players[self.game.gameState.currPlayer]
+        while currPlayer.seatNumber != 0:
+            agentAction = currPlayer.DoMove(self.game)
+            agentAction.ApplyAction(self.game.gameState)
+            currPlayer = self.players[self.game.gameState.currPlayer]
+
+        # Return initial info needed: State, ActionMask
+        possibleActions = self.agent.GetPossibleActions(self.game.gameState)
+        self.action_mask, self.indexActionDict = self.getActionMask(possibleActions)
+        observation = self.getObservation(self.game.gameState)
+
+        return observation, {}
+    

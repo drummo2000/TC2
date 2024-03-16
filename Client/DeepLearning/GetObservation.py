@@ -4,7 +4,7 @@ from Game.CatanBoard import BoardNode, BoardHex, BoardEdge, g_portType, portType
 from Game.CatanAction import *
 import numpy as np
 
-def getSetupObservation(gameState: GameState):
+def getSetupObservation(gameState: GameState, playerNumber=0):
     """
     returns dotTotal for each node (54)
     """
@@ -20,7 +20,7 @@ def getSetupObservation(gameState: GameState):
 setupRandomLowerBounds = np.array(54 * (22*[0]))
 var = ([1] * 16) + (5 * [5]) + [15]
 setupRandomUpperBounds = np.array(54 * var)
-def getSetupRandomObservation(gameState: GameState):
+def getSetupRandomObservation(gameState: GameState, playerNumber=0):
     """
     reutrns full Node representation for each node (54*22)
     """
@@ -36,7 +36,7 @@ def getSetupRandomObservation(gameState: GameState):
 setupRandomWithRoadsLowerBounds = np.array((54 * (22*[0])) + (72 * (5*[0])))
 var = ([1] * 16) + (5 * [5]) + [15]
 setupRandomWithRoadsUpperBounds = np.array((54 * var) + (72 * (5*[1])))
-def getSetupRandomWithRoadsObservation(gameState: GameState):
+def getSetupRandomWithRoadsObservation(gameState: GameState, playerNumber=0):
     """
     Returns all node and edge info
     """
@@ -146,7 +146,7 @@ def getObservation(gameState: GameState, playerPosition=0):
     return np.array(output)
 
 # returns 2350 length 1D array (now 2358)
-def getObservationNoPhase(gameState: GameState):
+def getObservationNoPhase(gameState: GameState, playerNumber=0):
     """
     Returns all game info for a model, excluding the game phase (2350)
     """

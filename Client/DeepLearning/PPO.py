@@ -24,6 +24,10 @@ from sb3_contrib.ppo_mask.policies import CnnPolicy, MlpPolicy, MultiInputPolicy
 import os
 from collections import deque
 from typing import Callable
+import random
+
+from DeepLearning.globals import GAME_RESULTS, GAME_RESULTS_LEN
+
 
 SelfMaskablePPO = TypeVar("SelfMaskablePPO", bound="MaskablePPO")
 
@@ -559,12 +563,15 @@ class MaskablePPO(OnPolicyAlgorithm):
             #         os.environ["WIN_REWARDS"] = "True"
 
             # SAVE MODEL
-            if sum(rewardList)/3 > bestAvgReward:
-            #     self.selfPlayUpdate(iteration)
-            #     rewardList = deque(maxlen=10)
-                self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
-                bestAvgReward = sum(rewardList)/3
-                # rewardList = deque(maxlen=10)
+            # if sum(rewardList)/3 > bestAvgReward:
+            # #     self.selfPlayUpdate(iteration)
+            # #     rewardList = deque(maxlen=10)
+            #     self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
+            #     bestAvgReward = sum(rewardList)/3
+            #     # rewardList = deque(maxlen=10)
+
+            # self.selfPlayUniformUpdate(self.num_timesteps)
+            self.selfPlayDistributionUpdate(self.num_timesteps)
 
             # Display training infos
             if log_interval is not None and iteration % log_interval == 0:
@@ -585,9 +592,30 @@ class MaskablePPO(OnPolicyAlgorithm):
 
         return self
 
-    # def selfPlayUpdate(self, iteration):
-    #     # print("(Debug) Threshold reached, saving model and setting env variable.")
-    #     modelName = f'model_iteration_{iteration}'
-    #     self.save(f'DeepLearning/SelfPlayModels/{modelName}')
-    #     os.environ["UPDATE_MODELS"] = "True"
-    #     os.environ["MODEL_NAME"] = modelName
+    def selfPlayUniformUpdate(self, timestep):
+        # Check if threshold has been reached (>50% win rate over last 100 games)
+        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.5:
+            # print("(Debug) Threshold reached, saving model and setting env variable.")
+            modelName = f'model_{timestep}'
+            self.save(f'DeepLearning/Models/SelfPlaySame/{modelName}')
+            os.environ["UPDATE_MODELS"] = "True"
+            os.environ["MODEL_NAME"] = modelName
+            GAME_RESULTS.clear()
+    
+    def selfPlayDistributionUpdate(self, timestep):
+        # Check if threshold has been reached (>50% win rate over last 100 games)
+        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.5:
+
+            modelName1 = f'model_{timestep}'
+            self.save(f'DeepLearning/Models/SelfPlayDistribution/{modelName1}')
+
+            modelList = os.listdir("DeepLearning/Models/SelfPlayDistribution/")
+            modelName2 = random.choice(modelList)
+            modelName3 = random.choice(modelList)
+            os.environ["MODEL_1_NAME"] = modelName1
+            os.environ["MODEL_2_NAME"] = modelName2
+            os.environ["MODEL_3_NAME"] = modelName3
+
+
+            os.environ["UPDATE_MODELS"] = "True"
+            GAME_RESULTS.clear()
