@@ -139,30 +139,26 @@ class CatanEnv(CatanBaseEnv):
         super(CatanEnv, self).__init__(customBoard=customBoard, players=players)
 
         # Reward settings
-        self.winReward = True
+        self.winReward = False
         self.winRewardAmount = 0
         self.loseRewardAmount = -50
         self.vpActionReward = True # Actions that directly give vp
-        self.vpActionRewardMultiplier = 4
+        self.vpActionRewardMultiplier = 10
             # Setup Rewards
         self.setupReward = True
-        self.setupRewardMultiplier = 0.5
+        self.setupRewardMultiplier = 0.75
             # Speed Rewards
         self.winSpeedReward = False
         self.maxNumTurnsToWin = 100
             # Trading Rewards
         self.bankTradeReward = True
-        self.bankTradeRewardMultiplier = 1
+        self.bankTradeRewardMultiplier = 0.75
             # Dense Rewards - Building roads/Buying dev cards/steeling resource
-        self.denseRewards = False
+        self.denseRewards = True
         self.denseRewardMultiplier = 1
 
     
     def reset(self, seed=None):
-        # if os.environ.get("VP_REWARDS") == "True":
-        #     self.vpActionReward = True
-        # if os.environ.get("WIN_REWARDS") == "True":
-        #     self.winReward = True
         self.numTurns = 0
         self.turnsFirstSettlement = 0
         return super(CatanEnv, self).reset()
@@ -219,12 +215,16 @@ class CatanEnv(CatanBaseEnv):
                 canBuyDevCardAfter = self.agent.CanAfford(BuyDevelopmentCardAction.cost)
                 # Trades which allow us to build
                 if canBuildSettlementBefore == False and canBuildSettlementAfter == True:
+                    # print("SettlementTRADE")
                     reward += 4 * self.bankTradeRewardMultiplier
                 if canBuildCityBefore == False and canBuildCityAfter == True:
+                    # print("CityTRADE")
                     reward += 4 * self.bankTradeRewardMultiplier
                 if canBuildRoadBefore == False and canBuildRoadAfter == True :
+                    # print("RoadTRADE")
                     reward += 1 * self.bankTradeRewardMultiplier
                 if canBuyDevCardBefore == False and canBuyDevCardAfter == True:
+                    # print("DevCardTRADE")
                     reward += 2 * self.bankTradeRewardMultiplier
                 # Trades which get rid of resources for possible Builds
                 if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
@@ -256,28 +256,20 @@ class CatanEnv(CatanBaseEnv):
 
         if self.denseRewards:
             if actionObj.type == 'BuyDevelopmentCard':
-                reward += 5 * self.denseRewardMultiplier
+                reward += 4 * self.denseRewardMultiplier
             elif actionObj.type == 'BuildRoad' and prevState[:5] != "START":
-                reward += 2 * self.denseRewardMultiplier
+                # reward += 0.5 * self.denseRewardMultiplier
                 # If before we have built 1st settlement we build another Road - punish
                 if (len(self.agent.settlements) + len(self.agent.cities) <= 2) and possibleSettlementsBefore:
-                    reward -= 4 * self.denseRewardMultiplier
+                    reward -= 2 * self.denseRewardMultiplier
                 # If we increase number of possible settlements - reward
-                elif (len(self.agent.settlements) + len(self.agent.cities) <= 2):
+                elif (len(self.agent.settlements) + len(self.agent.cities) <= 2) and len(possibleSettlementsBefore) == 0:
                     reward += 1
             elif actionObj.type == 'PlaceRobber' and self.game.gameState.currState == "WAITING_FOR_CHOICE":
                 reward += 0.5 * self.denseRewardMultiplier
-            if actionObj.type == 'BuildSettlement' and prevState[:5] != "START":
-                reward += 15 * self.denseRewardMultiplier
-            elif actionObj.type == 'BuildCity':
-                reward += 15 * self.denseRewardMultiplier
             # Using dev card
             elif actionObj.type[:3] == 'Use':
                 reward += 1
-            if biggestArmyBefore == False and self.agent.biggestArmy == True:
-                reward += 15 * self.denseRewardMultiplier
-            if biggestRoadBefore == False and self.agent.biggestRoad == True:  
-                reward += 15 * self.denseRewardMultiplier
 
 
         
@@ -290,9 +282,9 @@ class CatanEnv(CatanBaseEnv):
                 # Diversity
                 diversity = sum(x != 0 for x in resourceProduction)
                 if diversity == 5:
-                    reward += 20 * self.setupRewardMultiplier
+                    reward += 7 * self.setupRewardMultiplier
                 elif diversity == 4:
-                    reward += 10 * self.setupRewardMultiplier
+                    reward += 3 * self.setupRewardMultiplier
 
 
         # Check if game Over
