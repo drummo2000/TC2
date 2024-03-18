@@ -556,22 +556,14 @@ class MaskablePPO(OnPolicyAlgorithm):
 
             rewardList.append(safe_mean([ep_info["r"] for ep_info in self.ep_info_buffer]))
 
-            # Turn on vp rewards when production reaches 20
-            # winReward = os.environ.get("WIN_REWARDS")
-            # if winReward == "False":
-            #     if sum(rewardList)/10 > 17:
-            #         os.environ["WIN_REWARDS"] = "True"
 
             # SAVE MODEL
-            # if sum(rewardList)/3 > bestAvgReward:
-            # #     self.selfPlayUpdate(iteration)
-            # #     rewardList = deque(maxlen=10)
-            #     self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
-            #     bestAvgReward = sum(rewardList)/3
-            #     # rewardList = deque(maxlen=10)
+            if sum(rewardList)/3 > bestAvgReward:
+                self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
+                bestAvgReward = sum(rewardList)/3
 
             # self.selfPlayUniformUpdate(self.num_timesteps)
-            self.selfPlayDistributionUpdate(self.num_timesteps)
+            # self.selfPlayDistributionUpdate(self.num_timesteps)
 
             # Display training infos
             if log_interval is not None and iteration % log_interval == 0:
@@ -594,11 +586,12 @@ class MaskablePPO(OnPolicyAlgorithm):
 
     def selfPlayUniformUpdate(self, timestep):
         # Check if threshold has been reached (>50% win rate over last 100 games)
+        print(f"CheckingWinRate: {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
         if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.5:
             # print("(Debug) Threshold reached, saving model and setting env variable.")
             modelName = f'model_{timestep}'
-            self.save(f'DeepLearning/Models/SelfPlaySame/{modelName}')
-            os.environ["UPDATE_MODELS"] = "True"
+            self.save(f'DeepLearning/Models/SelfPlayUniform/{modelName}')
+            os.environ["UPDATE_MODELS_UNIFORM"] = "True"
             os.environ["MODEL_NAME"] = modelName
             GAME_RESULTS.clear()
     
@@ -617,5 +610,5 @@ class MaskablePPO(OnPolicyAlgorithm):
             os.environ["MODEL_3_NAME"] = modelName3
 
 
-            os.environ["UPDATE_MODELS"] = "True"
+            os.environ["UPDATE_MODELS_DIST"] = "True"
             GAME_RESULTS.clear()

@@ -7,9 +7,9 @@ import random
 
 class AgentRandom2(Player):
 
-    def __init__(self, name, seatNumber, playerTrading: bool=False):
+    def __init__(self, name, seatNumber, recordStats=False, playerTrading: bool=False):
 
-        super(AgentRandom2, self).__init__(name, seatNumber)
+        super(AgentRandom2, self).__init__(name, seatNumber, recordStats=recordStats)
         self.playerTrading          = playerTrading
 
         self.trading                = None
@@ -65,9 +65,9 @@ class AgentRandom2(Player):
         if possibleBankTrades is not None and possibleBankTrades:
             possibleActions += possibleBankTrades
         
-        # Can only offer 3 player trades per turn
+        # Can only offer 2 player trades per turn
         if self.playerTrading:
-            if self.tradeCount <= 3:
+            if self.tradeCount < 2:
                 possiblePlayerTrades = self.GetPossiblePlayerTrades(gameState, player)
                 if possiblePlayerTrades is not None and possiblePlayerTrades:
                     possibleActions += possiblePlayerTrades
@@ -240,19 +240,29 @@ class AgentRandom2(Player):
         possibleTrades = []
 
         if sum(player.resources) > 0:
-            for i in range(5):
+            for giveIndex in range(5):
                 for giveAmount in [1, 2]:
-                    if player.resources[i] > 0:
-                        giveResources    = [0, 0, 0, 0, 0]
-                        giveResources[i] = giveAmount
-                        for j in range(5):
-                            if j != i:
-                                getResources    = [0, 0, 0, 0, 0]
-                                getResources[j] = 1
-                                tradeAction = MakeTradeOfferAction(fromPlayerNumber=player.seatNumber,
-                                                                toPlayers=[True, True, True, True],
-                                                                giveResources=giveResources, getResources=getResources)
-                                possibleTrades.append(tradeAction)
+                    if player.resources[giveIndex] >= giveAmount:
+                        giveResources    = [0, 0, 0, 0, 0, 0]
+                        giveResources[giveIndex] = giveAmount
+                        for getIndex in range(5):
+                            if getIndex != giveIndex:
+                                getResources    = [0, 0, 0, 0, 0, 0]
+                                getResources[getIndex] = 1
+                                # Go through other players and only offer to players who have resource
+                                toPlayers = [True, True, True, True]
+                                toPlayers[player.seatNumber] = False
+                                for otherPlayer in gameState.players:
+                                    if otherPlayer.seatNumber != player.seatNumber:
+                                        if otherPlayer.resources[getIndex] == 0:
+                                            toPlayers[otherPlayer.seatNumber] = False
+                                            # print(f"{self.seatNumber} Cannot offer trade: {giveResources}_{getResources} to {player.seatNumber}, since resources: {player.resources[:5]}")
+                                if any(toPlayers):
+                                    # print(f"{player.seatNumber}(Turn {player.stats.numTurns}) with resources: {player.resources[:5]}, Offer: {giveResources[:5]}_{getResources[:5]}")
+                                    tradeAction = MakeTradeOfferAction(fromPlayerNumber=self.seatNumber,
+                                                                    toPlayers=toPlayers,
+                                                                    giveResources=giveResources, getResources=getResources)
+                                    possibleTrades.append(tradeAction)
         return possibleTrades
 
     def GetMonopolyResource(self, game, player):
@@ -281,17 +291,11 @@ class AgentRandom2(Player):
     def GetPossiblePlayerTradeReactions(self, gameState, player):
 
         canTrade = True
-
-        for i in range(0, len(gameState.currTradeOffer.getResources)):
-            if player.resources[i] < gameState.currTradeOffer.getResources[i]:
-                canTrade = False
-                break
-
         rejectTrade = RejectTradeOfferAction(playerNumber=player.seatNumber)
 
-        if canTrade:
-            acceptTrade = AcceptTradeOfferAction(playerNumber=player.seatNumber,
-                                                 offerPlayerNumber=gameState.currTradeOffer.fromPlayerNumber)
+        for i in range(5):
+            if player.resources[i] < gameState.currTradeOffer.getResources[i]:
+                return [rejectTrade]
+        else:
+            acceptTrade = AcceptTradeOfferAction(playerNumber=player.seatNumber, offerPlayerNumber=gameState.currTradeOffer.fromPlayerNumber, gameState=gameState)
             return [acceptTrade, rejectTrade]
-
-        return [rejectTrade]

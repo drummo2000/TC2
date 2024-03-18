@@ -196,9 +196,10 @@ class BuildSettlementAction(BuildAction):
             gameState.currState = "START2B"
 
             # Record resource production and trade rates after setup phase
-            for diceNumber, resourceList in gameState.players[self.playerNumber].diceProduction.items():
-                gameState.players[self.playerNumber].stats.setupResourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
-            gameState.players[self.playerNumber].stats.setupTradeRates = gameState.players[self.playerNumber].tradeRates
+            if gameState.players[self.playerNumber].recordStats:
+                for diceNumber, resourceList in gameState.players[self.playerNumber].diceProduction.items():
+                    gameState.players[self.playerNumber].stats.setupResourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
+                gameState.players[self.playerNumber].stats.setupTradeRates = gameState.players[self.playerNumber].tradeRates
     
     def getString(self):
         return f"{self.type}{self.position}"
@@ -307,7 +308,9 @@ class BuyDevelopmentCardAction(Action):
         #logging.debug("APPLYING ACTION! \n TYPE = {0}".format(BuyDevelopmentCardAction.type))
 
         gameState.players[self.playerNumber].resources -= BuyDevelopmentCardAction.cost
-        gameState.players[self.playerNumber].stats.devCardsBought += 1
+
+        if gameState.players[self.playerNumber].recordStats:
+            gameState.players[self.playerNumber].stats.devCardsBought += 1
 
         if self.tradeOptimistic:
             discountCount = 0
@@ -338,7 +341,8 @@ class UseDevelopmentCardAction(Action):
 
         gameState.players[self.playerNumber].playedDevCard = True
 
-        gameState.players[self.playerNumber].stats.usedDevCards[self.index] += 1
+        if gameState.players[self.playerNumber].recordStats:
+            gameState.players[self.playerNumber].stats.usedDevCards[self.index] += 1
 
 class UseKnightsCardAction(UseDevelopmentCardAction):
 
@@ -405,12 +409,13 @@ class UseMonopolyCardAction(UseDevelopmentCardAction):
             gameState.players[index].resources[self.resource] = 0
 
             total += amount
-
-            gameState.players[index].stats.totalResourcesStolen += amount
+            if gameState.players[self.playerNumber].recordStats:
+                gameState.players[index].stats.totalResourcesStolen += amount
 
         gameState.players[self.playerNumber].resources[self.resource] += total
 
-        gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resource] += total
+        if gameState.players[self.playerNumber].recordStats:
+            gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resource] += total
     
     def getString(self):
         return f"{self.type}{self.resource}"
@@ -440,8 +445,9 @@ class UseYearOfPlentyCardAction(UseDevelopmentCardAction):
 
         gameState.players[self.playerNumber].resources[self.resources[1]] += 1
 
-        gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resources[0]] += 1
-        gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resources[1]] += 1
+        if gameState.players[self.playerNumber].recordStats:
+            gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resources[0]] += 1
+            gameState.players[self.playerNumber].stats.resourcesFromDevCard[self.resources[1]] += 1
     
     def getString(self):
         return f"{self.type}{self.resources[0]}{self.resources[1]}{self.resources[2]}{self.resources[3]}{self.resources[4]}"
@@ -530,7 +536,8 @@ class EndTurnAction(Action):
         gameState.players[self.playerNumber].rolledTheDices = False
         gameState.players[self.playerNumber].placedRobber   = False
         gameState.currTurn += 1
-        gameState.players[self.playerNumber].stats.numTurns += 1
+        if gameState.players[self.playerNumber].recordStats:
+            gameState.players[self.playerNumber].stats.numTurns += 1
 
         playerPoints = gameState.players[self.playerNumber].GetVictoryPoints()
 
@@ -574,7 +581,8 @@ class DiscardResourcesAction(Action):
 
         gameState.players[self.playerNumber].resources -= self.resources
 
-        gameState.players[self.playerNumber].stats.totalResourcesDiscarded += sum(self.resources)
+        if gameState.players[self.playerNumber].recordStats:
+            gameState.players[self.playerNumber].stats.totalResourcesDiscarded += sum(self.resources)
 
         gameState.currPlayer += 1
 
@@ -627,7 +635,8 @@ class ChoosePlayerToStealFromAction(Action):
 
             gameState.players[self.targetPlayerNumber].resources[stolenResource] -= 1
 
-            gameState.players[self.targetPlayerNumber].stats.totalResourcesStolen += 1
+            if gameState.players[self.playerNumber].recordStats:
+                gameState.players[self.targetPlayerNumber].stats.totalResourcesStolen += 1
 
         if gameState.dicesAreRolled:
             gameState.currState = "PLAY1"
@@ -648,6 +657,8 @@ class MakeTradeOfferAction(Action):
         self.toPlayers                   = toPlayers
         self.toPlayers[fromPlayerNumber] = False #Assert the player cannot offer to himself!
 
+        assert(any(toPlayers) == True)
+
         self.toPlayerNumbers = []
         for i in range(0, len(self.toPlayers)):
             if self.toPlayers[i]:
@@ -661,22 +672,24 @@ class MakeTradeOfferAction(Action):
 
         return MakeOfferMessage(gameName, self.fromPlayerNumber, self.toPlayers, self.giveResources, self.getResources)
 
-    def ApplyAction(self, gameState, specificPlayer=None):
+    def ApplyAction(self, gameState):
 
         if gameState.currState != 'WAITING_FOR_TRADE':
             self.previousGameState = gameState.currState
             gameState.currState    = 'WAITING_FOR_TRADE'
         else:
             self.previousGameState = gameState.currTradeOffer.previousGameState
-        if specificPlayer is None:
-            gameState.currPlayer = self.toPlayerNumbers[int(random.random() * len(self.toPlayerNumbers))]
-        else:
-            gameState.currPlayer = self.toPlayerNumbers[specificPlayer]
+        
+        gameState.currPlayer = self.toPlayerNumbers[int(random.random() * len(self.toPlayerNumbers))]
+
         self.toPlayerNumbers.remove(gameState.currPlayer)
         gameState.currTradeOffer = self
 
+        if gameState.players[self.fromPlayerNumber].recordStats:
+            gameState.players[self.fromPlayerNumber].stats.totalPlayerTrades += 1
+
     def getString(self):
-        return f"{self.type}{self.giveResources[0]}{self.giveResources[1]}{self.giveResources[2]}{self.giveResources[3]}{self.giveResources[4]}_{self.getResources[0]}{self.getResources[1]}{self.getResources[2]}{self.getResources[3]}{self.getResources[4]}"
+        return f"BankTradeOffer{self.giveResources[0]}{self.giveResources[1]}{self.giveResources[2]}{self.giveResources[3]}{self.giveResources[4]}_{self.getResources[0]}{self.getResources[1]}{self.getResources[2]}{self.getResources[3]}{self.getResources[4]}"
 
 
 class RejectTradeOfferAction(Action):
@@ -692,6 +705,9 @@ class RejectTradeOfferAction(Action):
         return RejectOfferMessage(gameName, self.playerNumber)
 
     def ApplyAction(self, gameState):
+        player = gameState.players[self.playerNumber]
+        if player.recordStats:
+            player.stats.rejectedTrades += 1
 
         if len(gameState.currTradeOffer.toPlayerNumbers) <= 0:
             gameState.currState      = gameState.currTradeOffer.previousGameState
@@ -702,40 +718,119 @@ class RejectTradeOfferAction(Action):
             gameState.currPlayer = gameState.currTradeOffer.toPlayerNumbers[currPlayerIndex]
             gameState.currTradeOffer.toPlayerNumbers.remove(gameState.currPlayer)
     
+    # Rejecting incoming offer is treated as EndTurn action
     def getString(self):
-        return f"{self.type}"
+        return f"EndTurn"
 
 class AcceptTradeOfferAction(Action):
 
     type = 'AcceptTradeOffer'
 
-    def __init__(self, playerNumber, offerPlayerNumber):
+    def __init__(self, playerNumber, offerPlayerNumber, gameState=None):
 
         self.playerNumber      = playerNumber
         self.offerPlayerNumber = offerPlayerNumber
+
+        if gameState:
+            self.iGive = gameState.currTradeOffer.getResources
+            self.iGet  = gameState.currTradeOffer.giveResources
 
     def GetMessage(self, gameName, currGameStateName = None):
 
         return AcceptOfferMessage(gameName, self.playerNumber, self.offerPlayerNumber)
 
     def ApplyAction(self, gameState):
+        player = gameState.players[self.playerNumber]
+        offerPlayer = gameState.players[self.offerPlayerNumber]
+
+        # Collect pre trade info
+        if player.recordStats:
+            possibleSettlementsBefore = gameState.GetPossibleSettlements(player)
+            canBuildSettlementBefore = possibleSettlementsBefore and player.HavePiece(g_pieces.index('SETTLEMENTS')) and player.CanAfford(BuildSettlementAction.cost)
+            canBuildCityBefore = player.settlements and player.CanAfford(BuildCityAction.cost)
+            canBuyDevCardBefore = player.CanAfford(BuyDevelopmentCardAction.cost)
+            canBuildRoadBefore = gameState.GetPossibleRoads(player) and player.HavePiece(g_pieces.index('ROADS')) and player.CanAfford(BuildRoadAction.cost)
+        if offerPlayer.recordStats:
+            possibleSettlementsBeforeOffer = gameState.GetPossibleSettlements(offerPlayer)
+            canBuildSettlementBeforeOffer = possibleSettlementsBeforeOffer and offerPlayer.HavePiece(g_pieces.index('SETTLEMENTS')) and offerPlayer.CanAfford(BuildSettlementAction.cost)
+            canBuildCityBeforeOffer = offerPlayer.settlements and offerPlayer.CanAfford(BuildCityAction.cost)
+            canBuyDevCardBeforeOffer = offerPlayer.CanAfford(BuyDevelopmentCardAction.cost)
+            canBuildRoadBeforeOffer = gameState.GetPossibleRoads(offerPlayer) and offerPlayer.HavePiece(g_pieces.index('ROADS')) and offerPlayer.CanAfford(BuildRoadAction.cost)
 
         gameState.currState  = gameState.currTradeOffer.previousGameState
         gameState.currPlayer = gameState.currTradeOffer.fromPlayerNumber
 
-        give = gameState.currTradeOffer.giveResources + [0]
-        get  = gameState.currTradeOffer.getResources  + [0]
+        give = gameState.currTradeOffer.giveResources
+        get  = gameState.currTradeOffer.getResources
 
+        # Presuming offerPlayer is the player who made the offer, and playerNumber is accepting offer
         gameState.players[self.offerPlayerNumber].resources -= listm(give)
-        gameState.players[self.playerNumber].resources      -= listm(get )
+        gameState.players[self.offerPlayerNumber].resources += listm(get)
 
-        gameState.players[self.offerPlayerNumber].resources += listm(give)
-        gameState.players[self.playerNumber].resources      += listm(get )
+        gameState.players[self.playerNumber].resources      -= listm(get)
+        gameState.players[self.playerNumber].resources      += listm(give)
 
         gameState.currTradeOffer = None
+
+        # Add Incoming trade stats
+        if player.recordStats:
+            player.stats.acceptedTrades += 1
+            canBuildSettlementAfter = player.CanAfford(BuildSettlementAction.cost)
+            canBuildRoadAfter = player.CanAfford(BuildRoadAction.cost)
+            canBuildCityAfter = player.CanAfford(BuildCityAction.cost)
+            canBuyDevCardAfter = player.CanAfford(BuyDevelopmentCardAction.cost)
+                # Trades which allow us to build
+            if canBuildSettlementBefore == False and canBuildSettlementAfter == True:
+                player.stats.goodSettlementAcceptedTrades += 1
+            if canBuildCityBefore == False and canBuildCityAfter == True:
+                player.stats.goodCityAcceptedTrades += 1
+            if canBuildRoadBefore == False and canBuildRoadAfter == True :
+                player.stats.goodRoadAcceptedTrades += 1
+            if canBuyDevCardBefore == False and canBuyDevCardAfter == True:
+                player.stats.goodDevCardAcceptedTrades += 1
+                # Trades which get rid of resources for possible Builds
+            if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
+                player.stats.badSettlementAcceptedTrades += 1
+            if canBuildCityBefore == True and canBuildCityAfter == False:
+                player.stats.badCityAcceptedTrades += 1
+            if canBuyDevCardBefore == True and canBuyDevCardAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuildRoadAfter == False:
+                player.stats.badDevCardAcceptedTrades += 1
+            if canBuildRoadBefore == True and canBuildRoadAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuyDevCardAfter == False:
+                player.stats.badRoadAcceptedTrades += 1
+            if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
+                player.stats.neutralAcceptedTrades += 1
+        
+        # Add Offering trade stats
+        if offerPlayer.recordStats:
+            offerPlayer.stats.acceptedPlayerTrades += 1
+            canBuildSettlementAfterOffer = offerPlayer.CanAfford(BuildSettlementAction.cost)
+            canBuildRoadAfterOffer = offerPlayer.CanAfford(BuildRoadAction.cost)
+            canBuildCityAfterOffer = offerPlayer.CanAfford(BuildCityAction.cost)
+            canBuyDevCardAfterOffer = offerPlayer.CanAfford(BuyDevelopmentCardAction.cost)
+                # Trades which allow us to build
+            if canBuildSettlementBeforeOffer == False and canBuildSettlementAfterOffer == True:
+                offerPlayer.stats.goodSettlementPlayerTrades += 1
+            if canBuildCityBeforeOffer == False and canBuildCityAfterOffer == True:
+                offerPlayer.stats.goodCityPlayerTrades += 1
+            if canBuildRoadBeforeOffer == False and canBuildRoadAfterOffer == True :
+                offerPlayer.stats.goodRoadPlayerTrades += 1
+            if canBuyDevCardBeforeOffer == False and canBuyDevCardAfterOffer == True:
+                offerPlayer.stats.goodDevCardPlayerTrades += 1
+                # Trades which get rid of resources for possible Builds
+            if canBuildSettlementBeforeOffer == True and canBuildSettlementAfterOffer == False:
+                offerPlayer.stats.badSettlementPlayerTrades += 1
+            if canBuildCityBeforeOffer == True and canBuildCityAfterOffer == False:
+                offerPlayer.stats.badCityPlayerTrades += 1
+            if canBuyDevCardBeforeOffer == True and canBuyDevCardAfterOffer == False and canBuildCityAfterOffer == False and canBuildSettlementAfterOffer == False and canBuildRoadAfterOffer == False:
+                offerPlayer.stats.badDevCardPlayerTrades += 1
+            if canBuildRoadBeforeOffer == True and canBuildRoadAfterOffer == False and canBuildCityAfterOffer == False and canBuildSettlementAfterOffer == False and canBuyDevCardAfterOffer == False:
+                offerPlayer.stats.badRoadPlayerTrades += 1
+            if canBuildSettlementAfterOffer == False and canBuildRoadAfterOffer == False and canBuildCityAfterOffer == False and canBuyDevCardAfterOffer == False:
+                offerPlayer.stats.neutralPlayerTrades += 1
     
+    # Accepting offer is treated as BankTradeOffer
     def getString(self):
-        return f"{self.type}"
+        return f"BankTradeOffer{self.iGive[0]}{self.iGive[1]}{self.iGive[2]}{self.iGive[3]}{self.iGive[4]}_{self.iGet[0]}{self.iGet[1]}{self.iGet[2]}{self.iGet[3]}{self.iGet[4]}"
 
 class BankTradeOfferAction(Action):
 
@@ -752,6 +847,15 @@ class BankTradeOfferAction(Action):
         return BankTradeMessage(gameName, self.giveResources, self.getResources)
 
     def ApplyAction(self, gameState):
+        player = gameState.players[self.playerNumber]
+
+        # Collect pre trade info
+        if player.recordStats:
+            possibleSettlementsBefore = gameState.GetPossibleSettlements(player)
+            canBuildSettlementBefore = possibleSettlementsBefore and player.HavePiece(g_pieces.index('SETTLEMENTS')) and player.CanAfford(BuildSettlementAction.cost)
+            canBuildCityBefore = player.settlements and player.CanAfford(BuildCityAction.cost)
+            canBuyDevCardBefore = player.CanAfford(BuyDevelopmentCardAction.cost)
+            canBuildRoadBefore = gameState.GetPossibleRoads(player) and player.HavePiece(g_pieces.index('ROADS')) and player.CanAfford(BuildRoadAction.cost)
 
         #logging.debug("APPLYING ACTION! \n TYPE = {0}".format(BankTradeOfferAction.type))
 
@@ -759,10 +863,37 @@ class BankTradeOfferAction(Action):
         give = self.giveResources + [0]
         get  = self.getResources  + [0]
 
-        gameState.players[self.playerNumber].resources -= listm(give)
-        gameState.players[self.playerNumber].resources += listm(get )
+        player.resources -= listm(give)
+        player.resources += listm(get )
 
-        gameState.players[self.playerNumber].stats.resourcesFromBankTrade += listm(get)
+        # Add stats
+        if player.recordStats:
+            canBuildSettlementAfter = player.CanAfford(BuildSettlementAction.cost)
+            canBuildRoadAfter = player.CanAfford(BuildRoadAction.cost)
+            canBuildCityAfter = player.CanAfford(BuildCityAction.cost)
+            canBuyDevCardAfter = player.CanAfford(BuyDevelopmentCardAction.cost)
+            # Trades which allow us to build
+            if canBuildSettlementBefore == False and canBuildSettlementAfter == True:
+                player.stats.goodSettlementBankTrades += 1
+            if canBuildCityBefore == False and canBuildCityAfter == True:
+                player.stats.goodCityBankTrades += 1
+            if canBuildRoadBefore == False and canBuildRoadAfter == True :
+                player.stats.goodRoadBankTrades += 1
+            if canBuyDevCardBefore == False and canBuyDevCardAfter == True:
+                player.stats.goodDevCardBankTrades += 1
+            # Trades which get rid of resources for possible Builds
+            if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
+                player.stats.badSettlementBankTrades += 1
+            if canBuildCityBefore == True and canBuildCityAfter == False:
+                player.stats.badCityBankTrades += 1
+            if canBuyDevCardBefore == True and canBuyDevCardAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuildRoadAfter == False:
+                player.stats.badDevCardBankTrades += 1
+            if canBuildRoadBefore == True and canBuildRoadAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuyDevCardAfter == False:
+                player.stats.badRoadBankTrades += 1
+            if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
+                player.stats.neutralBankTrades += 1
+
+            gameState.players[self.playerNumber].stats.resourcesFromBankTrade += listm(get)
     
     def getString(self):
         return f"{self.type}{self.giveResources[0]}{self.giveResources[1]}{self.giveResources[2]}{self.giveResources[3]}{self.giveResources[4]}_{self.getResources[0]}{self.getResources[1]}{self.getResources[2]}{self.getResources[3]}{self.getResources[4]}"

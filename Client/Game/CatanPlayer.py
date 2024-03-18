@@ -7,9 +7,8 @@ from Game.CatanBoard import g_resources
 
 class PlayerStats(object):
     """
-    Stats for a single game
+    Stats for a single game, initialised when Player is initialised
     """
-
     def __init__(self):
 
         # General
@@ -42,6 +41,44 @@ class PlayerStats(object):
         self.noSettlementsBuilt = 1
         self.turnsForFirstCity = 0
         self.noCityBuilt = 1
+        self.numRoadsFor1stSettlement = 0
+        # Trading Stats
+            # Bank
+        self.goodSettlementBankTrades = 0
+        self.badSettlementBankTrades = 0
+        self.goodCityBankTrades = 0
+        self.badCityBankTrades = 0
+        self.goodRoadBankTrades = 0
+        self.badRoadBankTrades = 0
+        self.goodDevCardBankTrades = 0
+        self.badDevCardBankTrades = 0
+        self.neutralBankTrades = 0
+            # Player
+                # Incoming trades
+        self.acceptedTrades = 0
+        self.rejectedTrades = 0
+        self.goodSettlementAcceptedTrades = 0
+        self.badSettlementAcceptedTrades = 0
+        self.goodCityAcceptedTrades = 0
+        self.badCityAcceptedTrades = 0
+        self.goodRoadAcceptedTrades = 0
+        self.badRoadAcceptedTrades = 0
+        self.goodDevCardAcceptedTrades = 0
+        self.badDevCardAcceptedTrades = 0
+        self.neutralAcceptedTrades = 0
+                # Outgoing trades
+        self.totalPlayerTrades = 0
+        self.acceptedPlayerTrades = 0
+        self.goodSettlementPlayerTrades = 0
+        self.badSettlementPlayerTrades = 0
+        self.goodCityPlayerTrades = 0
+        self.badCityPlayerTrades = 0
+        self.goodRoadPlayerTrades = 0
+        self.badRoadPlayerTrades = 0
+        self.goodDevCardPlayerTrades = 0
+        self.badDevCardPlayerTrades = 0
+        self.neutralPlayerTrades = 0
+
     
     def __str__(self):
         output = f"General\n" + \
@@ -100,7 +137,6 @@ class PlayerStats(object):
                 self.resourcesFromDevCard,
                 round(sum(self.resourcesFromDevCard), 3),
                 self.resourcesFromBankTrade,
-                round(sum(self.resourcesFromBankTrade), 3),
                 self.finalResourceProduction[:-1],
                 self.finalTradeRates,
                 self.setupResourceProduction[:-1],
@@ -110,7 +146,40 @@ class PlayerStats(object):
                 self.turnsForFirstSettlement,
                 self.noSettlementsBuilt,
                 self.turnsForFirstCity,
-                self.noCityBuilt
+                self.noCityBuilt,
+                self.numRoadsFor1stSettlement,
+                round(sum(self.resourcesFromBankTrade), 3),
+                self.goodSettlementBankTrades,
+                self.badSettlementBankTrades,
+                self.goodCityBankTrades,
+                self.badCityBankTrades,
+                self.goodRoadBankTrades,
+                self.badRoadBankTrades,
+                self.goodDevCardBankTrades,
+                self.badDevCardBankTrades,
+                self.neutralBankTrades,
+                self.acceptedTrades,
+                self.rejectedTrades,
+                self.goodSettlementAcceptedTrades,
+                self.badSettlementAcceptedTrades,
+                self.goodCityAcceptedTrades,
+                self.badCityAcceptedTrades,
+                self.goodRoadAcceptedTrades,
+                self.badRoadAcceptedTrades,
+                self.goodDevCardAcceptedTrades,
+                self.badDevCardAcceptedTrades,
+                self.neutralAcceptedTrades,
+                self.totalPlayerTrades,
+                self.acceptedPlayerTrades,
+                self.goodSettlementPlayerTrades,
+                self.badSettlementPlayerTrades,
+                self.goodCityPlayerTrades,
+                self.badCityPlayerTrades,
+                self.goodRoadPlayerTrades,
+                self.badRoadPlayerTrades,
+                self.goodDevCardPlayerTrades,
+                self.badDevCardPlayerTrades,
+                self.neutralPlayerTrades,
         ]
 
 class PlayerStatsTracker(PlayerStats):
@@ -151,16 +220,50 @@ class PlayerStatsTracker(PlayerStats):
             self.setupResourceDiversity += other.setupResourceDiversity
             # Tasks Breakdown
             self.noSettlementsBuilt += other.noSettlementsBuilt
-            # Only count turns if settlemnt was built
+            # Only count turns if settlemnt was built, only count roads for first settlement if built
             if other.noSettlementsBuilt == 0:
                 self.turnsForFirstSettlement += other.turnsForFirstSettlement
+                self.numRoadsFor1stSettlement += other.numRoadsFor1stSettlement
 
             self.noCityBuilt += other.noCityBuilt
             # Only count turns if city was built
             if other.noCityBuilt == 0:
                 self.turnsForFirstCity += other.turnsForFirstCity
-
-
+            # Bank Trade
+            self.goodSettlementBankTrades += other.goodSettlementBankTrades
+            self.badSettlementBankTrades += other.badSettlementBankTrades
+            self.goodCityBankTrades += other.goodCityBankTrades
+            self.badCityBankTrades += other.badCityBankTrades
+            self.goodRoadBankTrades += other.goodRoadBankTrades
+            self.badRoadBankTrades += other.badRoadBankTrades
+            self.goodDevCardBankTrades += other.goodDevCardBankTrades
+            self.badDevCardBankTrades += other.badDevCardBankTrades
+            self.neutralBankTrades += other.neutralBankTrades
+            # Incoming player trades
+            self.acceptedTrades += other.acceptedTrades
+            self.rejectedTrades += other.rejectedTrades
+            self.goodSettlementAcceptedTrades += other.goodSettlementAcceptedTrades
+            self.badSettlementAcceptedTrades += other.badSettlementAcceptedTrades
+            self.goodCityAcceptedTrades += other.goodCityAcceptedTrades
+            self.badCityAcceptedTrades += other.badCityAcceptedTrades
+            self.goodRoadAcceptedTrades += other.goodRoadAcceptedTrades
+            self.badRoadAcceptedTrades += other.badRoadAcceptedTrades
+            self.goodDevCardAcceptedTrades += other.goodDevCardAcceptedTrades
+            self.badDevCardAcceptedTrades += other.badDevCardAcceptedTrades
+            self.neutralAcceptedTrades += other.neutralAcceptedTrades
+            # Outgoing player trades
+            self.totalPlayerTrades += other.totalPlayerTrades
+            self.acceptedPlayerTrades += other.acceptedPlayerTrades
+            self.goodSettlementPlayerTrades += other.goodSettlementPlayerTrades
+            self.badSettlementPlayerTrades += other.badSettlementPlayerTrades
+            self.goodCityPlayerTrades += other.goodCityPlayerTrades
+            self.badCityPlayerTrades += other.badCityPlayerTrades
+            self.goodRoadPlayerTrades += other.goodRoadPlayerTrades
+            self.badRoadPlayerTrades += other.badRoadPlayerTrades
+            self.goodDevCardPlayerTrades += other.goodDevCardPlayerTrades
+            self.badDevCardPlayerTrades += other.badDevCardPlayerTrades
+            self.neutralPlayerTrades += other.neutralPlayerTrades
+            
             return self
                 
         else:
@@ -205,14 +308,51 @@ class PlayerStatsTracker(PlayerStats):
         self.noSettlementsBuilt = (self.noSettlementsBuilt - 1) / self.numGames
         if (self.numGames == self.noSettlementsBuilt):
             self.turnsForFirstSettlement = -1
+            self.numRoadsFor1stSettlement = -1
         else:
             self.turnsForFirstSettlement = self.turnsForFirstSettlement / (self.numGames - self.noSettlementsBuilt)
+            self.numRoadsFor1stSettlement = self.numRoadsFor1stSettlement / (self.numGames - self.noSettlementsBuilt)
         
         self.noCityBuilt = (self.noCityBuilt - 1) / self.numGames
         if (self.numGames == self.noCityBuilt):
             self.turnsForFirstCity = -1
         else:
             self.turnsForFirstCity = self.turnsForFirstCity / (self.numGames - self.noCityBuilt)
+        # Bank trades
+        self.goodSettlementBankTrades = self.goodSettlementBankTrades / self.numGames
+        self.badSettlementBankTrades = self.badSettlementBankTrades / self.numGames
+        self.goodCityBankTrades = self.goodCityBankTrades / self.numGames
+        self.badCityBankTrades = self.badCityBankTrades / self.numGames
+        self.goodRoadBankTrades = self.goodRoadBankTrades / self.numGames
+        self.badRoadBankTrades = self.badRoadBankTrades / self.numGames
+        self.goodDevCardBankTrades = self.goodDevCardBankTrades / self.numGames
+        self.badDevCardBankTrades = self.badDevCardBankTrades / self.numGames
+        self.neutralBankTrades = self.neutralBankTrades / self.numGames
+        # Incoming player trades
+        self.acceptedTrades = self.acceptedTrades / self.numGames
+        self.rejectedTrades = self.rejectedTrades / self.numGames
+        self.goodSettlementAcceptedTrades = self.goodSettlementAcceptedTrades / self.numGames
+        self.badSettlementAcceptedTrades = self.badSettlementAcceptedTrades / self.numGames
+        self.goodCityAcceptedTrades = self.goodCityAcceptedTrades / self.numGames
+        self.badCityAcceptedTrades = self.badCityAcceptedTrades / self.numGames
+        self.goodRoadAcceptedTrades = self.goodRoadAcceptedTrades / self.numGames
+        self.badRoadAcceptedTrades = self.badRoadAcceptedTrades / self.numGames
+        self.goodDevCardAcceptedTrades = self.goodDevCardAcceptedTrades / self.numGames
+        self.badDevCardAcceptedTrades = self.badDevCardAcceptedTrades / self.numGames
+        self.neutralAcceptedTrades = self.neutralAcceptedTrades / self.numGames
+        # Outgoing player trades
+        self.totalPlayerTrades = self.totalPlayerTrades / self.numGames
+        self.acceptedPlayerTrades = self.acceptedPlayerTrades / self.numGames
+        self.goodSettlementPlayerTrades = self.goodSettlementPlayerTrades / self.numGames
+        self.badSettlementPlayerTrades = self.badSettlementPlayerTrades / self.numGames
+        self.goodCityPlayerTrades = self.goodCityPlayerTrades / self.numGames
+        self.badCityPlayerTrades = self.badCityPlayerTrades / self.numGames
+        self.goodRoadPlayerTrades = self.goodRoadPlayerTrades / self.numGames
+        self.badRoadPlayerTrades = self.badRoadPlayerTrades / self.numGames
+        self.goodDevCardPlayerTrades = self.goodDevCardPlayerTrades / self.numGames
+        self.badDevCardPlayerTrades = self.badDevCardPlayerTrades / self.numGames
+        self.neutralPlayerTrades = self.neutralPlayerTrades / self.numGames
+            
         
 
 
@@ -240,7 +380,7 @@ class Player(object):
 
     Model = None
 
-    def __init__(self, name, seatNumber):
+    def __init__(self, name, seatNumber, recordStats=False):
 
         self.name             = name
         self.seatNumber       = seatNumber
@@ -295,6 +435,7 @@ class Player(object):
         self.roadCount = 0
         self.agentName = "RANDOM"
 
+        self.recordStats = recordStats
         self.stats = PlayerStats()
 
     # @staticmethod
@@ -372,7 +513,8 @@ class Player(object):
             if sum(diceProduction) > 0:
                 num_start = len(self.resources)
                 self.resources += diceProduction
-                self.stats.resourcesReceived += diceProduction
+                if self.recordStats:
+                    self.stats.resourcesReceived += diceProduction
                 num_end = len(self.resources)
                 if num_start != num_end:
                     print("\n\n\n UpdatePlayerResources changes length \n\n\n", self.seatNumber, self.resources, diceProduction)
@@ -583,9 +725,11 @@ class Player(object):
             elif gameState.currState == "START2A":
                 self.secondSettlementBuild = True
             else:
-                if self.stats.noSettlementsBuilt == 1:
-                    self.stats.turnsForFirstSettlement = self.stats.numTurns 
-                self.stats.noSettlementsBuilt = 0
+                if self.recordStats:
+                    if self.stats.noSettlementsBuilt == 1:
+                        self.stats.turnsForFirstSettlement = self.stats.numTurns 
+                        self.stats.numRoadsFor1stSettlement = len(self.roads) - 2
+                    self.stats.noSettlementsBuilt = 0
 
             newConstruction = Construction(g_constructionTypes[1],
                                            self.seatNumber, len(self.settlements), position)
@@ -611,9 +755,10 @@ class Player(object):
 
         elif pieceType == 'CITY':
 
-            if self.stats.noCityBuilt == 1:
-                    self.stats.turnsForFirstCity = self.stats.numTurns 
-            self.stats.noCityBuilt = 0
+            if self.recordStats:
+                if self.stats.noCityBuilt == 1:
+                        self.stats.turnsForFirstCity = self.stats.numTurns 
+                self.stats.noCityBuilt = 0
 
             newConstruction = Construction(g_constructionTypes[2],
                                            self.seatNumber, len(self.cities), position)

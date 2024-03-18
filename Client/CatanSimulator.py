@@ -549,35 +549,35 @@ def runParallelGames(totalGames, numProcesses, players) -> list:
             finalresults = [a + b for a, b in zip(results, finalresults)]
     return finalresults
 
-players = [
-    AgentUCT("P0", 0, simulationCount=100),
-    # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
-    # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
-    AgentRandom2("P1", 1),
-    AgentRandom2("P2", 2),
-    # AgentMCTS(name="P3", seatNumber=3, simulationCount=100)
-    # AgentRandom2("P2", 2),
-    AgentRandom2("P3", 3)
-]
+# players = [
+#     AgentUCT("P0", 0, simulationCount=100),
+#     # AgentMCTS(name="P1", seatNumber=1, choiceTime=0.1, useModel=False),
+#     # AgentMCTS(name="P2", seatNumber=2, choiceTime=0.1, useModel=False),
+#     AgentRandom2("P1", 1),
+#     AgentRandom2("P2", 2),
+#     # AgentMCTS(name="P3", seatNumber=3, simulationCount=100)
+#     # AgentRandom2("P2", 2),
+#     AgentRandom2("P3", 3)
+# ]
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    numGames = 1000
-    numProcesses = 6
+#     numGames = 1000
+#     numProcesses = 6
 
-    start_time = time.time()
-    results = [0, 0, 0, 0]
+#     start_time = time.time()
+#     results = [0, 0, 0, 0]
     
-    # results = runParallelGames(numGames, numProcesses, players)
-    # results = runMultipleGames(numGames, players)
+#     # results = runParallelGames(numGames, numProcesses, players)
+#     # results = runMultipleGames(numGames, players)
 
-    for i in range(10):
-        winner = RunGame(players=players)
-        results[winner] += 1
+#     for i in range(10):
+#         winner = RunGame(players=players)
+#         results[winner] += 1
 
-    end_time = time.time()
-    print(f"\n\nResults: {results}")
-    print("Time: ", end_time-start_time)
+#     end_time = time.time()
+#     print(f"\n\nResults: {results}")
+#     print("Time: ", end_time-start_time)
 
     
     # start_time = time.time()

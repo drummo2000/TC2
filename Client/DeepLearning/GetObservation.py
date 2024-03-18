@@ -68,6 +68,7 @@ phaseOneHotMapping = {
     "WAITING_FOR_CHOICE":   [0, 0, 0, 0, 0, 0, 1, 0],
     "PLACING_FREE_ROAD1":   [0, 0, 0, 0, 0, 0, 0, 1],
     "PLACING_FREE_ROAD2":   [0, 0, 0, 0, 0, 0, 0, 1],
+    "WAITING_FOR_TRADE":    [0, 0, 0, 1, 0, 0, 0, 0],
 }
 
 phaseOneHotMappingFull = {

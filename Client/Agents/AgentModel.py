@@ -11,9 +11,9 @@ class BaseAgentModel(AgentRandom2):
     The Agents here are not used for training, they are either used as opponents for training
     or for testing pretrained models
     """
-    def __init__(self, name, seatNumber, model: MaskablePPO, playerTrading: bool=False):
+    def __init__(self, name, seatNumber, model: MaskablePPO, playerTrading: bool=False, recordStats=False):
 
-        super(BaseAgentModel, self).__init__(name, seatNumber, playerTrading)
+        super(BaseAgentModel, self).__init__(name, seatNumber, playerTrading=playerTrading, recordStats=recordStats)
         self.model                  = model
 
     def getModelAction(self, game, possibleActions):
@@ -37,8 +37,6 @@ class BaseAgentModel(AgentRandom2):
         return chosenAction
 
 
-
-
 class AgentModel(BaseAgentModel):
     """
     Agent which uses passed model for all moves
@@ -48,9 +46,12 @@ class AgentModel(BaseAgentModel):
         if len(possibleActions) == 1:
             return possibleActions[0]
 
-        return self.getModelAction(game, possibleActions)
+        actionObj = self.getModelAction(game, possibleActions)
 
-    
+        if self.playerTrading and actionObj.type == "MakeTradeOffer":
+            self.tradeCount += 1
+
+        return actionObj
 
 
 class AgentMultiModel(BaseAgentModel):
@@ -60,9 +61,9 @@ class AgentMultiModel(BaseAgentModel):
     If 'model' not passed will use random actions
     """
 
-    def __init__(self, name, seatNumber, setupModel: MaskablePPO, fullSetup: bool, playerTrading: bool=False, model: MaskablePPO = None):
+    def __init__(self, name, seatNumber, setupModel: MaskablePPO, fullSetup: bool, playerTrading: bool=False, model: MaskablePPO = None, recordStats=False):
 
-        super(AgentMultiModel, self).__init__(name, seatNumber, model, playerTrading)
+        super(AgentMultiModel, self).__init__(name, seatNumber, model, playerTrading, recordStats=recordStats)
         self.setupModel = setupModel
         self.fullSetup = fullSetup
 
