@@ -433,10 +433,6 @@ class SelfPlayDistribution(CatanEnv):
 
 
 
-
-
-
-
 class CatanTradingEnv(CatanBaseEnv):
     """
     Full Catan game with full action and state space
@@ -453,12 +449,14 @@ class CatanTradingEnv(CatanBaseEnv):
             # Setup Rewards
         self.setupReward = True
         self.setupRewardMultiplier = 0.75
-            # Trading Rewards
-        self.bankTradeReward = True
-        self.bankTradeRewardMultiplier = 0.75
             # Dense Rewards - Building roads/Buying dev cards/steeling resource
         self.denseRewards = True
         self.denseRewardMultiplier = 1
+            # Trading Rewards (Accepting offer is treated same as bank trade)
+        self.bankTradeReward = True
+        self.bankTradeRewardMultiplier = 0.75
+        self.playerTradeReward = True
+        self.playerTradeRewardMultiplier = 0.75
 
         self.getActionMask = getActionMaskTrading
         self.getObservation = getObservationSimplified
@@ -472,6 +470,8 @@ class CatanTradingEnv(CatanBaseEnv):
     def reset(self, seed=None):
         self.numTurns = 0
         self.turnsFirstSettlement = 0
+        self.checkForTradeResult = False
+        self.resourcesBeforeTradeOffer = None
         return super(CatanTradingEnv, self).reset()
 
     def endCondition(self) -> bool:
@@ -500,9 +500,8 @@ class CatanTradingEnv(CatanBaseEnv):
         vpDevCardBefore = self.agent.developmentCards[VICTORY_POINT_CARD_INDEX]
         prevState = self.game.gameState.currState
 
-        resourcesBefore = self.agent.resources
 
-        if self.bankTradeReward and prevState[:5] != "START":
+        if (self.bankTradeReward or self.playerTradeReward) and prevState[:5] != "START":
             possibleSettlementsBefore = self.game.gameState.GetPossibleSettlements(self.agent)
             canBuildSettlementBefore = possibleSettlementsBefore and self.agent.HavePiece(g_pieces.index('SETTLEMENTS')) and self.agent.CanAfford(BuildSettlementAction.cost)
             canBuildCityBefore = self.agent.settlements and self.agent.CanAfford(BuildCityAction.cost)
@@ -521,7 +520,7 @@ class CatanTradingEnv(CatanBaseEnv):
             self.agent.tradeCount += 1
 
         if self.bankTradeReward:
-            if actionObj.type == "BankTradeOffer":
+            if actionObj.type == "BankTradeOffer" or actionObj.type == "AcceptTradeOffer":
                 # print(f"Trade: {actionObj.getString()}\nResources: {self.agent.resources[:5]}\n\n")
                 # DisplayImage(self.game.gameState)
                 canBuildSettlementAfter = self.agent.CanAfford(BuildSettlementAction.cost)
@@ -555,6 +554,13 @@ class CatanTradingEnv(CatanBaseEnv):
                     # Small negative if we trade for no reason (Risk here that we stop long term planning of builds)
                 if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
                     reward -= 0.25 * self.bankTradeRewardMultiplier
+
+        if self.playerTradeReward:
+            # If we just made an offer need to check next time around if offer was accepted
+            if actionObj.type == "MakeTradeOffer":
+                self.checkForTradeResult = True
+                self.resourcesBeforeTradeOffer = self.agent.resources
+
 
         if self.vpActionReward:
             if biggestArmyBefore == False and self.agent.biggestArmy == True:
@@ -622,6 +628,41 @@ class CatanTradingEnv(CatanBaseEnv):
             # Check if game Over
             if self.endCondition():
                 return self.endGame(reward)
+        
+        # If we made an offer it will have either been accepted/rejected at this point
+        if self.playerTradeReward:
+            if self.checkForTradeResult:
+                # If trade was accepted resources will have changed
+                if self.resourcesBeforeTradeOffer != self.agent.resources:
+                    canBuildSettlementAfter = self.agent.CanAfford(BuildSettlementAction.cost)
+                    canBuildRoadAfter = self.agent.CanAfford(BuildRoadAction.cost)
+                    canBuildCityAfter = self.agent.CanAfford(BuildCityAction.cost)
+                    canBuyDevCardAfter = self.agent.CanAfford(BuyDevelopmentCardAction.cost)
+                    # Trades which allow us to build
+                    if canBuildSettlementBefore == False and canBuildSettlementAfter == True:
+                        reward += 4 * self.playerTradeRewardMultiplier
+                    if canBuildCityBefore == False and canBuildCityAfter == True:
+                        reward += 4 * self.playerTradeRewardMultiplier
+                    if canBuildRoadBefore == False and canBuildRoadAfter == True :
+                        reward += 1 * self.playerTradeRewardMultiplier
+                    if canBuyDevCardBefore == False and canBuyDevCardAfter == True:
+                        reward += 2 * self.playerTradeRewardMultiplier
+                    # Trades which get rid of resources for possible Builds
+                    if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
+                        reward -= 4 * self.playerTradeRewardMultiplier
+                    if canBuildCityBefore == True and canBuildCityAfter == False:
+                        reward -= 4 * self.playerTradeRewardMultiplier
+                        # If we could buy dev card before and now can't get anything
+                    if canBuyDevCardBefore == True and canBuyDevCardAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuildRoadAfter == False:
+                        reward -= 2 * self.playerTradeRewardMultiplier
+                        # If could build road before and now can't get anything
+                    if canBuildRoadBefore == True and canBuildRoadAfter == False and canBuildCityAfter == False and canBuildSettlementAfter == False and canBuyDevCardAfter == False:
+                        reward -= 1 * self.playerTradeRewardMultiplier
+                        # Punish more than bank trades since we could be helping other players
+                    if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
+                        reward -= 2 * self.playerTradeRewardMultiplier
+                self.checkForTradeResult = False
+
         
         # Now ready for agent to choose action, get observation and action mask
         possibleActions = self.agent.GetPossibleActions(self.game.gameState)

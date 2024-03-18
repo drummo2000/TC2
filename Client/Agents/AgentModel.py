@@ -4,6 +4,7 @@ from Game.CatanAction import *
 from Agents.AgentRandom2 import AgentRandom2
 import random
 from DeepLearning.PPO import MaskablePPO
+import logging
 
 
 class BaseAgentModel(AgentRandom2):
@@ -42,11 +43,23 @@ class AgentModel(BaseAgentModel):
     Agent which uses passed model for all moves
     """
     def DoMove(self, game):
+
+        # For JSettlers
+        if game.gameState.currPlayer != self.seatNumber and game.gameState.currState != "WAITING_FOR_DISCARDS":
+            #raise Exception("\n\nReturning None Action - INVESTIGATE\n\n")
+            return None
+        
         possibleActions = self.GetPossibleActions(game.gameState)
+        print(f"POSSIBLE_ACTIONS:")
+        for action in possibleActions:
+            if action:
+                print(f"     {action.type}")
         if len(possibleActions) == 1:
             return possibleActions[0]
 
         actionObj = self.getModelAction(game, possibleActions)
+
+        print(f"SELECTED_ACTION: {actionObj.type}\n")
 
         if self.playerTrading and actionObj.type == "MakeTradeOffer":
             self.tradeCount += 1

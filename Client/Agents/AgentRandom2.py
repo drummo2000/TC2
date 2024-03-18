@@ -7,10 +7,11 @@ import random
 
 class AgentRandom2(Player):
 
-    def __init__(self, name, seatNumber, recordStats=False, playerTrading: bool=False):
+    def __init__(self, name, seatNumber, recordStats=False, playerTrading: bool=False, jsettlers=False):
 
         super(AgentRandom2, self).__init__(name, seatNumber, recordStats=recordStats)
         self.playerTrading          = playerTrading
+        self.jsettlers = jsettlers
 
         self.trading                = None
     
@@ -201,6 +202,10 @@ class AgentRandom2(Player):
     # Function which returns PlaceRobberActions for all hex positions
     def ChooseRobberPosition(self, gameState: GameState, player: Player) -> list:
         possiblePositions = gameState.possibleRobberPos
+        try:
+            possiblePositions.remove(gameState.robberPos)
+        except:
+            print("Robber not in list")
         return [PlaceRobberAction(player.seatNumber, pos) for pos in possiblePositions]
 
     def ChoosePlayerToStealFrom(self, gameState, player):
@@ -252,17 +257,18 @@ class AgentRandom2(Player):
                                 # Go through other players and only offer to players who have resource
                                 toPlayers = [True, True, True, True]
                                 toPlayers[player.seatNumber] = False
-                                for otherPlayer in gameState.players:
-                                    if otherPlayer.seatNumber != player.seatNumber:
-                                        if otherPlayer.resources[getIndex] == 0:
-                                            toPlayers[otherPlayer.seatNumber] = False
-                                            # print(f"{self.seatNumber} Cannot offer trade: {giveResources}_{getResources} to {player.seatNumber}, since resources: {player.resources[:5]}")
-                                if any(toPlayers):
-                                    # print(f"{player.seatNumber}(Turn {player.stats.numTurns}) with resources: {player.resources[:5]}, Offer: {giveResources[:5]}_{getResources[:5]}")
-                                    tradeAction = MakeTradeOfferAction(fromPlayerNumber=self.seatNumber,
-                                                                    toPlayers=toPlayers,
-                                                                    giveResources=giveResources, getResources=getResources)
-                                    possibleTrades.append(tradeAction)
+                                if self.jsettlers == False:
+                                    for otherPlayer in gameState.players:
+                                        if otherPlayer.seatNumber != player.seatNumber:
+                                            if otherPlayer.resources[getIndex] == 0:
+                                                toPlayers[otherPlayer.seatNumber] = False
+                                                # print(f"{self.seatNumber} Cannot offer trade: {giveResources}_{getResources} to {player.seatNumber}, since resources: {player.resources[:5]}")
+                                    if any(toPlayers):
+                                        # print(f"{player.seatNumber}(Turn {player.stats.numTurns}) with resources: {player.resources[:5]}, Offer: {giveResources[:5]}_{getResources[:5]}")
+                                        tradeAction = MakeTradeOfferAction(fromPlayerNumber=self.seatNumber,
+                                                                        toPlayers=toPlayers,
+                                                                        giveResources=giveResources, getResources=getResources)
+                                        possibleTrades.append(tradeAction)
         return possibleTrades
 
     def GetMonopolyResource(self, game, player):

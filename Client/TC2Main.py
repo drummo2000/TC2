@@ -9,7 +9,7 @@ from Agents.AgentMCTS import AgentMCTS
 from Agents.AgentUCT import AgentUCT
 from Agents.AgentUCTTuned import AgentUCTTuned
 from Agents.AgentRandom2 import AgentRandom2
-from Agents.AgentModel import AgentMultiModel
+from Agents.AgentModel import AgentModel
 from DeepLearning.PPO import MaskablePPO
 
 import CatanData.CSVGenerator
@@ -158,7 +158,7 @@ class TC2Main(object):
         # if args.agentType == 'rand':
         # self.player = AgentRandom(args.nickname, 0)
         # self.player = AgentRandom2(args.nickname, 0)
-        self.player = AgentMultiModel(args.nickname, 0, setupModel=MaskablePPO.load("DeepLearning/Models/SetupOnly_DotTotal_100k.zip"), fullSetup=False, model=MaskablePPO.load("DeepLearning/Models/SelfPlay_7vp_13M.zip"))
+        self.player = AgentModel(args.nickname, 0, playerTrading=True, model=MaskablePPO.load("DeepLearning/Models/Trading/Trading_SetupVpActionDense_15M.zip"))
 
         # if args.agentType == 'mcts':
         #     # 10.000 sims without multiThread - 2 min and 30 sec
@@ -218,10 +218,10 @@ class TC2Main(object):
         # Go back to the Client directory...
         os.chdir(mycwd)
 
-        if args.logging == 'i':
-            logging.getLogger().setLevel(logging.INFO)
-        elif args.logging == 'd':
-            logging.getLogger().setLevel(logging.DEBUG)
+        # if args.logging == 'i':
+        #     logging.getLogger().setLevel(logging.INFO)
+        # elif args.logging == 'd':
+        #     logging.getLogger().setLevel(logging.DEBUG)
 
         #logging.getLogger().setLevel(logging.CRITICAL)
 
