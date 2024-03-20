@@ -533,6 +533,7 @@ class Client:
             # TRADE?
             #if instance.to[self.player.seatNumber]:
             #    self.SendMessage(RejectOfferMessage(self.gameName, self.player.seatNumber))
+            # Incoming Trade Offer
             if instance.fr != self.player.seatNumber and instance.to[self.player.seatNumber]:
 
                 if self.player.trading is not None:
@@ -562,7 +563,7 @@ class Client:
 
             if self.waitTradeResult:
                 self.tradeResultCount -= 1
-                print("trade result count = {0}".format(self.tradeResultCount))
+                # print("trade result count = {0}".format(self.tradeResultCount))
                 if self.tradeResultCount <= 0:
                     self.tradeResultCount = -1
                     self.waitTradeResult = False

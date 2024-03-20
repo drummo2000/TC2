@@ -9,11 +9,14 @@ from Agents.AgentMCTS import AgentMCTS
 from Agents.AgentUCT import AgentUCT
 from Agents.AgentUCTTuned import AgentUCTTuned
 from Agents.AgentRandom2 import AgentRandom2
-from Agents.AgentModel import AgentModel
+from Agents.AgentModel import AgentModel, AgentMultiModel
 from DeepLearning.PPO import MaskablePPO
 
 import CatanData.CSVGenerator
 from Client import Client
+from tabulate import tabulate
+from DeepLearning.Stats import headers
+import pandas as pd
 
 def check_positive(value):
     ivalue = int(value)
@@ -158,7 +161,7 @@ class TC2Main(object):
         # if args.agentType == 'rand':
         # self.player = AgentRandom(args.nickname, 0)
         # self.player = AgentRandom2(args.nickname, 0)
-        self.player = AgentModel(args.nickname, 0, playerTrading=True, model=MaskablePPO.load("DeepLearning/Models/Trading/Trading_SetupVpActionDense_15M.zip"))
+        self.player = AgentModel(args.nickname, 0, playerTrading=True, recordStats=True, jsettlersGame=True, model=MaskablePPO.load("DeepLearning/Models/Trading_PortStrat/Trading_PortStrat_9117696.zip"))
 
         # if args.agentType == 'mcts':
         #     # 10.000 sims without multiThread - 2 min and 30 sec
@@ -244,4 +247,43 @@ class TC2Main(object):
         # Give some time so the server can start and the robots get in....
         time.sleep(3)
 
-        main.RunClient()
+        finalGameState = main.RunClient()
+
+        if True:
+            # player0Stats = PlayerStatsTracker()
+            # Player0LosingStats = PlayerStatsTracker()
+
+            winner = [0, 0, 0, 0]
+            winner[finalGameState.winner] = 1
+            lost = finalGameState.winner != 0
+            print(winner)
+            # Stats
+            finalGameState.players[0].generatePlayerStats()
+            finalGameState.players[1].generatePlayerStats()
+
+            player0Stats = finalGameState.players[0].stats
+            # if lost:
+                # Player0LosingStats += finalGameState.players[0].stats
+
+            # player0Stats.getAverages()
+            # Player0LosingStats.getAverages()
+            player0Data = player0Stats.getList()
+            # player0LosingData = Player0LosingStats.getList()
+
+            p_hat0 = winner[0] / sum(winner)
+            p_hat1 = winner[1] / sum(winner)
+            margin_error0 = round(100*(1.96 * math.sqrt((p_hat0 * (1 - p_hat0)) / sum(winner))), 2)
+            margin_error1 = round(100*(1.96 * math.sqrt((p_hat1 * (1 - p_hat1)) / sum(winner))), 2)
+            player0Data.insert(0, margin_error0)
+            # player0LosingData.insert(0, -1)
+            player0Data.insert(0, winner[0]/sum(winner))
+            # player0LosingData.insert(0, -1)
+            player0Data.insert(0, "Player0")
+            # player0LosingData.insert(0, "Player0LossesStats")
+
+            table = tabulate([player0Data], headers=headers, tablefmt='simple')
+            # print(table)
+
+            fileName = f'StatsNewGame.csv'
+            df = pd.DataFrame([player0Data], columns=headers)
+            df.to_csv(f'JSettlersGames/{fileName}', index=False)

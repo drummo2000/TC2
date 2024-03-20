@@ -7,13 +7,16 @@ import random
 
 class AgentRandom2(Player):
 
-    def __init__(self, name, seatNumber, recordStats=False, playerTrading: bool=False, jsettlers=False):
+    def __init__(self, name, seatNumber, recordStats=False, playerTrading: bool=False, jsettlersGame=False):
 
         super(AgentRandom2, self).__init__(name, seatNumber, recordStats=recordStats)
         self.playerTrading          = playerTrading
-        self.jsettlers = jsettlers
+        self.jsettlersGame = jsettlersGame
 
-        self.trading                = None
+        if playerTrading:
+            self.trading = playerTrading
+        else:
+            self.trading = None
     
     def GetAllPossibleActions_RegularTurns(self, gameState: GameState, player: Player):
 
@@ -38,7 +41,7 @@ class AgentRandom2(Player):
             possibleActions += [BuildRoadAction(player.seatNumber, pos, len(player.roads)) for pos in
                                 gameState.GetPossibleRoads(player)]
 
-        if gameState.CanBuyADevCard(player) and not player.biggestArmy:
+        if gameState.CanBuyADevCard(player):
             possibleActions.append(BuyDevelopmentCardAction(player.seatNumber))
 
         if not player.playedDevCard and sum(player.developmentCards[:-1]) > 0:
@@ -202,11 +205,7 @@ class AgentRandom2(Player):
     # Function which returns PlaceRobberActions for all hex positions
     def ChooseRobberPosition(self, gameState: GameState, player: Player) -> list:
         possiblePositions = gameState.possibleRobberPos
-        try:
-            possiblePositions.remove(gameState.robberPos)
-        except:
-            print("Robber not in list")
-        return [PlaceRobberAction(player.seatNumber, pos) for pos in possiblePositions]
+        return [PlaceRobberAction(player.seatNumber, pos) for pos in possiblePositions if pos != gameState.robberPos]
 
     def ChoosePlayerToStealFrom(self, gameState, player):
 
@@ -257,18 +256,17 @@ class AgentRandom2(Player):
                                 # Go through other players and only offer to players who have resource
                                 toPlayers = [True, True, True, True]
                                 toPlayers[player.seatNumber] = False
-                                if self.jsettlers == False:
-                                    for otherPlayer in gameState.players:
-                                        if otherPlayer.seatNumber != player.seatNumber:
-                                            if otherPlayer.resources[getIndex] == 0:
-                                                toPlayers[otherPlayer.seatNumber] = False
-                                                # print(f"{self.seatNumber} Cannot offer trade: {giveResources}_{getResources} to {player.seatNumber}, since resources: {player.resources[:5]}")
-                                    if any(toPlayers):
-                                        # print(f"{player.seatNumber}(Turn {player.stats.numTurns}) with resources: {player.resources[:5]}, Offer: {giveResources[:5]}_{getResources[:5]}")
-                                        tradeAction = MakeTradeOfferAction(fromPlayerNumber=self.seatNumber,
-                                                                        toPlayers=toPlayers,
-                                                                        giveResources=giveResources, getResources=getResources)
-                                        possibleTrades.append(tradeAction)
+                                for otherPlayer in gameState.players:
+                                    if otherPlayer.seatNumber != player.seatNumber:
+                                        if otherPlayer.resources[getIndex] == 0:
+                                            toPlayers[otherPlayer.seatNumber] = False
+                                            # print(f"{self.seatNumber} Cannot offer trade: {giveResources}_{getResources} to {player.seatNumber}, since resources: {player.resources[:5]}")
+                                if any(toPlayers):
+                                    # print(f"{player.seatNumber}(Turn {player.stats.numTurns}) with resources: {player.resources[:5]}, Offer: {giveResources[:5]}_{getResources[:5]}")
+                                    tradeAction = MakeTradeOfferAction(fromPlayerNumber=self.seatNumber,
+                                                                    toPlayers=toPlayers,
+                                                                    giveResources=giveResources, getResources=getResources)
+                                    possibleTrades.append(tradeAction)
         return possibleTrades
 
     def GetMonopolyResource(self, game, player):
@@ -297,11 +295,19 @@ class AgentRandom2(Player):
     def GetPossiblePlayerTradeReactions(self, gameState, player):
 
         canTrade = True
+
+        for i in range(0, len(gameState.currTradeOffer.getResources)):
+            if player.resources[i] < gameState.currTradeOffer.getResources[i]:
+                canTrade = False
+                break
+
         rejectTrade = RejectTradeOfferAction(playerNumber=player.seatNumber)
 
-        for i in range(5):
-            if player.resources[i] < gameState.currTradeOffer.getResources[i]:
-                return [rejectTrade]
-        else:
-            acceptTrade = AcceptTradeOfferAction(playerNumber=player.seatNumber, offerPlayerNumber=gameState.currTradeOffer.fromPlayerNumber, gameState=gameState)
+        # Something is broken with certain incoming trades with jsettlers server so reject all incoming trades
+        if canTrade:
+            acceptTrade = AcceptTradeOfferAction(playerNumber=player.seatNumber,
+                                                 offerPlayerNumber=gameState.currTradeOffer.fromPlayerNumber, 
+                                                 gameState=gameState)
             return [acceptTrade, rejectTrade]
+
+        return [rejectTrade]

@@ -209,6 +209,10 @@ def getActionMaskTrading(possibleActions: list[Action]):
 
     mask = [0] * len(actionsListTrades)
     for action in possibleActions:
-        mask[actionsDictTrades[action.getString()]] = 1
-        indexActionDict[actionsDictTrades[action.getString()]] = action
+        try:
+            mask[actionsDictTrades[action.getString()]] = 1
+            indexActionDict[actionsDictTrades[action.getString()]] = action
+        except Exception as e:
+            # Haven't added different resource trades yet
+            pass
     return np.array(mask), indexActionDict

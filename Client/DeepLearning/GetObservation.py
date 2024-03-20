@@ -468,6 +468,9 @@ def getObservationSimplified(gameState: GameState, playerNumber=0):
     longestRoadPlayer = 1 if gameState.longestRoadPlayer == playerNumber else 0 # 1
     largestArmyPlayer = 1 if gameState.largestArmyPlayer == playerNumber else 0 # 1
 
+    # TODO:
+    # Add HaveBuiltFirstSettlement, CanBuildSettlement, CanBuildRoad, CanBuildCity, CanBuildDevCard, CurrentProduction, NumSettlements, NumCities, NumRoads, NumDevCardsBought, 
+
     ## Board info ##
 
     # Get hex robber info

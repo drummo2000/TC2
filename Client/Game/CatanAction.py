@@ -548,7 +548,6 @@ class EndTurnAction(Action):
         if playerPoints >= 10:
             gameState.currState = "OVER"
             gameState.winner    = self.playerNumber
-
         else:
             gameState.currState = "PLAY"
 
@@ -670,18 +669,19 @@ class MakeTradeOfferAction(Action):
 
     def GetMessage(self, gameName, currGameStateName = None):
 
-        return MakeOfferMessage(gameName, self.fromPlayerNumber, self.toPlayers, self.giveResources, self.getResources)
+        return MakeOfferMessage(gameName, self.fromPlayerNumber, self.toPlayers, self.giveResources[:5], self.getResources[:5])
 
-    def ApplyAction(self, gameState):
+    def ApplyAction(self, gameState, specificPlayer=None):
 
         if gameState.currState != 'WAITING_FOR_TRADE':
             self.previousGameState = gameState.currState
             gameState.currState    = 'WAITING_FOR_TRADE'
         else:
             self.previousGameState = gameState.currTradeOffer.previousGameState
-        
-        gameState.currPlayer = self.toPlayerNumbers[int(random.random() * len(self.toPlayerNumbers))]
-
+        if specificPlayer is None:
+            gameState.currPlayer = self.toPlayerNumbers[int(random.random() * len(self.toPlayerNumbers))]
+        else:
+            gameState.currPlayer = self.toPlayerNumbers[specificPlayer]
         self.toPlayerNumbers.remove(gameState.currPlayer)
         gameState.currTradeOffer = self
 

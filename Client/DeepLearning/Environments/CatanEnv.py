@@ -146,34 +146,31 @@ class CatanEnv(CatanBaseEnv):
         self.winReward = False
         self.winRewardAmount = 0
         self.loseRewardAmount = -50
-        self.vpActionReward = True # Actions that directly give vp
+        self.vpActionReward = False # Actions that directly give vp
         self.vpActionRewardMultiplier = 10
             # Setup Rewards
         self.setupReward = True
-        self.setupRewardMultiplier = 0.75
+        self.setupRewardMultiplier = 1
             # Speed Rewards
         self.winSpeedReward = False
         self.maxNumTurnsToWin = 100
             # Trading Rewards
-        self.bankTradeReward = True
+        self.bankTradeReward = False
         self.bankTradeRewardMultiplier = 0.75
             # Dense Rewards - Building roads/Buying dev cards/steeling resource
-        self.denseRewards = True
+        self.denseRewards = False
         self.denseRewardMultiplier = 1
 
     
     def reset(self, seed=None):
         self.numTurns = 0
         self.turnsFirstSettlement = 0
+        self.setup1Production = listm([0, 0, 0, 0, 0, 0])
+        self.setup1TradeRates = listm([4, 4, 4, 4, 4])
         return super(CatanEnv, self).reset()
 
     def endCondition(self) -> bool:
-        # Default
-        # if self.game.gameState.currState == "OVER":
-        #     return True
-        # else:
-        #     return False
-        if self.game.gameState.currState == "OVER":
+        if self.game.gameState.currState == "PLAY":
             return True
         else:
             return False
@@ -278,17 +275,44 @@ class CatanEnv(CatanBaseEnv):
 
         
         if self.setupReward:
-            if actionObj.type == 'BuildSettlement' and prevState == 'START2A':
+            if actionObj.type == 'BuildSettlement' and prevState == 'START1A':
                 resourceProduction = listm([0, 0, 0, 0, 0, 0])
                 for diceNumber, resourceList in self.game.gameState.players[0].diceProduction.items():
                     resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
-                reward += sum(resourceProduction) * self.setupRewardMultiplier
-                # Diversity
-                diversity = sum(x != 0 for x in resourceProduction)
-                if diversity == 5:
-                    reward += 7 * self.setupRewardMultiplier
-                elif diversity == 4:
-                    reward += 3 * self.setupRewardMultiplier
+                self.setup1Production = resourceProduction
+                self.setup1TradeRates = self.agent.tradeRates
+                # Did we get a port
+                if sum(self.setup1TradeRates) < 20:
+                    for i in range(5):
+                        # Matching 2:1 port with 3+ dot resource
+                        if self.setup1TradeRates[i] == 2 and self.setup1Production[i] >= 3:
+                            reward += 2
+                        # 3:1 port with >= 6 dots
+                        elif sum(self.setup1TradeRates) == 18 and sum(self.setup1Production) >= 6:
+                            reward += 2
+                # If we didn't get a port, need to get >= 10 dots
+                else:
+                    if sum(self.setup1Production) >= 10:
+                        reward += 1         
+            elif actionObj.type == 'BuildSettlement' and prevState == 'START2A':
+                resourceProduction = listm([0, 0, 0, 0, 0, 0])
+                for diceNumber, resourceList in self.game.gameState.players[0].diceProduction.items():
+                    resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
+                setup2Production = resourceProduction - self.setup1Production
+                # Did we get a port
+                if sum(self.agent.tradeRates) < sum(self.setup1TradeRates):
+                    for i in range(5):
+                        # Matching 2:1 port with 3+ dot resource
+                        if self.agent.tradeRates[i] == 2 and setup2Production[i] >= 3:
+                            reward += 2
+                        # 3:1 port with >= 6 dots
+                        elif  sum(self.setup1Production) >= 6:
+                            reward += 2
+                    else:
+                        if sum(setup2Production) >= 10:
+                            reward += 1
+
+                    
 
 
         # Check if game Over
@@ -448,15 +472,15 @@ class CatanTradingEnv(CatanBaseEnv):
         self.vpActionRewardMultiplier = 10
             # Setup Rewards
         self.setupReward = True
-        self.setupRewardMultiplier = 0.75
+        self.setupRewardMultiplier = 1
             # Dense Rewards - Building roads/Buying dev cards/steeling resource
         self.denseRewards = True
         self.denseRewardMultiplier = 1
             # Trading Rewards (Accepting offer is treated same as bank trade)
         self.bankTradeReward = True
-        self.bankTradeRewardMultiplier = 0.75
+        self.bankTradeRewardMultiplier = 0.5
         self.playerTradeReward = True
-        self.playerTradeRewardMultiplier = 0.75
+        self.playerTradeRewardMultiplier = 0.5
 
         self.getActionMask = getActionMaskTrading
         self.getObservation = getObservationSimplified
@@ -472,6 +496,8 @@ class CatanTradingEnv(CatanBaseEnv):
         self.turnsFirstSettlement = 0
         self.checkForTradeResult = False
         self.resourcesBeforeTradeOffer = None
+        self.setup1Production = None
+        self.setup1TradeRates = None
         return super(CatanTradingEnv, self).reset()
 
     def endCondition(self) -> bool:
@@ -536,7 +562,7 @@ class CatanTradingEnv(CatanBaseEnv):
                     reward += 4 * self.bankTradeRewardMultiplier
                 if canBuildRoadBefore == False and canBuildRoadAfter == True :
                     # print("RoadTRADE")
-                    reward += 1 * self.bankTradeRewardMultiplier
+                    reward += 0.25 * self.bankTradeRewardMultiplier
                 if canBuyDevCardBefore == False and canBuyDevCardAfter == True:
                     # print("DevCardTRADE")
                     reward += 2 * self.bankTradeRewardMultiplier
@@ -553,7 +579,7 @@ class CatanTradingEnv(CatanBaseEnv):
                     reward -= 1 * self.bankTradeRewardMultiplier
                     # Small negative if we trade for no reason (Risk here that we stop long term planning of builds)
                 if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
-                    reward -= 0.25 * self.bankTradeRewardMultiplier
+                    reward -= 1 * self.bankTradeRewardMultiplier
 
         if self.playerTradeReward:
             # If we just made an offer need to check next time around if offer was accepted
@@ -566,43 +592,64 @@ class CatanTradingEnv(CatanBaseEnv):
             if biggestArmyBefore == False and self.agent.biggestArmy == True:
                 reward += 2 * self.vpActionRewardMultiplier
             if biggestRoadBefore == False and self.agent.biggestRoad == True:  
-                reward += 2 * self.vpActionRewardMultiplier
+                reward += 1.5 * self.vpActionRewardMultiplier
             if self.agent.developmentCards[VICTORY_POINT_CARD_INDEX] - vpDevCardBefore == 1:
                 reward += 1 * self.vpActionRewardMultiplier
             if actionObj.type == 'BuildSettlement' and prevState[:5] != "START":
                 reward += 1 * self.vpActionRewardMultiplier
             elif actionObj.type == 'BuildCity':
-                reward += 1 * self.vpActionRewardMultiplier
+                reward += 1.5 * self.vpActionRewardMultiplier
 
         if self.denseRewards:
             if actionObj.type == 'BuyDevelopmentCard':
                 reward += 4 * self.denseRewardMultiplier
             elif actionObj.type == 'BuildRoad' and prevState[:5] != "START":
                 # reward += 0.5 * self.denseRewardMultiplier
-                # If before we have built 1st settlement we build another Road - punish
+                # If theres was a spot to build first settlement and we build another city - punish heavily (keeps on happening)
                 if (len(self.agent.settlements) + len(self.agent.cities) <= 2) and possibleSettlementsBefore:
-                    reward -= 2 * self.denseRewardMultiplier
-                # If we increase number of possible settlements - reward
-                elif (len(self.agent.settlements) + len(self.agent.cities) <= 2) and len(possibleSettlementsBefore) == 0:
+                    reward -= 3 * self.denseRewardMultiplier
+                # If there was no spot to build 1st settlement and road increases possible 
+                elif (len(self.agent.settlements) + len(self.agent.cities) <= 2) and len(possibleSettlementsBefore) == 0 and len(self.game.gameState.GetPossibleSettlements(self.agent)) > 0:
                     reward += 1
-            elif actionObj.type == 'PlaceRobber' and self.game.gameState.currState == "WAITING_FOR_CHOICE":
-                reward += 0.5 * self.denseRewardMultiplier
             # Using dev card
             elif actionObj.type[:3] == 'Use':
                 reward += 1
 
         if self.setupReward:
-            if actionObj.type == 'BuildSettlement' and prevState == 'START2A':
+            if actionObj.type == 'BuildSettlement' and prevState == 'START1A':
                 resourceProduction = listm([0, 0, 0, 0, 0, 0])
                 for diceNumber, resourceList in self.game.gameState.players[0].diceProduction.items():
                     resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
-                reward += sum(resourceProduction) * self.setupRewardMultiplier
-                # Diversity
-                diversity = sum(x != 0 for x in resourceProduction)
-                if diversity == 5:
-                    reward += 7 * self.setupRewardMultiplier
-                elif diversity == 4:
-                    reward += 3 * self.setupRewardMultiplier
+                self.setup1Production = resourceProduction
+                self.setup1TradeRates = self.agent.tradeRates
+                # Did we get a port
+                if sum(self.setup1TradeRates) < 20:
+                    for i in range(5):
+                        # Matching 2:1 port with 3+ dot resource
+                        if self.setup1TradeRates[i] == 2 and self.setup1Production[i] >= 3:
+                            reward += 20 * self.setupRewardMultiplier
+                        # 3:1 port with >= 6 dots
+                        elif sum(self.setup1TradeRates) == 18 and sum(self.setup1Production) >= 6:
+                            reward += 20 * self.setupRewardMultiplier
+                # If we didn't get a port, need to get >= 10 dots
+                else:
+                    reward += sum(self.setup1Production) * self.setupRewardMultiplier
+            elif actionObj.type == 'BuildSettlement' and prevState == 'START2A':
+                resourceProduction = listm([0, 0, 0, 0, 0, 0])
+                for diceNumber, resourceList in self.game.gameState.players[0].diceProduction.items():
+                    resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
+                setup2Production = resourceProduction - self.setup1Production
+                # Did we get a port
+                if sum(self.agent.tradeRates) < sum(self.setup1TradeRates):
+                    for i in range(5):
+                        # Matching 2:1 port with 3+ dot resource
+                        if self.agent.tradeRates[i] == 2 and setup2Production[i] >= 3:
+                            reward += 20 * self.setupRewardMultiplier
+                        # 3:1 port with >= 6 dots
+                        elif  sum(self.setup1Production) >= 6:
+                            reward += 20 * self.setupRewardMultiplier
+                    else:
+                        reward += sum(setup2Production) * self.setupRewardMultiplier
 
 
         # Check if game Over
@@ -644,7 +691,7 @@ class CatanTradingEnv(CatanBaseEnv):
                     if canBuildCityBefore == False and canBuildCityAfter == True:
                         reward += 4 * self.playerTradeRewardMultiplier
                     if canBuildRoadBefore == False and canBuildRoadAfter == True :
-                        reward += 1 * self.playerTradeRewardMultiplier
+                        reward += 0.25 * self.playerTradeRewardMultiplier
                     if canBuyDevCardBefore == False and canBuyDevCardAfter == True:
                         reward += 2 * self.playerTradeRewardMultiplier
                     # Trades which get rid of resources for possible Builds
