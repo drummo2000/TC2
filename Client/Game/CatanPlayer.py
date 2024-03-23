@@ -735,7 +735,7 @@ class Player(object):
                                            self.seatNumber, len(self.settlements), position)
 
             if gameState.boardNodes[position].construction is not None:
-                print("BOARD NODE ALREADY CONSTRUCTED!!!!!")
+                print("BOARD NODE ALREADY CONSTRUCTED!!!!!(MIGHT BE CHECKING FOR POSSIBLE SETTLEMENTS IN SETUP)")
                 print(gameState.currState)
                 print(gameState.boardNodes[position].construction.owner)
                 sys.exit("BOARD NODE ALREADY CONSTRUCTED!!!!!")

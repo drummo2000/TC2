@@ -97,11 +97,15 @@ Client/tensorboard_logs/
 Client/.DS_Store
 
 JSettlers-2.6.10
-Client/DeepLearning/SelfPlayModels/
 Client/TC2MainV2.py
 
 Client/StateActions/
 Client/StateActions2/
 
-Client/ReplicateUCT/state_action_setup.csv
-Client/ReplicateUCT/state_actions.csv
+Client/ReplicateUCT/CSV
+
+Client/DeepLearning/Models/SelfPlaySame
+Client/DeepLearning/Models/SelfPlayDistribution
+Client/DeepLearning/Models/SelfPlayUniform
+Client/DeepLearning/Models/SelfPlayDist_Trading/
+Client/DeepLearning/Models/Trading_20Turns/

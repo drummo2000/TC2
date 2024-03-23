@@ -6,9 +6,9 @@ from Game.CatanUtilsPy import GetRandomBankTrade
 
 class AgentRandom(Player):
 
-    def __init__(self, name, seatNumber, useModel = False):
+    def __init__(self, name, seatNumber, useModel = False, recordStats=True):
 
-        super(AgentRandom, self).__init__(name, seatNumber)
+        super(AgentRandom, self).__init__(name, seatNumber, recordStats=True)
 
         self.agentName              = "RANDOM"
         self.preSelectMode          = None

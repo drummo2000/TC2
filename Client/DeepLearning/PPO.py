@@ -542,7 +542,7 @@ class MaskablePPO(OnPolicyAlgorithm):
         callback.on_training_start(locals(), globals())
 
         # Collect avg reward for past 10 iterations(20_000 timesteps(100 games))
-        rewardList = deque(maxlen=3)
+        rewardList = deque(maxlen=10)
         bestAvgReward = -50
 
         while self.num_timesteps < total_timesteps:
@@ -558,9 +558,10 @@ class MaskablePPO(OnPolicyAlgorithm):
 
 
             # SAVE MODEL
-            if sum(rewardList)/3 > bestAvgReward:
+            if (sum(rewardList)/10 > bestAvgReward) and len(rewardList) == rewardList.maxlen:
                 self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
-                bestAvgReward = sum(rewardList)/3
+                bestAvgReward = sum(rewardList)/10
+                rewardList.clear()
 
             # self.selfPlayUniformUpdate(self.num_timesteps)
             # self.selfPlayDistributionUpdate(self.num_timesteps)
@@ -597,12 +598,13 @@ class MaskablePPO(OnPolicyAlgorithm):
     
     def selfPlayDistributionUpdate(self, timestep):
         # Check if threshold has been reached (>50% win rate over last 100 games)
-        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.5:
+        print(f"CheckingWinRate: {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
+        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.4:
 
             modelName1 = f'model_{timestep}'
-            self.save(f'DeepLearning/Models/SelfPlayDistribution/{modelName1}')
+            self.save(f'DeepLearning/Models/SelfPlayDist_Trading/{modelName1}')
 
-            modelList = os.listdir("DeepLearning/Models/SelfPlayDistribution/")
+            modelList = os.listdir("DeepLearning/Models/SelfPlayDist_Trading/")
             modelName2 = random.choice(modelList)
             modelName3 = random.choice(modelList)
             os.environ["MODEL_1_NAME"] = modelName1

@@ -146,9 +146,10 @@ class AgentRandom2(Player):
     # Return selected action
     def DoMove(self, game):
 
-        if game.gameState.currPlayer != self.seatNumber and game.gameState.currState != "WAITING_FOR_DISCARDS":
-            #raise Exception("\n\nReturning None Action - INVESTIGATE\n\n")
-            return None
+        if self.jsettlersGame:
+            if game.gameState.currPlayer != self.seatNumber and game.gameState.currState != "WAITING_FOR_DISCARDS":
+                #raise Exception("\n\nReturning None Action - INVESTIGATE\n\n")
+                return None
 
         possibleActions = self.GetPossibleActions(game.gameState)
 

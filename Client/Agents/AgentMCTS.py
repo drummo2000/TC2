@@ -103,7 +103,7 @@ class AgentMCTS(AgentRandom):
 
     def __init__(self, name, seatNumber, choiceTime = 10.0, simulationCount = None, explorationValue = 0.25,
                  multiThreading = False, numberOfThreads = 0, preSelectMode = 'citiesOverSettlements',
-                 simPreSelectMode = None, trading = None, virtualWins = False, useModel = False):
+                 simPreSelectMode = None, trading = None, virtualWins = False, useModel = False, recordStats=True):
 
         super(AgentMCTS, self).__init__(name, seatNumber)
 

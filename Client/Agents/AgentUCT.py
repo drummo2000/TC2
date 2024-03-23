@@ -6,10 +6,10 @@ class AgentUCT(AgentMCTS):
 
     def __init__(self, name, seatNumber, choiceTime = 10.0, simulationCount = None, explorationValue = 0.25,
                  multiThreading = False, numberOfThreads = 0, preSelectMode = 'citiesOverSettlements',
-                 simPreSelectMode = None, trading = None, virtualWins = False, useModel = False):
+                 simPreSelectMode = None, trading = None, virtualWins = False, useModel = False, recordStats=True):
 
         super(AgentUCT, self).__init__(name, seatNumber, choiceTime, simulationCount, explorationValue,
-                                       multiThreading, numberOfThreads, preSelectMode, simPreSelectMode, trading, virtualWins, useModel)
+                                       multiThreading, numberOfThreads, preSelectMode, simPreSelectMode, trading, virtualWins, useModel, recordStats=recordStats)
         self.agentName = "UCT : {0} sec, {1} sims".format(choiceTime, simulationCount)
 
     def BestChild(self, node, explorationValue, totalNValue, player=None):

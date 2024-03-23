@@ -17,6 +17,83 @@ def getSetupObservation(gameState: GameState, playerNumber=0):
     
     return np.array(nodeInfo)
 
+def getSetupObservationValue(gameState: GameState, playerNumber=0):
+    """
+    returns single integer with value of node - production/diversity/ports,
+    """
+    # Get Node info
+    nodes = gameState.boardNodes
+    nodeInfo = []
+    for nodeIndex in constructableNodesList:
+        nodeInfo.append(getCompactNodeInfo(nodes[nodeIndex], gameState))
+    
+    return np.array(nodeInfo)
+
+getNodeValueLowerBounds = np.array(54*[0])
+getNodeValueUpperBounds = np.array(54*[16])
+def getCompactNodeInfo(node: BoardNode, gameState: GameState):
+    """
+    Return 2 values - 1st is a general value of node taking production/port/diversity into account, 2nd is 1-hot vector 10 if wood-brick, 01 if ore-wheat, 00 if neither.
+    """
+    value = 0
+    # Get node production
+    productionList = [0, 0, 0, 0, 0]
+    adjTileNumbers = node.GetAdjacentHexes()
+    adjTiles = [gameState.boardHexes[tileNumber] for tileNumber in adjTileNumbers if tileNumber != None]
+    for tile in adjTiles:
+        if tile.production == None:
+            continue
+        productionList[resourceIndex[tile.production]] += numberDotsMapping[tile.number]
+    # Port type
+    portType = [0, 0, 0, 0, 0, 0, 0]
+    portType[portTypeIndex[node.portType]] = 1
+    # Diversity
+    resources = [1 if num != 0 else 0 for num in productionList]
+
+    value += sum(productionList)
+    value += sum(resources)
+
+    return value
+
+def getNodeValue(node: BoardNode, gameState: GameState):
+    # Get node production
+    productionList = [0, 0, 0, 0, 0]
+    adjTileNumbers = node.GetAdjacentHexes()
+    adjTiles = [gameState.boardHexes[tileNumber] for tileNumber in adjTileNumbers if tileNumber != None]
+    for tile in adjTiles:
+        if tile.production == None:
+            continue
+        productionList[resourceIndex[tile.production]] += numberDotsMapping[tile.number]
+    production = sum(productionList)
+    # Port type
+    portType = [0, 0, 0, 0, 0, 0, 0]
+    portType[portTypeIndex[node.portType]] = 1
+    # Diversity
+    resources = [1 if num != 0 else 0 for num in productionList]
+
+    # # 2:1 port with matching resources total >= 4
+    # for i in range(5):
+    #     if portType[i] == 1 and productionList[i] >= 4:
+    #         value = 5 * productionList[i] # (4 - 9)
+    #         return value
+    # # 3:1 port with resources total >= 8
+    # if portType[5] == 1 and sum(productionList) >= 8:
+    #     value = 2 * sum(productionList) # (16-19)
+    #     return value
+    
+    # # If it doesnt get a port then production and diversity are most important, production(0-13) diversity(0-3), (0 - 19)
+    # value = production + (2 * diversity)
+    # if value <= 10:
+    #     return 0
+    # else:
+    #     return value
+    value = 0
+    value += sum(productionList)
+    value += sum(resources)
+
+    return value
+
+
 setupRandomLowerBounds = np.array(54 * (22*[0]))
 var = ([1] * 16) + (5 * [5]) + [15]
 setupRandomUpperBounds = np.array(54 * var)
@@ -469,7 +546,7 @@ def getObservationSimplified(gameState: GameState, playerNumber=0):
     largestArmyPlayer = 1 if gameState.largestArmyPlayer == playerNumber else 0 # 1
 
     # TODO:
-    # Add HaveBuiltFirstSettlement, CanBuildSettlement, CanBuildRoad, CanBuildCity, CanBuildDevCard, CurrentProduction, NumSettlements, NumCities, NumRoads, NumDevCardsBought, 
+    # Add HaveBuiltFirstSettlement, availableSettlements, availableRoads, availableCity, CanAffordDevCard, CurrentProduction, NumSettlements(including cities), NumCities, NumRoads, NumDevCardsBought,
 
     ## Board info ##
 
@@ -571,14 +648,93 @@ def getEdgeRepresentationSimplified(edge: BoardEdge, gameState: GameState, playe
 ####################################################################################################################################################################
 
 
-def getObservationFull(gameState: GameState):
+
+
+
+
+
+
+
+
+
+
+
+
+singleNodeInfoLowerTrading = [0] * 14
+# *portType, *dotList, dotTotal, canBuildSettlement]
+singleNodeInfoUpperTrading = (7*[1]) + (5*[15]) + [15] + [1]
+nodeInfoLowerTrading = singleNodeInfoLowerTrading * 54
+nodeInfoUpperTrading = singleNodeInfoUpperTrading * 54
+
+edgeInfoLowerTrading = [0, 0] * 72
+edgeInfoUpperTrading = [1, 1] * 72
+
+resourceProductionLower = [0, 0, 0, 0, 0]
+resourceProductionUpper = [40, 40, 40, 40, 40]
+
+
+
+lowerBoundsTrading = np.array([
+    *myResourcesLower,
+    *developmentCardsLower,
+    *myVictoryPointsLower,
+    *moreThan7ResourcesLower,
+    *tradeRatesLower,
+    *knightsLower,
+    *roadCountLower,
+    0, # *longestRoadPlayerUpper,
+    0, # *largestArmyPlayerUpper,
+    0, #CanAffordSettlement
+    0, #CanAffordCity
+    0, #CanAffordRoad
+    0, # CanAffordDevCard
+    0, # PossibleSettlement
+    0, # PossibleCity
+    0, # NumSettlementsBuilt
+    0, # NumCitiesBuilt
+    0, # Num roads built
+    0, # HaveBuilt1stSettlement
+    0, # HaveBuilt1stCity,
+    *resourceProductionLower, # Resource Production
+    *nodeInfoUpperTrading,
+    *hexRobberInfoUpper,
+    *edgeInfoUpperTrading,
+    *phaseUpper
+])
+
+upperBoundsTrading = np.array([
+    *myResourcesUpper,
+    *developmentCardsUpper,
+    *myVictoryPointsUpper,
+    *moreThan7ResourcesUpper,
+    *tradeRatesUpper,
+    *knightsUpper,
+    *roadCountUpper,
+    1, # *longestRoadPlayerUpper,
+    1, # *largestArmyPlayerUpper,
+    1, #CanAffordSettlement
+    1, #CanAffordCity
+    1, #CanAffordRoad
+    1, # CanAffordDevCard
+    1, # PossibleSettlement
+    1, # PossibleCity
+    3, # NumSettlementsBuilt
+    4, # NumCitiesBuilt
+    13, # Num roads built
+    1, # HaveBuilt1stSettlement
+    1, # HaveBuilt1stCity,
+    *resourceProductionUpper, # Resource Production
+    *nodeInfoUpperTrading,
+    *hexRobberInfoUpper,
+    *edgeInfoUpperTrading,
+    *phaseUpper
+])
+
+def getObservationTrading(gameState: GameState, playerNumber=0):
     """
-    Observation used for model to copy MCTS agent actions
+    Final tuned observation for trading - 965
     """
-    player:Player = gameState.players[0]
-    player1 = gameState.players[1]
-    player2 = gameState.players[2]
-    player3 = gameState.players[3]
+    player:Player = gameState.players[playerNumber]
 
     ## My info ##
     myResources = player.resources # 6
@@ -589,61 +745,62 @@ def getObservationFull(gameState: GameState):
     # Number of used knights
     knights = player.knights # 1
     roadCount = player.roadCount # 1
-    # Enough resourcs to build settlement/city/road
+    # Useful Info for trading
+    longestRoadPlayer = 1 if gameState.longestRoadPlayer == playerNumber else 0 # 1
+    largestArmyPlayer = 1 if gameState.largestArmyPlayer == playerNumber else 0 # 1
     canAffordSettlement = int(player.CanAfford(BuildSettlementAction.cost)) # 1
     canAffordCity = int(player.CanAfford(BuildCityAction.cost)) # 1
     canAffordRoad = int(player.CanAfford(BuildRoadAction.cost)) # 1
+    canAffordDevelopmentCard = int(player.CanAfford(BuyDevelopmentCardAction.cost)) # 1
+        # Could build if we can afford
+    possibleSettlement = 0
+    if gameState.currState[:5] != "START":
+        if gameState.GetPossibleSettlements(player):
+            possibleSettlement = 1  
+    possibleCity = 1 if player.settlements else 0
+    numSettlementsBuilt = len(player.settlements) + len(player.cities) - 2 # excluding setup - 1
+    numCitiesBuilt = len(player.cities) # 1
+    numRoadsBuilt = len(player.roads) - 2 # excluding setup - 1
+    haveBuilt1stSettlement = int(numSettlementsBuilt > 0) # 1
+    haveBuilt1stCity = int(numCitiesBuilt > 0) # 1
+    
+    # Current Production
+    resourceProduction = listm([0, 0, 0, 0, 0, 0]) # 5
+    for diceNumber, resourceList in player.diceProduction.items():
+        resourceProduction += [numberDotsMapping[diceNumber] * resource for resource in resourceList]
+    resourceProduction = resourceProduction[:-1]
 
-    ## Other players info ##
-    longestRoadPlayer = [0, 0, 0, 0, 0]
-    longestRoadPlayer[gameState.longestRoadPlayer] = 1
-    largestArmyPlayer = [0, 0, 0, 0, 0]
-    largestArmyPlayer[gameState.largestArmyPlayer] = 1
-    player1VP = getVisibleVictoryPoints(player1)
-    player2VP = getVisibleVictoryPoints(player2)
-    player3VP = getVisibleVictoryPoints(player3)
-
+    # 38 ^^
     ## Board info ##
 
     # Get hex robber info
     hexes = gameState.boardHexes
     hexInfo = [] # 19
     for hexIndex in constructableHexesList:
-        hexInfo.append(getHexRobberRating(hexes[hexIndex], gameState))
+        hexInfo.append(getHexRobberRating(hexes[hexIndex], gameState, playerNumber=playerNumber))
     
     # Get node info
     nodes = gameState.boardNodes
-    nodeInfo = [] # 54 * 20 = 1080
+    nodeInfo = [] # 756
     for nodeIndex in constructableNodesList:
-        nodeInfo.extend(getNodeRepresentationFull(nodes[nodeIndex], gameState))
+        nodeInfo.extend(getNodeRepresentationTrading(nodes[nodeIndex], gameState, playerNumber=playerNumber))
 
     # Get edge info
-    edgeInfo = [] # 72 * 4 = 288
+    edgeInfo = [] # 144
     for edgeIndex in constructableEdgesList:
-        edgeInfo.extend(getEdgeRepresentationFull(gameState.boardEdges[edgeIndex], gameState))
+        edgeInfo.extend(getEdgeRepresentationTrading(gameState.boardEdges[edgeIndex], gameState, playerNumber=playerNumber))
 
     # Get Game phase
-    phase = phaseOneHotMappingFull[gameState.currState] # 8
+    phase = phaseOneHotMapping[gameState.currState] # 8
 
-    output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, canAffordSettlement, canAffordCity, canAffordRoad, *longestRoadPlayer, *largestArmyPlayer, player1VP, player2VP, player3VP, *nodeInfo, *hexInfo, *edgeInfo, *phase]
+    output = [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, roadCount, longestRoadPlayer, largestArmyPlayer, canAffordSettlement, canAffordCity, canAffordRoad, canAffordDevelopmentCard, possibleSettlement, possibleCity, numSettlementsBuilt, numCitiesBuilt, numRoadsBuilt, haveBuilt1stSettlement, haveBuilt1stCity, *resourceProduction, *nodeInfo, *hexInfo, *edgeInfo, *phase]
     return np.array(output)
 
-
-def getNodeRepresentationFull(node: BoardNode, gameState: GameState) -> list:
+def getNodeRepresentationTrading(node: BoardNode, gameState: GameState, playerNumber=0) -> list:
     """
-    For each node get: owner, constructionType, portType, dotList, production (20 total) - 20*54 = 1080
+    For each node get: portType, dotList, production, canBuild (14 total) - 14*54 = 756
     """
-    owner = [0, 0, 0, 0, 0]
-    constructionType = [0, 0, 0, 0]
     portType = [0, 0, 0, 0, 0, 0, 0]
-
-    if node.construction != None:
-        owner[node.construction.owner] = 1
-        constructionType[constructionTypeIndex[node.construction.type]] = 1
-    else:
-        owner[-1] = 1
-        constructionType[-1] = 1
-
     portType[portTypeIndex[node.portType]] = 1
 
     # Get production of a given node
@@ -655,27 +812,24 @@ def getNodeRepresentationFull(node: BoardNode, gameState: GameState) -> list:
             continue
         dotList[resourceIndex[tile.production]] += numberDotsMapping[tile.number]
     dotTotal = sum(dotList)
+    # resourceList = [1 if x != 0 else 0 for x in dotList]
 
     setupPhase = not gameState.setupDone
-    canBuildSettlement = int(gameState.CanBuildSettlement(gameState.players[0], node, setUpPhase=setupPhase))
+    canBuildSettlement = int(gameState.CanBuildSettlement(gameState.players[playerNumber], node, setUpPhase=setupPhase))
 
-    #       cat    cat               cat       num          num
-    return [*owner, *constructionType, *portType, *dotList, dotTotal, canBuildSettlement]
+    #       cat       num          num      cat
+    return [*portType, *dotList, dotTotal, canBuildSettlement]
 
-
-
-def getEdgeRepresentationFull(edge: BoardEdge, gameState: GameState) -> list:
+def getEdgeRepresentationTrading(edge: BoardEdge, gameState: GameState, playerNumber=0) -> list:
     """
-    For each edge get owner - 4 * 72 = 288
+    For each edge return if we own it and can we build road on it - 2 * 72 = 144
     """
-    owner = [0, 0, 0, 0, 0]
-    if edge.construction == None:
-        owner[-1] = 1
-    else:
-        # cat
-        owner[edge.construction.owner] = 1
+    myEdge = 0
+    if edge.construction != None:
+        if edge.construction.owner == playerNumber:
+            myEdge = 1
 
     setupPhase = not gameState.setupDone
-    canBuildRoad = int(gameState.CanBuildRoad(gameState.players[0], edge, edge.index, setUpPhase=setupPhase))
+    canBuildRoad = int(gameState.CanBuildRoad(gameState.players[playerNumber], edge, edge.index, setUpPhase=setupPhase))
 
-    return [*owner, canBuildRoad]
+    return [myEdge, canBuildRoad]

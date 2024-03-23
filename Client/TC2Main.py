@@ -11,6 +11,8 @@ from Agents.AgentUCTTuned import AgentUCTTuned
 from Agents.AgentRandom2 import AgentRandom2
 from Agents.AgentModel import AgentModel, AgentMultiModel
 from DeepLearning.PPO import MaskablePPO
+from DeepLearning.GetObservation import getObservationSimplified
+from DeepLearning.GetActionMask import getActionMaskTrading
 
 import CatanData.CSVGenerator
 from Client import Client
@@ -161,7 +163,9 @@ class TC2Main(object):
         # if args.agentType == 'rand':
         # self.player = AgentRandom(args.nickname, 0)
         # self.player = AgentRandom2(args.nickname, 0)
-        self.player = AgentModel(args.nickname, 0, playerTrading=True, recordStats=True, jsettlersGame=True, model=MaskablePPO.load("DeepLearning/Models/Trading_PortStrat/Trading_PortStrat_9117696.zip"))
+
+        model=MaskablePPO.load("DeepLearning/Models/Trading/TradingBase_3M.zip")
+        self.player = AgentMultiModel(args.nickname, 0, playerTrading=True, recordStats=True, jsettlersGame=True, model=model, setupModel=MaskablePPO.load("DeepLearning/Models/SelfPlayDist_Trading/SelfPlayDistribution_Trading_Rewards_NoSetupWinVpActionTrading.zip"), fullSetup=True)
 
         # if args.agentType == 'mcts':
         #     # 10.000 sims without multiThread - 2 min and 30 sec
@@ -179,7 +183,7 @@ class TC2Main(object):
         #     self.player = AgentUCTParanoid(args.nickname, 0, simulationCount=self.simCount, multiThreading=True, numberOfThreads=10)
 
         # if args.agentType == 'uctTuned':
-            # self.player = AgentUCTTuned(args.nickname, 0, simulationCount=self.simCount, multiThreading=True, numberOfThreads=10, trading='Optimistic')
+        #     self.player = AgentUCTTuned(args.nickname, 0, simulationCount=100, multiThreading=False, numberOfThreads=0, trading='Optimistic')
 
 
         # Change the current directory...

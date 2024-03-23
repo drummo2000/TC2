@@ -65,14 +65,23 @@ class AgentModel(BaseAgentModel):
         if self.jsettlersGame:
             if game.gameState.currState[:5] != "START":
                 canBuildRoad = False
+                canBuyDevCard = False
                 for action in possibleActions:
                     if action.type == "BuildRoad":
                         canBuildRoad = True
-                        break
+                    elif action.type == "BuyDevelopmentCard":
+                        canBuyDevCard = True
+                # Remove road option if haven't built 1st settlement or have longest road
                 if canBuildRoad:
-                    if (len(self.settlements) + len(self.cities) <= 2) and len(game.gameState.GetPossibleSettlements(self)) > 0:
+                    if ((len(self.settlements) + len(self.cities) <= 2) and len(game.gameState.GetPossibleSettlements(self)) > 0) or (game.gameState.longestRoadPlayer == self.seatNumber):
                         possibleActions = [action for action in possibleActions if action.type != "BuildRoad"]
                         print("                 REMOVED BUILD ROAD OPTIONS")
+                # Remove buy dev card option if we haven't built a city
+                if canBuyDevCard:
+                    if len(self.cities) == 0:
+                        possibleActions = [action for action in possibleActions if action.type != "BuyDevelopmentCard"]
+                        print("                 REMOVED BUY DEVCARD OPTIONS")
+                
 
 
         actionObj = self.getModelAction(game, possibleActions)
