@@ -19,7 +19,7 @@ class PlayerStats(object):
         self.devCardsBought = 0
         self.usedDevCards = listm([0, 0, 0, 0, 0])
         # Point Breakdown
-        self.settlementsBuilt      = 0
+        self.settlementsBuilt      = 0 # including settlements turned into cities, not including setup
         self.citiesBuilt           = 0
         self.devCardVP             = 0
         self.largestArmy           = 0
@@ -364,7 +364,7 @@ class Player(object):
         Set PlayerStats attributes after game
         """
         self.stats.victoryPoints = self.victoryPoints
-        self.stats.settlementsBuilt = len(self.settlements)
+        self.stats.settlementsBuilt = len(self.settlements) + len(self.cities) - 2
         self.stats.citiesBuilt = len(self.cities)
         self.stats.devCardVP = self.developmentCards[VICTORY_POINT_CARD_INDEX]
         self.stats.largestArmy = int(self.biggestArmy)

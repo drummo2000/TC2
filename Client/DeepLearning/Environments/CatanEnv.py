@@ -453,8 +453,8 @@ class CatanTradingEnv(CatanBaseEnv):
         self.winReward = False
         self.winRewardAmount = 0
         self.loseRewardAmount = -40
-        self.vpActionReward = False # Actions that directly give vp
-        self.vpActionRewardMultiplier = 10
+        self.vpActionReward = True # Actions that directly give vp
+        self.vpActionRewardMultiplier = 1
             # Setup Rewards
         self.setupReward = False
         self.setupRewardMultiplier = 1
@@ -462,10 +462,10 @@ class CatanTradingEnv(CatanBaseEnv):
         self.denseRewards = False
         self.denseRewardMultiplier = 1
             # Trading Rewards (Accepting offer is treated same as bank trade)
-        self.bankTradeReward = False
-        self.bankTradeRewardMultiplier = 1
-        self.playerTradeReward = False
-        self.playerTradeRewardMultiplier = 1
+        self.bankTradeReward = True
+        self.bankTradeRewardMultiplier = 0.1
+        self.playerTradeReward = True
+        self.playerTradeRewardMultiplier = 0.1
 
         self.getActionMask = getActionMaskTrading
         self.getObservation = getObservationTrading
@@ -536,22 +536,22 @@ class CatanTradingEnv(CatanBaseEnv):
                 canBuyDevCardAfter = self.agent.CanAfford(BuyDevelopmentCardAction.cost)
                 # Trades which allow us to build
                 if canBuildSettlementBefore == False and canBuildSettlementAfter == True:
-                    reward += 4 * self.bankTradeRewardMultiplier
-                if canBuildCityBefore == False and canBuildCityAfter == True:
-                    reward += 4 * self.bankTradeRewardMultiplier
-                    # only in situations where we want to build road - haven't built 1st settlement or don't have longest road
-                if (canBuildRoadBefore == False and canBuildRoadAfter == True) and ((len(self.agent.settlements) <= 2 and not self.game.gameState.GetPossibleSettlements(self.agent)) or (len(self.agent.settlements) > 2 and self.game.gameState.longestRoadPlayer != self.agent.seatNumber)):
-                    reward += 1 * self.bankTradeRewardMultiplier
-                if (canBuyDevCardBefore == False and canBuyDevCardAfter == True) and ((len(self.agent.settlements) + len(self.agent.settlements)) > 2 and len(self.agent.cities) > 0):
                     reward += 2 * self.bankTradeRewardMultiplier
+                if canBuildCityBefore == False and canBuildCityAfter == True:
+                    reward += 2 * self.bankTradeRewardMultiplier
+                #     # only in situations where we want to build road - haven't built 1st settlement or don't have longest road
+                # if (canBuildRoadBefore == False and canBuildRoadAfter == True) and ((len(self.agent.settlements) <= 2 and not self.game.gameState.GetPossibleSettlements(self.agent)) or (len(self.agent.settlements) > 2 and self.game.gameState.longestRoadPlayer != self.agent.seatNumber)):
+                #     reward += 1 * self.bankTradeRewardMultiplier
+                # if (canBuyDevCardBefore == False and canBuyDevCardAfter == True) and ((len(self.agent.settlements) + len(self.agent.settlements)) > 2 and len(self.agent.cities) > 0):
+                #     reward += 2 * self.bankTradeRewardMultiplier
                 # Trades which get rid of resources for possible Builds
                 if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
-                    reward -= 4 * self.bankTradeRewardMultiplier
-                if canBuildCityBefore == True and canBuildCityAfter == False:
-                    reward -= 4 * self.bankTradeRewardMultiplier
-                # Trade for no direct benefit
-                if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
                     reward -= 2 * self.bankTradeRewardMultiplier
+                if canBuildCityBefore == True and canBuildCityAfter == False:
+                    reward -= 2 * self.bankTradeRewardMultiplier
+                # # Trade for no direct benefit
+                # if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
+                #     reward -= 2 * self.bankTradeRewardMultiplier
 
         if self.playerTradeReward:
             # If we just made an offer need to check next time around if offer was accepted
@@ -568,9 +568,9 @@ class CatanTradingEnv(CatanBaseEnv):
             # if self.agent.developmentCards[VICTORY_POINT_CARD_INDEX] - vpDevCardBefore == 1:
             #     reward += 0.25 * self.vpActionRewardMultiplier
             if actionObj.type == 'BuildSettlement' and prevState[:5] != "START":
-                reward += 2 * self.vpActionRewardMultiplier
+                reward += 1 * self.vpActionRewardMultiplier
             elif actionObj.type == 'BuildCity':
-                reward += 2 * self.vpActionRewardMultiplier
+                reward += 1 * self.vpActionRewardMultiplier
 
         if self.denseRewards:
             if actionObj.type == 'BuyDevelopmentCard':
@@ -672,21 +672,21 @@ class CatanTradingEnv(CatanBaseEnv):
                     canBuyDevCardAfter = self.agent.CanAfford(BuyDevelopmentCardAction.cost)
                     # Trades which allow us to build
                     if canBuildSettlementBefore == False and canBuildSettlementAfter == True:
-                        reward += 4 * self.playerTradeRewardMultiplier
-                    if canBuildCityBefore == False and canBuildCityAfter == True:
-                        reward += 4 * self.playerTradeRewardMultiplier
-                    if (canBuildRoadBefore == False and canBuildRoadAfter == True) and ((len(self.agent.settlements) <= 2 and not self.game.gameState.GetPossibleSettlements(self.agent)) or (len(self.agent.settlements) > 2 and self.game.gameState.longestRoadPlayer != self.agent.seatNumber)):
-                        reward += 1 * self.playerTradeRewardMultiplier
-                    if (canBuyDevCardBefore == False and canBuyDevCardAfter == True) and ((len(self.agent.settlements) + len(self.agent.settlements)) > 2 and len(self.agent.cities) > 0):
                         reward += 2 * self.playerTradeRewardMultiplier
+                    if canBuildCityBefore == False and canBuildCityAfter == True:
+                        reward += 2 * self.playerTradeRewardMultiplier
+                    # if (canBuildRoadBefore == False and canBuildRoadAfter == True) and ((len(self.agent.settlements) <= 2 and not self.game.gameState.GetPossibleSettlements(self.agent)) or (len(self.agent.settlements) > 2 and self.game.gameState.longestRoadPlayer != self.agent.seatNumber)):
+                    #     reward += 1 * self.playerTradeRewardMultiplier
+                    # if (canBuyDevCardBefore == False and canBuyDevCardAfter == True) and ((len(self.agent.settlements) + len(self.agent.settlements)) > 2 and len(self.agent.cities) > 0):
+                    #     reward += 2 * self.playerTradeRewardMultiplier
                     # Trades which get rid of resources for possible Builds
                     if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
-                        reward -= 4 * self.playerTradeRewardMultiplier
-                    if canBuildCityBefore == True and canBuildCityAfter == False:
-                        reward -= 4 * self.playerTradeRewardMultiplier
-                        # Punish more than bank trades since we could be helping other players
-                    if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
                         reward -= 2 * self.playerTradeRewardMultiplier
+                    if canBuildCityBefore == True and canBuildCityAfter == False:
+                        reward -= 2 * self.playerTradeRewardMultiplier
+                        # Punish more than bank trades since we could be helping other players
+                    # if canBuildSettlementAfter == False and canBuildRoadAfter == False and canBuildCityAfter == False and canBuyDevCardAfter == False:
+                    #     reward -= 2 * self.playerTradeRewardMultiplier
                 self.checkForTradeResult = False
 
         
