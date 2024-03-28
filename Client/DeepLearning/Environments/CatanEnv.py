@@ -473,9 +473,6 @@ class CatanTradingEnv(CatanBaseEnv):
         self.action_space = spaces.Discrete(566)
         self.observation_space = spaces.Box(low=lowerBoundsTrading, high=upperBoundsTrading, dtype=np.int64) 
 
-        # Track number of trade offers per turn
-        self.tradesThisTurn = 0
-
     
     def reset(self, seed=None):
         self.numTurns = 0
@@ -748,8 +745,6 @@ class SelfPlayDistTradingEnv(CatanBaseEnv):
 
         self.action_space = spaces.Discrete(566)
 
-        # Track number of trade offers per turn
-        self.tradesThisTurn = 0
 
         # Load starting opponent model
         self.opponentModel1 = MaskablePPO.load('DeepLearning/Models/BaselineTradingModel.zip')
