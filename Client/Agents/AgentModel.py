@@ -59,41 +59,43 @@ class AgentModel(BaseAgentModel):
                     print(f"     {action.type}")
 
         if len(possibleActions) == 1:
-            return possibleActions[0]
+            actionObj = possibleActions[0]
+        else:
+            # Don't Allow to build roads when theres a possible settlement and we haven't built our 1st settlement
+            if self.jsettlersGame:
+                if game.gameState.currState[:5] != "START":
+                    canBuildRoad = False
+                    canBuyDevCard = False
+                    for action in possibleActions:
+                        if action.type == "BuildRoad":
+                            canBuildRoad = True
+                        elif action.type == "BuyDevelopmentCard":
+                            canBuyDevCard = True
+                    # Remove road option if haven't built 1st settlement or have longest road
+                    if canBuildRoad:
+                        if ((len(self.settlements) + len(self.cities) <= 2) and len(game.gameState.GetPossibleSettlements(self)) > 0) or (game.gameState.longestRoadPlayer == self.seatNumber):
+                            possibleActions = [action for action in possibleActions if action.type != "BuildRoad"]
+                            print("                 REMOVED BUILD ROAD OPTIONS")
+                    # Remove buy dev card option if we haven't built a city
+                    if canBuyDevCard:
+                        if len(self.cities) == 0:
+                            possibleActions = [action for action in possibleActions if action.type != "BuyDevelopmentCard"]
+                            print("                 REMOVED BUY DEVCARD OPTIONS")
+                    
+
+            actionObj = self.getModelAction(game, possibleActions)
+
+            if self.jsettlersGame:
+                if actionObj.type == "MakeTradeOffer":
+                    print(f"SELECTED_ACTION: {actionObj.type}, {actionObj.giveResources[:5]}_{actionObj.getResources[:5]}\n")
+                else:
+                    print(f"SELECTED_ACTION: {actionObj.type}\n")
+
+            if self.playerTrading and actionObj.type == "MakeTradeOffer":
+                self.tradeCount += 1
         
-        # Don't Allow to build roads when theres a possible settlement and we haven't built our 1st settlement
-        if self.jsettlersGame:
-            if game.gameState.currState[:5] != "START":
-                canBuildRoad = False
-                canBuyDevCard = False
-                for action in possibleActions:
-                    if action.type == "BuildRoad":
-                        canBuildRoad = True
-                    elif action.type == "BuyDevelopmentCard":
-                        canBuyDevCard = True
-                # Remove road option if haven't built 1st settlement or have longest road
-                if canBuildRoad:
-                    if ((len(self.settlements) + len(self.cities) <= 2) and len(game.gameState.GetPossibleSettlements(self)) > 0) or (game.gameState.longestRoadPlayer == self.seatNumber):
-                        possibleActions = [action for action in possibleActions if action.type != "BuildRoad"]
-                        print("                 REMOVED BUILD ROAD OPTIONS")
-                # Remove buy dev card option if we haven't built a city
-                if canBuyDevCard:
-                    if len(self.cities) == 0:
-                        possibleActions = [action for action in possibleActions if action.type != "BuyDevelopmentCard"]
-                        print("                 REMOVED BUY DEVCARD OPTIONS")
-                
-
-
-        actionObj = self.getModelAction(game, possibleActions)
-
-        if self.jsettlersGame:
-            if actionObj.type == "MakeTradeOffer":
-                print(f"SELECTED_ACTION: {actionObj.type}, {actionObj.giveResources[:5]}_{actionObj.getResources[:5]}\n")
-            else:
-                print(f"SELECTED_ACTION: {actionObj.type}\n")
-
-        if self.playerTrading and actionObj.type == "MakeTradeOffer":
-            self.tradeCount += 1
+        if actionObj.type == "EndTurn":
+            self.playerTurns += 1
 
         return actionObj
 
@@ -127,42 +129,46 @@ class AgentMultiModel(BaseAgentModel):
                     print(f"     {action.type}")
 
         if len(possibleActions) == 1:
-            return possibleActions[0]
-        
-        if game.gameState.currState == "START1A" or game.gameState.currState == "START2A":
-            actionObj = self.getSetupModelAction(game, possibleActions)
-        elif game.gameState.currState == "START1B" or game.gameState.currState == "START2B":
-            if self.fullSetup:
-                actionObj = self.getSetupModelAction(game, possibleActions)
-            else:
-                actionObj = self.getRandomAction(game, possibleActions)
-        
-        if self.jsettlersGame:
-            # Don't Allow to build roads when theres a possible settlement and we haven't built our 1st settlement
-            if game.gameState.currState[:5] != "START":
-                canBuildRoad = False
-                for action in possibleActions:
-                    if action.type == "BuildRoad":
-                        canBuildRoad = True
-                        break
-                if canBuildRoad:
-                    if (len(self.settlements) + len(self.cities) <= 2) and len(game.gameState.GetPossibleSettlements(self)) > 0:
-                        possibleActions = [action for action in possibleActions if action.type != "BuildRoad"]
-                        print("                 REMOVED BUILD ROAD OPTIONS")
-
-        if self.model == None:
-            actionObj = self.getRandomAction(game, possibleActions)
+            actionObj = possibleActions[0]
         else:
-            actionObj = self.getModelAction(game, possibleActions)
         
-        if self.jsettlersGame:
-            if actionObj.type == "MakeTradeOffer":
-                print(f"SELECTED_ACTION: {actionObj.type}, {actionObj.giveResources[:5]}_{actionObj.getResources[:5]}\n")
-            else:
-                print(f"SELECTED_ACTION: {actionObj.type}\n")
+            if game.gameState.currState == "START1A" or game.gameState.currState == "START2A":
+                actionObj = self.getSetupModelAction(game, possibleActions)
+            elif game.gameState.currState == "START1B" or game.gameState.currState == "START2B":
+                if self.fullSetup:
+                    actionObj = self.getSetupModelAction(game, possibleActions)
+                else:
+                    actionObj = self.getRandomAction(game, possibleActions)
+            
+            if self.jsettlersGame:
+                # Don't Allow to build roads when theres a possible settlement and we haven't built our 1st settlement
+                if game.gameState.currState[:5] != "START":
+                    canBuildRoad = False
+                    for action in possibleActions:
+                        if action.type == "BuildRoad":
+                            canBuildRoad = True
+                            break
+                    if canBuildRoad:
+                        if (len(self.settlements) + len(self.cities) <= 2) and len(game.gameState.GetPossibleSettlements(self)) > 0:
+                            possibleActions = [action for action in possibleActions if action.type != "BuildRoad"]
+                            print("                 REMOVED BUILD ROAD OPTIONS")
 
-        if self.playerTrading and actionObj.type == "MakeTradeOffer":
-            self.tradeCount += 1
+            if self.model == None:
+                actionObj = self.getRandomAction(game, possibleActions)
+            else:
+                actionObj = self.getModelAction(game, possibleActions)
+            
+            if self.jsettlersGame:
+                if actionObj.type == "MakeTradeOffer":
+                    print(f"SELECTED_ACTION: {actionObj.type}, {actionObj.giveResources[:5]}_{actionObj.getResources[:5]}\n")
+                else:
+                    print(f"SELECTED_ACTION: {actionObj.type}\n")
+
+            if self.playerTrading and actionObj.type == "MakeTradeOffer":
+                self.tradeCount += 1
+        
+        if actionObj.type == "EndTurn":
+            self.playerTurns += 1
 
         return actionObj
     

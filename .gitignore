@@ -92,6 +92,8 @@ ENV/
 *.iml
 
 Client/tensorboard_logs/
+
+Client/tensorboard_logs_thesis/
 .DS_Store
 .vscode/
 Client/.DS_Store

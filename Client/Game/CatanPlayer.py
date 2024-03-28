@@ -140,7 +140,7 @@ class PlayerStats(object):
                 self.finalResourceProduction[:-1],
                 self.finalTradeRates,
                 self.setupResourceProduction[:-1],
-                round(sum(self.setupResourceProduction[:-1])),
+                round(sum(self.setupResourceProduction[:-1]), 3),
                 self.setupTradeRates,
                 self.setupResourceDiversity,
                 self.turnsForFirstSettlement,
@@ -437,6 +437,8 @@ class Player(object):
 
         self.recordStats = recordStats
         self.stats = PlayerStats()
+
+        self.playerTurns = 0
 
     # @staticmethod
     # def LoadModel():

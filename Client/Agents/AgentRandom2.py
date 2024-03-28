@@ -154,13 +154,16 @@ class AgentRandom2(Player):
         possibleActions = self.GetPossibleActions(game.gameState)
 
         if len(possibleActions) == 1:
-            return possibleActions[0]
-        
-        randIndex = random.randint(0, len(possibleActions)-1)
-        chosenAction = possibleActions[randIndex]
-        
-        if chosenAction.type == "MakeTradeOffer":
-            self.tradeCount += 1
+            chosenAction = possibleActions[0]
+        else:
+            randIndex = random.randint(0, len(possibleActions)-1)
+            chosenAction = possibleActions[randIndex]
+            
+            if chosenAction.type == "MakeTradeOffer":
+                self.tradeCount += 1
+
+        if chosenAction.type == "EndTurn":
+            self.playerTurns += 1
         
         return chosenAction
         # NOTE: If no actions returned should we return EndTurn/RollDice?

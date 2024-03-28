@@ -110,7 +110,7 @@ class MaskablePPO(OnPolicyAlgorithm):
         getActionMask: Callable = None,
         getObservation: Callable = None,
         info: Dict = None,
-        saveName = ""
+        savePath = ""
     ):
         super().__init__(
             policy,
@@ -152,7 +152,7 @@ class MaskablePPO(OnPolicyAlgorithm):
         self.getObservation = getObservation
 
         self.info = info
-        self.saveName = saveName
+        self.savePath = savePath
 
     def _setup_model(self) -> None:
         self._setup_lr_schedule()
@@ -542,7 +542,7 @@ class MaskablePPO(OnPolicyAlgorithm):
         callback.on_training_start(locals(), globals())
 
         # Collect avg reward for past 10 iterations(20_000 timesteps(100 games))
-        rewardList = deque(maxlen=10)
+        rewardList = deque(maxlen=5)
         bestAvgReward = -50
 
         while self.num_timesteps < total_timesteps:
@@ -558,9 +558,9 @@ class MaskablePPO(OnPolicyAlgorithm):
 
 
             # SAVE MODEL
-            if (sum(rewardList)/10 > bestAvgReward) and len(rewardList) == rewardList.maxlen:
-                self.save(f'DeepLearning/models/{self.saveName}/{self.saveName}_{self.num_timesteps}')
-                bestAvgReward = sum(rewardList)/10
+            if (sum(rewardList)/5 > bestAvgReward) and len(rewardList) == rewardList.maxlen:
+                self.save(f'{self.savePath}/model_{self.num_timesteps}')
+                bestAvgReward = sum(rewardList)/5
                 rewardList.clear()
 
             # self.selfPlayUniformUpdate(self.num_timesteps)
