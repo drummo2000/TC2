@@ -94,7 +94,7 @@ class AgentModel(BaseAgentModel):
             if self.playerTrading and actionObj.type == "MakeTradeOffer":
                 self.tradeCount += 1
         
-        if actionObj.type == "EndTurn":
+        if actionObj and actionObj.type == "EndTurn":
             self.playerTurns += 1
 
         return actionObj

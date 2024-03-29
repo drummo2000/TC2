@@ -542,7 +542,7 @@ class MaskablePPO(OnPolicyAlgorithm):
         callback.on_training_start(locals(), globals())
 
         # Collect avg reward for past 10 iterations(20_000 timesteps(100 games))
-        rewardList = deque(maxlen=3)
+        rewardList = deque(maxlen=2)
         bestAvgReward = -50
 
         while self.num_timesteps < total_timesteps:
@@ -558,9 +558,9 @@ class MaskablePPO(OnPolicyAlgorithm):
 
 
             # SAVE MODEL
-            if (sum(rewardList)/3 > bestAvgReward) and len(rewardList) == rewardList.maxlen:
+            if (sum(rewardList)/2 > bestAvgReward) and len(rewardList) == rewardList.maxlen:
                 self.save(f'{self.savePath}/model_{self.num_timesteps}')
-                bestAvgReward = sum(rewardList)/3
+                bestAvgReward = sum(rewardList)/2
                 rewardList.clear()
 
             # self.selfPlayUniformUpdate(self.num_timesteps)

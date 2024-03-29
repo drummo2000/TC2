@@ -59,13 +59,13 @@ def getOtherInfo(gameState, playerNumber):
     return [*myResources, *developmentCards, myVictoryPoints, moreThan7Resources, *tradeRates, knights, largestArmyPlayer, roadCount, longestRoadPlayer, canAffordSettlement, canAffordCity, canAffordRoad, canAffordDevelopmentCard, possibleSettlement, possibleCity, numSettlementsBuilt, numCitiesBuilt, numRoadsBuilt, *resourceProduction, opponentVP, *phase, playerTurns]
 
 
-hexLowerBound = [0]*85
-hexUpperBound = [5] + 6*[1] + 78*[1]
+hexLowerBound = [0]*86
+hexUpperBound = [1] + [5] + 6*[1] + 78*[1]
 hexsLowerBound = hexLowerBound * 19
 hexsUpperBound = hexUpperBound * 19
 def getHexRepresentation(hex: BoardHex, gameState: GameState, playerNumber=0) -> list:
     """
-    For each hex get number, resource, for each surrounding node get: owner, construction type, 19 * 85 = 1615
+    For each hex get number, resource, for each surrounding node get: owner, construction type, 20 * 85 = 1700
     """
     dot = numberDotsMapping[hex.number]
     resource = [0, 0, 0, 0, 0, 0]
@@ -87,8 +87,10 @@ def getHexRepresentation(hex: BoardHex, gameState: GameState, playerNumber=0) ->
             owner = [1, 0, 0] if node.construction.owner == playerNumber else [0, 1, 0]
             constructionType[constructionTypeIndex[node.construction.type]-1] = 1
         adjNodesInfo.extend([*owner, *constructionType, *portType])
+
+    robber = int(gameState.robberPos == hex.index)
     #       num,   cat,      (cat, cat, cat)
-    return [dot, *resource, *adjNodesInfo]
+    return [robber, dot, *resource, *adjNodesInfo]
 
 
 
