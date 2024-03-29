@@ -112,3 +112,5 @@ Client/DeepLearning/Models/SelfPlayUniform
 Client/DeepLearning/Models/SelfPlayDist_Trading/
 
 Client/DeepLearning/Thesis/Hyperparameters/Models/
+
+*.zip
