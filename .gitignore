@@ -110,3 +110,5 @@ Client/DeepLearning/Models/SelfPlaySame
 Client/DeepLearning/Models/SelfPlayDistribution
 Client/DeepLearning/Models/SelfPlayUniform
 Client/DeepLearning/Models/SelfPlayDist_Trading/
+
+Client/DeepLearning/Thesis/Hyperparameters/Models/
