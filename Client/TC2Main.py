@@ -164,7 +164,7 @@ class TC2Main(object):
         # self.player = AgentRandom(args.nickname, 0)
         # self.player = AgentRandom2(args.nickname, 0)
 
-        model=MaskablePPO.load("DeepLearning/Models/Full/Rewards_SetupVpActionDenseTrades_8M.zip")
+        model=MaskablePPO.load("DeepLearning/Thesis/Opponents/Models/Uniform/model_8962048.zip")
         self.player = AgentModel(args.nickname, 0, playerTrading=False, recordStats=True, jsettlersGame=True, model=model)
 
         # if args.agentType == 'mcts':
@@ -209,13 +209,13 @@ class TC2Main(object):
                 "java -cp JSettlersServer{0}.jar soc.robot.SOCRobotClient localhost 8880 robot1 passwd".format(self.serverType),
                 shell=True, stdout=subprocess.PIPE)
 
-            # self.robot2Process = subprocess.Popen(
-            #     "java -cp JSettlersServer{0}.jar soc.robot.SOCRobotClient localhost 8880 robot2 passwd".format(self.serverType),
-            #     shell=True, stdout=subprocess.PIPE)
+            self.robot2Process = subprocess.Popen(
+                "java -cp JSettlersServer{0}.jar soc.robot.SOCRobotClient localhost 8880 robot2 passwd".format(self.serverType),
+                shell=True, stdout=subprocess.PIPE)
 
-            # self.robot3Process = subprocess.Popen(
-            #     "java -cp JSettlersServer{0}.jar soc.robot.SOCRobotClient localhost 8880 robot3 passwd".format(self.serverType),
-            #     shell=True, stdout=subprocess.PIPE)
+            self.robot3Process = subprocess.Popen(
+                "java -cp JSettlersServer{0}.jar soc.robot.SOCRobotClient localhost 8880 robot3 passwd".format(self.serverType),
+                shell=True, stdout=subprocess.PIPE)
 
         if args.client and callProcess:
 

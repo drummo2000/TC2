@@ -62,7 +62,7 @@ class AgentModel(BaseAgentModel):
             actionObj = possibleActions[0]
         else:
             # Don't Allow to build roads when theres a possible settlement and we haven't built our 1st settlement
-            if self.jsettlersGame:
+            if self.jsettlersGame and False:
                 if game.gameState.currState[:5] != "START":
                     canBuildRoad = False
                     canBuyDevCard = False

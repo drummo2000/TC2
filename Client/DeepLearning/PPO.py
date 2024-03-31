@@ -587,24 +587,24 @@ class MaskablePPO(OnPolicyAlgorithm):
 
     def selfPlayUniformUpdate(self, timestep):
         # Check if threshold has been reached (>50% win rate over last 100 games)
-        print(f"CheckingWinRate: {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
-        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.5:
+        print(f"CheckingWinRate(Uniform): {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
+        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.4:
             # print("(Debug) Threshold reached, saving model and setting env variable.")
             modelName = f'model_{timestep}'
-            self.save(f'DeepLearning/Models/SelfPlayUniform/{modelName}')
+            self.save(f'DeepLearning/Thesis/Opponents/Models/Uniform//{modelName}')
             os.environ["UPDATE_MODELS_UNIFORM"] = "True"
             os.environ["MODEL_NAME"] = modelName
             GAME_RESULTS.clear()
     
     def selfPlayDistributionUpdate(self, timestep):
         # Check if threshold has been reached (>50% win rate over last 100 games)
-        print(f"CheckingWinRate: {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
-        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.4:
+        print(f"CheckingWinRate(Distribution): {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
+        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.6:
 
             modelName1 = f'model_{timestep}'
-            self.save(f'DeepLearning/Models/SelfPlayDist_Trading/{modelName1}')
+            self.save(f'DeepLearning/Thesis/Opponents/Models/Distribution/{modelName1}')
 
-            modelList = os.listdir("DeepLearning/Models/SelfPlayDist_Trading/")
+            modelList = os.listdir("DeepLearning/Thesis/Opponents/Models/Distribution/")
             modelName2 = random.choice(modelList)
             modelName3 = random.choice(modelList)
             os.environ["MODEL_1_NAME"] = modelName1
