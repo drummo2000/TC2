@@ -164,7 +164,7 @@ class TC2Main(object):
         # self.player = AgentRandom(args.nickname, 0)
         # self.player = AgentRandom2(args.nickname, 0)
 
-        model=MaskablePPO.load("DeepLearning/Thesis/Opponents/Models/Uniform/model_8962048.zip")
+        model=MaskablePPO.load("DeepLearning/Thesis/Rewards/Models/Reward_build_trade/Reward_build_trade_18M.zip")
         self.player = AgentModel(args.nickname, 0, playerTrading=False, recordStats=True, jsettlersGame=True, model=model)
 
         # if args.agentType == 'mcts':
@@ -173,8 +173,8 @@ class TC2Main(object):
         #     self.player = AgentMCTS(args.nickname, 0, simulationCount=self.simCount, multiThreading=False)
 
         # if args.agentType == 'uct':
-        #     self.player = AgentUCT(args.nickname, 0, simulationCount=self.simCount, explorationValue=0.25, multiThreading=True,
-        #                             preSelectMode=None, simPreSelectMode=None, trading='Simple', virtualWins=False, useModel=False)
+        # self.player = AgentUCT(args.nickname, 0, simulationCount=1000, explorationValue=0.25, multiThreading=False,
+        #                         preSelectMode=None, simPreSelectMode=None, trading='Simple', virtualWins=False, useModel=False)
 
         # if args.agentType == 'rave':
         #     self.player = AgentRAVE(args.nickname, 0, simulationCount=self.simCount, multiThreading=False)
@@ -253,7 +253,7 @@ class TC2Main(object):
 
         finalGameState = main.RunClient()
 
-        if True:
+        if False:
             # player0Stats = PlayerStatsTracker()
             # Player0LosingStats = PlayerStatsTracker()
 

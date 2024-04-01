@@ -93,7 +93,6 @@ ENV/
 
 Client/tensorboard_logs/
 
-Client/tensorboard_logs_thesis/
 .DS_Store
 .vscode/
 Client/.DS_Store
@@ -116,3 +115,5 @@ Client/DeepLearning/Thesis/Hyperparameters/Models/
 Client/DeepLearning/Models/
 Client/DeepLearning/Thesis/Hyperparameters/Models/
 Client/DeepLearning/Thesis/Opponents/Models/
+Client/DeepLearning/Thesis/Tasks/Models/
+Client/DeepLearning/Thesis/DenseRewards/Models/

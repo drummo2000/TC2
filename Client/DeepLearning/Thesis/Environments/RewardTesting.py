@@ -8,7 +8,6 @@ from Game.CatanPlayer import Player
 from Agents.AgentRandom2 import AgentRandom2
 from Agents.AgentModel import AgentModel
 from CatanData.GameStateViewer import SaveGameStateImage
-from DeepLearning.GetObservation import getObservation, getSetupObservation, getSetupRandomObservation, lowerBounds, upperBounds, lowerBoundsSimplified, upperBoundsSimplified, getObservationSimplified, getNodeValue, getObservationTrading, lowerBoundsTrading, upperBoundsTrading
 from DeepLearning.GetActionMask import getActionMask, getActionMaskTrading
 from DeepLearning.PPO import MaskablePPO
 from CatanData.GameStateViewer import SaveGameStateImage, DisplayImage
@@ -16,13 +15,13 @@ import time
 from collections import deque
 from DeepLearning.globals import GAME_RESULTS
 from DeepLearning.Environments.CatanEnv import CatanBaseEnv
+from DeepLearning.GetActionMask import getActionMask
+from DeepLearning.Thesis.Observations.get_observation import getObservation, lowerBound, upperBound
 
 
 class WinRewardEnv(CatanBaseEnv):
-    """
-    Gives rewards for number of vp at end of game
-    """
-    def __init__(self, customBoard=None, players=None, trading=False, lowerBounds=None, upperBounds=None, getObservationFunction=None, getActionMaskFunction=None):
+
+    def __init__(self, customBoard=None, players=None, trading=False):
         super(WinRewardEnv, self).__init__(customBoard=customBoard, players=players, trading=trading)
 
         # Reward settings
@@ -31,11 +30,12 @@ class WinRewardEnv(CatanBaseEnv):
         self.loseRewardAmount = -10
         self.vpActionReward = False # Actions that directly give vp
         self.vpActionRewardMultiplier = 1
-        self.observation_space = spaces.Box(low=lowerBounds, high=upperBounds, dtype=np.int64)
+
+        self.observation_space = spaces.Box(low=lowerBound, high=upperBound, dtype=np.int64)
         self.action_space = spaces.Discrete(486)
         # self.action_space = spaces.Discrete(566)
-        self.getActionMask = getActionMaskFunction
-        self.getObservation = getObservationFunction
+        self.getActionMask = getActionMask
+        self.getObservation = getObservation
     
     def reset(self, seed=None):
         self.numTurns = 0
@@ -330,7 +330,7 @@ class DenseRewardEnv(CatanBaseEnv):
     Full Catan game with full action and state space (no player trades)
     Change the rewards when certain reward reached
     """
-    def __init__(self, customBoard=None, players=None, trading=False, lowerBounds=None, upperBounds=None, getObservationFunction=None, getActionMaskFunction=None):
+    def __init__(self, customBoard=None, players=None, trading=False):
         super(DenseRewardEnv, self).__init__(customBoard=customBoard, players=players, trading=trading)
 
         # Reward settings
@@ -346,11 +346,11 @@ class DenseRewardEnv(CatanBaseEnv):
         self.denseRewards = True
         self.denseRewardMultiplier = 1
 
-        self.observation_space = spaces.Box(low=lowerBounds, high=upperBounds, dtype=np.int64)
+        self.observation_space = spaces.Box(low=lowerBound, high=upperBound, dtype=np.int64)
         self.action_space = spaces.Discrete(486)
         # self.action_space = spaces.Discrete(566)
-        self.getActionMask = getActionMaskFunction
-        self.getObservation = getObservationFunction
+        self.getActionMask = getActionMask
+        self.getObservation = getObservation
 
     
     def reset(self, seed=None):
@@ -404,6 +404,10 @@ class DenseRewardEnv(CatanBaseEnv):
                     reward += 1 * self.bankTradeRewardMultiplier
                 if canBuildCityBefore == False and canBuildCityAfter == True:
                     reward += 1 * self.bankTradeRewardMultiplier
+                if canBuildSettlementBefore == True and canBuildSettlementAfter == False:
+                    reward += -1 * self.bankTradeRewardMultiplier
+                if canBuildCityBefore == True and canBuildCityAfter == False:
+                    reward += -1 * self.bankTradeRewardMultiplier
 
         if self.vpActionReward:
             if biggestArmyBefore == False and self.agent.biggestArmy == True:
@@ -430,9 +434,9 @@ class DenseRewardEnv(CatanBaseEnv):
             elif actionObj.type[:3] == 'Use':
                 reward += 1
             if biggestArmyBefore == False and self.agent.biggestArmy == True:
-                reward += 2 * self.vpActionRewardMultiplier
+                reward += 5 * self.vpActionRewardMultiplier
             if biggestRoadBefore == False and self.agent.biggestRoad == True:  
-                reward += 2 * self.vpActionRewardMultiplier
+                reward += 5 * self.vpActionRewardMultiplier
 
         # Check if game Over
         if self.endCondition():
