@@ -117,3 +117,5 @@ Client/DeepLearning/Thesis/Hyperparameters/Models/
 Client/DeepLearning/Thesis/Opponents/Models/
 Client/DeepLearning/Thesis/Tasks/Models/
 Client/DeepLearning/Thesis/DenseRewards/Models/
+
+*.zip

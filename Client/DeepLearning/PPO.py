@@ -154,6 +154,8 @@ class MaskablePPO(OnPolicyAlgorithm):
         self.info = info
         self.savePath = savePath
 
+        self.bestAvgReward = -50
+
     def _setup_model(self) -> None:
         self._setup_lr_schedule()
         self.set_random_seed(self.seed)
@@ -543,7 +545,6 @@ class MaskablePPO(OnPolicyAlgorithm):
 
         # Collect avg reward for past 10 iterations(20_000 timesteps(100 games))
         rewardList = deque(maxlen=2)
-        bestAvgReward = -50
 
         while self.num_timesteps < total_timesteps:
             continue_training = self.collect_rollouts(self.env, callback, self.rollout_buffer, self.n_steps, use_masking)
@@ -558,13 +559,15 @@ class MaskablePPO(OnPolicyAlgorithm):
 
 
             # SAVE MODEL
-            if (sum(rewardList)/2 > bestAvgReward) and len(rewardList) == rewardList.maxlen:
-                self.save(f'{self.savePath}/model_{self.num_timesteps}')
-                bestAvgReward = sum(rewardList)/2
+            avgReward = sum(rewardList)/2
+            if avgReward > self.bestAvgReward and len(rewardList) == rewardList.maxlen:
+                self.save(f'{self.savePath}/model_{self.num_timesteps}_{int(avgReward)}.zip')
+                self.bestAvgReward = sum(rewardList)/2
                 rewardList.clear()
 
             # self.selfPlayUniformUpdate(self.num_timesteps)
             # self.selfPlayDistributionUpdate(self.num_timesteps)
+            self.turnLimitUpdate(self.num_timesteps)
 
             # Display training infos
             if log_interval is not None and iteration % log_interval == 0:
@@ -614,3 +617,22 @@ class MaskablePPO(OnPolicyAlgorithm):
 
             os.environ["UPDATE_MODELS_DIST"] = "True"
             GAME_RESULTS.clear()
+
+
+    def turnLimitUpdate(self, timestep):
+        # Check if threshold has been reached (>80% win rate over last 100 games)
+        print(f"CheckingWinRate(TURNLIMIT): {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
+        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.8:
+
+            currentTurnLimit = int(os.environ.get("TURN_LIMIT"))
+            if currentTurnLimit > 25:
+                newTurnLimit = str(int(currentTurnLimit - 0.05 * currentTurnLimit))
+                os.environ["TURN_LIMIT"] = newTurnLimit
+
+            print("(Debug) Threshold reached, saving model and updating TURN_LIMIT env variable.", newTurnLimit)
+
+            modelName = f'model_{timestep}_{currentTurnLimit}'
+            self.save(f'{self.savePath}/TurnLimit/{modelName}')
+            GAME_RESULTS.clear()
+
+            self.bestAvgReward = -50

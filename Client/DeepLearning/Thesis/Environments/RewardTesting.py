@@ -426,10 +426,8 @@ class DenseRewardEnv(CatanBaseEnv):
                 reward += 10 * self.vpActionRewardMultiplier
             elif actionObj.type == 'BuildCity':
                 reward += 10 * self.vpActionRewardMultiplier
-            elif actionObj.type == 'BuyDevelopmentCard' and self.agent.victoryPoints >= 6:
-                reward += 10 * self.denseRewardMultiplier
-            elif actionObj.type == 'BuyDevelopmentCard' and self.agent.victoryPoints < 6:
-                reward -= 1 * self.denseRewardMultiplier
+            elif actionObj.type == 'BuyDevelopmentCard':
+                reward += 1 * self.denseRewardMultiplier
             elif actionObj.type == 'BuildRoad' and prevState[:5] != "START":
                 reward += 1 * self.denseRewardMultiplier
             # Using dev card
@@ -437,8 +435,8 @@ class DenseRewardEnv(CatanBaseEnv):
             #     reward += 1
             # if biggestArmyBefore == False and self.agent.biggestArmy == True:
             #     reward += 5 * self.vpActionRewardMultiplier
-            # if biggestRoadBefore == False and self.agent.biggestRoad == True:  
-            #     reward += 5 * self.vpActionRewardMultiplier
+            if biggestRoadBefore == False and self.agent.biggestRoad == True:  
+                reward += 20 * self.vpActionRewardMultiplier
 
         # Check if game Over
         if self.endCondition():
