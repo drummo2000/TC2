@@ -567,7 +567,7 @@ class MaskablePPO(OnPolicyAlgorithm):
 
             # self.selfPlayUniformUpdate(self.num_timesteps)
             # self.selfPlayDistributionUpdate(self.num_timesteps)
-            self.turnLimitUpdate(self.num_timesteps)
+            # self.turnLimitUpdate(self.num_timesteps)
 
             # Display training infos
             if log_interval is not None and iteration % log_interval == 0:

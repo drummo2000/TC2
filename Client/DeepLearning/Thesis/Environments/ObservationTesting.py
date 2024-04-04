@@ -4,11 +4,6 @@ from gymnasium import spaces
 import pickle
 from CatanSimulator import CreateGame
 from Game.CatanGame import *
-from Game.CatanPlayer import Player
-from Agents.AgentRandom2 import AgentRandom2
-from Agents.AgentModel import AgentModel
-from CatanData.GameStateViewer import SaveGameStateImage
-from DeepLearning.GetObservation import getObservation, getSetupObservation, getSetupRandomObservation, lowerBounds, upperBounds, lowerBoundsSimplified, upperBoundsSimplified, getObservationSimplified, getNodeValue, getObservationTrading, lowerBoundsTrading, upperBoundsTrading
 from DeepLearning.GetActionMask import getActionMask, getActionMaskTrading
 from DeepLearning.PPO import MaskablePPO
 from CatanData.GameStateViewer import SaveGameStateImage, DisplayImage
@@ -16,13 +11,15 @@ import time
 from collections import deque
 from DeepLearning.globals import GAME_RESULTS
 from DeepLearning.Environments.CatanEnv import CatanBaseEnv
+from DeepLearning.Thesis.Observations.get_observation_full import getObservation, lowerBound, upperBound
+
 
 
 class ObsTestingEnv(CatanBaseEnv):
     """
     Giving rewards only for victory points
     """
-    def __init__(self, customBoard=None, players=None, trading=False, lowerBounds=None, upperBounds=None, getObservationFunction=None):
+    def __init__(self, customBoard=None, players=None, trading=False):
         super(ObsTestingEnv, self).__init__(customBoard=customBoard, players=players, trading=trading)
 
         # Reward settings
@@ -33,9 +30,9 @@ class ObsTestingEnv(CatanBaseEnv):
         self.vpActionRewardMultiplier = 1
 
         # Settings for Setup training
-        self.observation_space = spaces.Box(low=lowerBounds, high=upperBounds, dtype=np.int64)
+        self.observation_space = spaces.Box(low=lowerBound, high=upperBound, dtype=np.int64)
         self.getActionMask = getActionMask
-        self.getObservation = getObservationFunction
+        self.getObservation = getObservation
     
     def reset(self, seed=None):
         self.numTurns = 0
