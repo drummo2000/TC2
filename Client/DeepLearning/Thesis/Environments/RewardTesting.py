@@ -16,7 +16,7 @@ from collections import deque
 from DeepLearning.globals import GAME_RESULTS
 from DeepLearning.Environments.CatanEnv import CatanBaseEnv
 from DeepLearning.GetActionMask import getActionMask
-from DeepLearning.Thesis.get_observation import getObservation, lowerBound, upperBound
+from DeepLearning.Thesis.Observations.get_observation import getObservation, lowerBound, upperBound
 
 
 class WinRewardEnv(CatanBaseEnv):

@@ -11,7 +11,7 @@ from DeepLearning.GetActionMask import getActionMask, getActionMaskTrading
 from DeepLearning.PPO import MaskablePPO
 from DeepLearning.globals import GAME_RESULTS
 from DeepLearning.Environments.CatanEnv import CatanBaseEnv
-from DeepLearning.Thesis.get_observation import getObservation, lowerBound, upperBound
+from DeepLearning.Thesis.Observations.get_observation import getObservation, lowerBound, upperBound
 
 class TurnLimitDense(CatanBaseEnv):
 
