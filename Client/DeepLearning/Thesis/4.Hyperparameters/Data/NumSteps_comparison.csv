@@ -1,0 +1,4 @@
+AgentName,WinRate,MarginError,numTurns,victoryPoints
+BatchSize-2048,0.8605,1.52,47.7145,9.6685
+BatchSize-4096,0.871,1.47,45.0755,9.7045
+BatchSize-8192,0.8515,1.56,48.9585,9.6185

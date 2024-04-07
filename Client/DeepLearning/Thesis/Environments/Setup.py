@@ -7,16 +7,12 @@ from Game.CatanGame import *
 from Game.CatanPlayer import Player
 from Agents.AgentRandom2 import AgentRandom2
 from Agents.AgentModel import AgentModel
-from CatanData.GameStateViewer import SaveGameStateImage
-from DeepLearning.GetActionMask import getActionMask, getActionMaskTrading
-from DeepLearning.PPO import MaskablePPO
-from CatanData.GameStateViewer import SaveGameStateImage, DisplayImage
 import time
 from collections import deque
 from DeepLearning.globals import GAME_RESULTS
 from DeepLearning.Environments.CatanEnv import CatanBaseEnv
-from DeepLearning.GetActionMask import getActionMask
-from DeepLearning.Thesis.Observations.get_observation import getObservation, lowerBound, upperBound
+from DeepLearning.Thesis.Setup.getActionMaskSetup import getSetupActionMask
+from DeepLearning.Thesis.Setup.getObservationSetup import getObservationSetup, lowerBound, upperBound 
 
 
 class SetupRandom(CatanBaseEnv):
@@ -28,8 +24,8 @@ class SetupRandom(CatanBaseEnv):
         super(SetupRandom, self).__init__(customBoard=customBoard, players=players, trading=trading)
 
         # Reward settings
-        self.winReward = False
-        self.winRewardAmount = 10
+        self.winReward = True
+        self.winRewardAmount = +10
         self.loseRewardAmount = -10
         self.vpActionReward = False # Actions that directly give vp
         self.vpActionRewardMultiplier = 1
@@ -41,10 +37,10 @@ class SetupRandom(CatanBaseEnv):
         self.denseRewardMultiplier = 1
 
         self.observation_space = spaces.Box(low=lowerBound, high=upperBound, dtype=np.int64)
-        self.action_space = spaces.Discrete(486)
+        self.action_space = spaces.Discrete(126)
         # self.action_space = spaces.Discrete(566)
-        self.getActionMask = getActionMask
-        self.getObservation = getObservation
+        self.getActionMask = getSetupActionMask
+        self.getObservation = getObservationSetup
 
     
     def reset(self, seed=None):
@@ -118,6 +114,39 @@ class SetupRandom(CatanBaseEnv):
             if self.game.gameState.currState == "OVER":
                 break
         
-        reward = self.agent.victoryPoints
+        wonGame = self.game.gameState.winner == 0
+        if wonGame:
+            if self.winReward:
+                reward += self.winRewardAmount
+        else:
+            if self.winReward:
+                reward += self.loseRewardAmount
+
+        return None, reward, True, False, {}
+
+
+class SetupRandomSettlement(SetupRandom):
+    """
+    Full Catan game with full action and state space (no player trades)
+    Change the rewards when certain reward reached
+    """
+
+    def endGame(self, reward):
+        while True:
+            currPlayer = self.game.gameState.players[self.game.gameState.currPlayer]
+
+            agentAction = currPlayer.DoMove(self.game)
+            agentAction.ApplyAction(self.game.gameState)
+
+            if currPlayer.seatNumber == 0 and agentAction.type == "EndTurn":
+                self.numTurns += 1
+
+            if self.game.gameState.currState == "OVER" or (len(self.agent.settlements)+len(self.agent.cities)>=3):
+                break
+        
+        if self.numTurns != 0:
+            reward = 10 / self.numTurns
+        else:
+            reward = 10
 
         return None, reward, True, False, {}

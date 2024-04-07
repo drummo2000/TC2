@@ -560,13 +560,13 @@ class MaskablePPO(OnPolicyAlgorithm):
 
             # SAVE MODEL
             avgReward = sum(rewardList)/2
-            if avgReward > self.bestAvgReward and len(rewardList) == rewardList.maxlen:
-                self.save(f'{self.savePath}/model_{self.num_timesteps}_{int(avgReward)}.zip')
-                self.bestAvgReward = sum(rewardList)/2
-                rewardList.clear()
+            # if avgReward > self.bestAvgReward and len(rewardList) == rewardList.maxlen:
+            #     self.save(f'{self.savePath}/model_{self.num_timesteps}_{int(avgReward)}.zip')
+            #     self.bestAvgReward = sum(rewardList)/2
+            #     rewardList.clear()
 
             # self.selfPlayUniformUpdate(self.num_timesteps)
-            # self.selfPlayDistributionUpdate(self.num_timesteps)
+            self.selfPlayDistributionUpdate(self.num_timesteps, avgReward)
             # self.turnLimitUpdate(self.num_timesteps)
 
             # Display training infos
@@ -599,20 +599,23 @@ class MaskablePPO(OnPolicyAlgorithm):
             os.environ["MODEL_NAME"] = modelName
             GAME_RESULTS.clear()
     
-    def selfPlayDistributionUpdate(self, timestep):
-        # Check if threshold has been reached (>50% win rate over last 100 games)
+    def selfPlayDistributionUpdate(self, timestep, avgReward):
+        # Check if threshold has been reached (>75% win rate over last 100 games)
         print(f"CheckingWinRate(Distribution): {sum(GAME_RESULTS)/GAME_RESULTS_LEN}")
-        if sum(GAME_RESULTS)/GAME_RESULTS_LEN >= 0.6:
+        winRate = sum(GAME_RESULTS)/GAME_RESULTS_LEN
+        if winRate >= 0.75:
 
-            modelName1 = f'model_{timestep}'
-            self.save(f'DeepLearning/Thesis/Opponents/Models/Distribution/{modelName1}')
+            modelName1 = f'model_{timestep}_{int(avgReward)}'
+            self.save(f'DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDense/{modelName1}')
 
-            modelList = os.listdir("DeepLearning/Thesis/Opponents/Models/Distribution/")
+            modelList = os.listdir("DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDense")
             modelName2 = random.choice(modelList)
             modelName3 = random.choice(modelList)
             os.environ["MODEL_1_NAME"] = modelName1
             os.environ["MODEL_2_NAME"] = modelName2
             os.environ["MODEL_3_NAME"] = modelName3
+
+            print(f"Updating opponents to: {modelName1}, {modelName2}, {modelName3}")
 
 
             os.environ["UPDATE_MODELS_DIST"] = "True"
