@@ -216,7 +216,7 @@ class SelfPlayDense(SelfPlayBase):
 
         # Reward settings
         self.winReward = True
-        self.winRewardAmount = 100
+        self.winRewardAmount = 50
         self.loseRewardAmount = -100
         self.vpActionReward = False # Actions that directly give vp
         self.vpActionRewardMultiplier = 1
@@ -244,9 +244,9 @@ class SelfPlayDense(SelfPlayBase):
             modelName1 = os.environ["MODEL_1_NAME"]
             modelName2 = os.environ["MODEL_2_NAME"]
             modelName3 = os.environ["MODEL_3_NAME"]
-            self.opponentModel1.set_parameters(f"DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDense/{modelName1}")
-            self.opponentModel1.set_parameters(f"DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDense/{modelName2}")
-            self.opponentModel1.set_parameters(f"DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDense/{modelName3}")
+            self.opponentModel1.set_parameters(f"DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDenseLower/{modelName1}")
+            self.opponentModel1.set_parameters(f"DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDenseLower/{modelName2}")
+            self.opponentModel1.set_parameters(f"DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDenseLower/{modelName3}")
             os.environ["UPDATE_MODELS_DIST"] = "False"
 
         self.game = CreateGame([AgentRandom2("P0", 0),
@@ -376,7 +376,7 @@ class SelfPlayDense(SelfPlayBase):
         else:
             GAME_RESULTS.append(0)
             if self.winReward:
-                reward += -10 * (10-self.agent.victoryPoints)
+                reward += -5 * (10-self.agent.victoryPoints)
 
         return None, reward, True, False, {}
 

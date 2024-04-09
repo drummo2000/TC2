@@ -113,7 +113,7 @@ class TC2Main(object):
 
     def InitGame(self, host = "8880", canInitServer = True, gameNamePrefix = None, callProcess=True):
 
-        model=MaskablePPO.load("DeepLearning/Thesis/5.Opponents/Models/Distribution/model_14966784.zip")
+        model=MaskablePPO.load("DeepLearning/Thesis/6.DenseRewards/Models/TurnLimitDenseLower/model_19111936_105.zip")
         self.player = AgentModel("TC2_agent", 0, playerTrading=False, recordStats=True, jsettlersGame=True, model=model)
 
 
@@ -170,7 +170,7 @@ class TC2Main(object):
         self.ourClient = Client(gameName, self.player, True, True)
 
     if __name__ == '__main__':
-        for i in range(10):
+        for i in range(5):
             from TC2Main import TC2Main
 
             main = TC2Main()

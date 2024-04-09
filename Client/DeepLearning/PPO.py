@@ -566,8 +566,8 @@ class MaskablePPO(OnPolicyAlgorithm):
             #     rewardList.clear()
 
             # self.selfPlayUniformUpdate(self.num_timesteps)
-            self.selfPlayDistributionUpdate(self.num_timesteps, avgReward)
-            # self.turnLimitUpdate(self.num_timesteps)
+            # self.selfPlayDistributionUpdate(self.num_timesteps, avgReward)
+            self.turnLimitUpdate(self.num_timesteps)
 
             # Display training infos
             if log_interval is not None and iteration % log_interval == 0:
@@ -606,9 +606,9 @@ class MaskablePPO(OnPolicyAlgorithm):
         if winRate >= 0.75:
 
             modelName1 = f'model_{timestep}_{int(avgReward)}'
-            self.save(f'DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDense/{modelName1}')
+            self.save(f'DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDenseLower/{modelName1}')
 
-            modelList = os.listdir("DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDense")
+            modelList = os.listdir("DeepLearning/Thesis/6.DenseRewards/Models/SelfPlayDenseLower")
             modelName2 = random.choice(modelList)
             modelName3 = random.choice(modelList)
             os.environ["MODEL_1_NAME"] = modelName1
