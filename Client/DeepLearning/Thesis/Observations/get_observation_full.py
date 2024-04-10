@@ -103,20 +103,20 @@ def getNodeRepresentation(node: BoardNode, gameState: GameState, playerNumber=0)
 
 
 
-edgeLowerBound = [0]*5
-edgeUpperBound = [1]*5
+edgeLowerBound = [0]*3
+edgeUpperBound = [1]*3
 edgesLowerBound = 72*edgeLowerBound
 edgesUpperBound = 72*edgeUpperBound
 def getEdgeRepresentation(edge: BoardEdge, gameState: GameState, playerNumber=0) -> list:
     """
-    For each edge get owner, 5*72=360
+    For each edge get owner, 3*72=144
     """
-    owner = [0, 0, 0, 0, 0]
+    owner = [0, 0, 0]
     if edge.construction == None:
         owner[-1] = 1
     else:
         # cat
-        owner[(playerNumber+edge.construction.owner)%4] = 1
+        owner = [1, 0, 0] if edge.construction.owner == playerNumber else [0, 1, 0]
     return owner
 
 
