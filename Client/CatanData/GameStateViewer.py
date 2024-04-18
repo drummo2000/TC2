@@ -270,7 +270,7 @@ def GetGameStateImage(gameState, action=None):
             if boardHex.number is not None and boardHex.number > 0:
 
                 draw = ImageDraw.Draw(mainImg)
-                font = ImageFont.truetype("CatanData/arial.ttf", 25)
+                font = ImageFont.truetype("CatanData/Menlo.ttf", 25)
 
                 x = hexPositions[boardHexIndex][0]
                 y = hexPositions[boardHexIndex][1] - 15
@@ -334,25 +334,29 @@ def GetGameStateImage(gameState, action=None):
                 mainImg.paste(coloredCity, cityImgPos, cityImg)
 
         draw = ImageDraw.Draw(mainImg)
-        font = ImageFont.truetype("CatanData/arial.ttf", 20)
-        # draw.text((2, 0), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        # draw.text((0, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        # draw.text((1, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        # draw.text((1, 2), "Largest Road: {0}".format(gameState.longestRoadPlayer), (0, 0, 0), font=font)
-        draw.text((500, 0), f"Longest Road: {gameState.longestRoadPlayer}", playerColor[gameState.longestRoadPlayer], font=font)
-        draw.text((500, 30), f"Largest Army: {gameState.largestArmyPlayer}", playerColor[gameState.largestArmyPlayer], font=font)
-        draw.text((500, 60), f"DevCardVps: {gameState.players[0].developmentCards[VICTORY_POINT_CARD_INDEX]}", (0, 0, 0), font=font)
-        draw.text((500, 90), f"Resource: {gameState.players[0].resources[:5]}", (0, 0, 0), font=font)
-        draw.text((500, 120), f"VictoryPoints: {gameState.players[0].victoryPoints}", (0, 0, 0), font=font)
-        draw.text((500, 150), f"SetupProduction: {gameState.players[0].stats.setupResourceProduction[:5]}", (0, 0, 0), font=font)
-        if action:
-            draw.text((500, 180), f"Action: {action.type}", (0, 0, 0), font=font)
-            if action.type == 'RollDices':
-                draw.text((500, 210), f"Action: {action.result}", (0, 0, 0), font=font)
-        robberHex = gameState.boardHexes[gameState.robberPos]
-        draw.text((500, 240), f"RobberPos: {robberHex.number}-{robberHex.production}", (0, 0, 0), font=font)
-        draw.text((500, 270), f"DevCards: {gameState.players[0].developmentCards}", (0, 0, 0), font=font)
+        font = ImageFont.truetype("CatanData/Menlo.ttf", 20)
 
+        res = gameState.players[0].resources[:5]
+
+        # Brick, ore, wool, wheat, wood
+        robberHex = gameState.boardHexes[gameState.robberPos]
+        draw.text((470, 0), f"RobberPos: {robberHex.number}-{robberHex.production}", (255, 255, 255), font=font)
+        draw.text((470, 30), f"Longest Road: Player {gameState.longestRoadPlayer}", (255, 255, 255), font=font)
+        draw.text((470, 60), f"Largest Army: Player {gameState.largestArmyPlayer}", (255, 255, 255), font=font)
+        draw.text((470, 90), f"VictoryPoints: {gameState.players[0].victoryPoints}", (255, 255, 255), font=font)
+        draw.text((470, 120), f"            B  O  S  W  L", (255, 255, 255), font=font)
+        draw.text((470, 150), f"Resources: {res}", (255, 255, 255), font=font)
+        draw.text((470, 180), f"DevCards: {gameState.players[0].developmentCards}", (255, 255, 255), font=font)
+        # draw.text((470, 210), f"DevCardVps: {gameState.players[0].developmentCards[VICTORY_POINT_CARD_INDEX]}", (255, 255, 255), font=font)
+        # draw.text((470, 240), f"SetupProduction: {gameState.players[0].stats.setupResourceProduction[:5]}", (255, 255, 255), font=font)
+        if action:
+            draw.text((470, 210), f"Action: {action.type}", (255, 255, 255), font=font)
+            if action.type == "AcceptTradeOffer":
+                draw.text((500, 240), f"          B  O  S  W  L", (255, 255, 255), font=font)
+                draw.text((500, 270), f"Give:    {action.iGive[:5]}\nReceive: {action.iGet[:5]}", (255, 255, 255), font=font)
+            elif action.type == "MakeTradeOffer":
+                draw.text((500, 240), f"          B  O  S  W  L", (255, 255, 255), font=font)
+                draw.text((500, 270), f"Give:    {action.giveResources[:5]}\nReceive: {action.getResources[:5]}", (255, 255, 255), font=font)
 
         mainImg.convert('RGB')
 
@@ -363,25 +367,16 @@ def GetGameStateImage(gameState, action=None):
 
         return None
 
-def SaveGameStateImage(gameState, imgFileName):
+def SaveGameStateImage(imgFileName, gameState, action=None):
 
-    gameStateImg = GetGameStateImage(gameState)
+    gameStateImg = GetGameStateImage(gameState, action)
 
     if gameStateImg is not None:
         gameStateImg.save(imgFileName)
 
-import tkinter as tk
-from PIL import ImageTk
-
 def DisplayImage(gameState, actionString=None):
-    # root = tk.Tk()
     gameStateImg: Image.Image = GetGameStateImage(gameState, actionString)
     gameStateImg.show()
-
-    # tkimage = ImageTk.PhotoImage(gameStateImg)
-    # tk.Label(root, image=tkimage).pack()
-    # root.bind('<space>', lambda event: root.destroy())
-    # root.mainloop()
 
 if __name__ == '__main__':
 
